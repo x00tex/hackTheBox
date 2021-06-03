@@ -9,7 +9,7 @@
 |Box|Difficulty|Writeup|Foothold|Privesc|
 |---|----------|-------|--------|-------|
 |<a href="https://app.hackthebox.eu/machines/Ready"><img width="25" hight="25" alt="ready" src="assets/ready.webp"></img></a>|<span style="color:orange">Medium</span>|[Ready](Boxes/linux/Retired/ready/README.md)|[SSRF in gitlab 11.4.7](Boxes/linux/Retired/ready/README.md#Footholdgitlab_1147_ssrf)|[Docker Privileged Mode](Boxes/linux/Retired/ready/README.md#Privescdocker_privileged_mode)|
-
+|<a href="https://app.hackthebox.eu/machines/ScriptKiddie"><img width="25" hight="25" alt="scriptKiddie" src="assets/scriptKiddie.webp"></img></a>|<span style="color:green">Easy</span>|[scriptKiddie](Boxes/linux/Retired/scriptKiddie/README.md)|[command_injection in msfvenom](Boxes/linux/Retired/scriptKiddie/README.md#Footholdcommand_injection)|[`msfconsole` with sudo](Boxes/linux/Retired/scriptKiddie/README.md#Privescmsfconsole_with_sudo)|
 
 
 
