@@ -461,3 +461,17 @@ done
 #ssh -i ./root_key root@10.10.10.223 'hostname'
 ssh -i ./root_key root@10.10.10.223 'flag=$(find / -type f \( -name "user.txt" -o -name "root.txt" \) -print 2>/dev/null) && cat $flag'
 ```
+
+## inotify
+
+__[inotify](https://man7.org/linux/man-pages/man7/inotify.7.html)__ API provides a mechanism for monitoring filesystem events. Inotify can be used to monitor individual files, or to monitor directories. When a directory is monitored, inotify will return events for the directory itself, and for files inside the directory.
+
+* [inotify api example in c](https://linuxhint.com/inotify_api_c_language/)
+* ippsec explain in [tenet video](https://www.youtube.com/watch?v=LhdE7dXbTQw&t=1560s)
+
+Compile C code
+```bash
+gcc inotify.c -o inofifythis
+```
+
+![](screenshots/inotify-poc.png)
