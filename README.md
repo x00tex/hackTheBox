@@ -8,10 +8,19 @@
 
 |Box|Difficulty|Writeup|Foothold|Privesc|
 |---|----------|-------|--------|-------|
+|<a href="https://app.hackthebox.eu/machines/Ophiuchi"><img width="25" hight="25" alt="ophiuchi" src="assets/ophiuchi.webp"></a>|<span style="color:orange">Medium</span>|[ophiuchi](Boxes/linux/Retired/ophiuchi/README.md)|[SnakeYAML Deserilization exploit](Boxes/linux/Retired/ophiuchi/README.md#FootholdSnakeYAML_Deserilization_exploit)|[wasm reversing](Boxes/linux/Retired/ophiuchi/README.md#Privescwasm_reversing)|
 |<a href="https://app.hackthebox.eu/machines/Ready"><img width="25" hight="25" alt="ready" src="assets/ready.webp"></a>|<span style="color:orange">Medium</span>|[Ready](Boxes/linux/Retired/ready/README.md)|[SSRF in gitlab 11.4.7](Boxes/linux/Retired/ready/README.md#Footholdgitlab_1147_ssrf)|[Docker Privileged Mode](Boxes/linux/Retired/ready/README.md#Privescdocker_privileged_mode)|
 |<a href="https://app.hackthebox.eu/machines/ScriptKiddie"><img width="25" hight="25" alt="scriptKiddie" src="assets/scriptKiddie.webp"></a>|<span style="color:green">Easy</span>|[scriptKiddie](Boxes/linux/Retired/scriptKiddie/README.md)|[command_injection in msfvenom](Boxes/linux/Retired/scriptKiddie/README.md#Footholdcommand_injection)|[`msfconsole` with sudo](Boxes/linux/Retired/scriptKiddie/README.md#Privescmsfconsole_with_sudo)|
 |<a href="https://app.hackthebox.eu/machines/Spectra"><img width="25" hight="25" alt="spectra" src="assets/spectra.webp"></a>|<span style="color:green">Easy</span>|[Spectra](Boxes/linux/Retired/spectra/README.md)|[wordpress admin rev_shell](Boxes/linux/Retired/spectra/README.md#Footholdwordpress_admin_rev_shell)|[`initctl` with sudo](Boxes/linux/Retired/spectra/README.md#Privescinitctl_with_sudo)|
 |<a href="https://app.hackthebox.eu/machines/Tentacle"><img width="25" hight="25" alt="tentacle" src="assets/tentacle.webp"></a>|<span style="color:red">Hard</span>|[Tentacle](Boxes/linux/Retired/tentacle/README.md)|[OpenSMTPD RCE](Boxes/linux/Retired/tentacle/README.md#FootholdOpenSMTPD_RCE)|[Everything kerberos](Boxes/linux/Retired/tentacle/README.md#Privesceverything_kerberos)|
+
+
+## <img width="25" hight="25" src="assets/win.png"> Windows
+
+|Box|Difficulty|Writeup|Foothold|Privesc|
+|---|----------|-------|--------|-------|
+|<a href="https://app.hackthebox.eu/machines/Atom"><img width="25" hight="25" alt="atom" src="assets/atom.webp"></a>|<span style="color:orange">Medium</span>|[Atom](Boxes/windows/Retired/atom/README.md)|[Electron-Updater RCE](Boxes/windows/Retired/atom/README.md#FootholdElectron_Updater-RCE)|[Kanban Decrypt](Boxes/windows/Retired/atom/README.md#PrivescKanban_decrypt)|
+|<a href="https://app.hackthebox.eu/machines/Breadcrumbs"><img width="25" hight="25" alt="breadcrumbs" src="assets/breadcrumbs.webp"></a>|<span style="color:red">Hard</span>|[Breadcrumbs](Boxes/windows/Retired/breadcrumbs/README.md)|[File_upload to RCE](Boxes/windows/Retired/breadcrumbs/README.md#FootholdFile_upload_to_RCE)|[Horizontal Privesc](Boxes/windows/Retired/breadcrumbs/README.md#PrivescHorizontal)|
 
 
 
