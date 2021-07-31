@@ -14,6 +14,8 @@
 |<a href="https://app.hackthebox.eu/machines/ScriptKiddie"><img width="25" hight="25" alt="scriptKiddie" src="assets/scriptKiddie.webp"></a>|<span style="color:green">Easy</span>|[scriptKiddie](Boxes/linux/Retired/scriptKiddie/README.md)|[command_injection in msfvenom](Boxes/linux/Retired/scriptKiddie/README.md#Footholdcommand_injection)|[`msfconsole` with sudo](Boxes/linux/Retired/scriptKiddie/README.md#Privescmsfconsole_with_sudo)|
 |<a href="https://app.hackthebox.eu/machines/Spectra"><img width="25" hight="25" alt="spectra" src="assets/spectra.webp"></a>|<span style="color:green">Easy</span>|[Spectra](Boxes/linux/Retired/spectra/README.md)|[wordpress admin rev_shell](Boxes/linux/Retired/spectra/README.md#Footholdwordpress_admin_rev_shell)|[`initctl` with sudo](Boxes/linux/Retired/spectra/README.md#Privescinitctl_with_sudo)|
 |<a href="https://app.hackthebox.eu/machines/Tentacle"><img width="25" hight="25" alt="tentacle" src="assets/tentacle.webp"></a>|<span style="color:red">Hard</span>|[Tentacle](Boxes/linux/Retired/tentacle/README.md)|[OpenSMTPD RCE](Boxes/linux/Retired/tentacle/README.md#FootholdOpenSMTPD_RCE)|[Everything kerberos](Boxes/linux/Retired/tentacle/README.md#Privesceverything_kerberos)|
+|<a href="https://app.hackthebox.eu/machines/TheNotebook"><img width="25" hight="25" alt="theNotebook" src="assets/theNotebook.webp"></a>|<span style="color:orange">Medium</span>|[theNotebook](Boxes/linux/Retired/theNotebook/README.md)|[jwt bypass](Boxes/linux/Retired/theNotebook/README.md#Footholdjwt_bypass)|[Docker: CVE-2019-5736](Boxes/linux/Retired/theNotebook/README.md#PrivescCVE-2019-5736)|
+
 
 
 ## <img width="25" hight="25" src="assets/win.png"> Windows
