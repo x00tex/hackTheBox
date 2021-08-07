@@ -24,6 +24,7 @@
 |---|----------|-------|--------|-------|
 |<a href="https://app.hackthebox.eu/machines/Atom"><img width="25" hight="25" alt="atom" src="assets/atom.webp"></a>|<span style="color:orange">Medium</span>|[Atom](Boxes/windows/Retired/atom/README.md)|[Electron-Updater RCE](Boxes/windows/Retired/atom/README.md#FootholdElectron_Updater-RCE)|[Kanban Decrypt](Boxes/windows/Retired/atom/README.md#PrivescKanban_decrypt)|
 |<a href="https://app.hackthebox.eu/machines/Breadcrumbs"><img width="25" hight="25" alt="breadcrumbs" src="assets/breadcrumbs.webp"></a>|<span style="color:red">Hard</span>|[Breadcrumbs](Boxes/windows/Retired/breadcrumbs/README.md)|[File_upload to RCE](Boxes/windows/Retired/breadcrumbs/README.md#FootholdFile_upload_to_RCE)|[Horizontal Privesc](Boxes/windows/Retired/breadcrumbs/README.md#PrivescHorizontal)|
+|<a href="https://app.hackthebox.eu/machines/Love"><img width="25" hight="25" alt="love" src="assets/love.webp"></a>|<span style="color:green">Easy</span>|[Love](Boxes/windows/Retired/love/README.md)|[File Upload](Boxes/windows/Retired/love/README.md#Footholdfile_upload)|[`AlwaysInstallElevated`](Boxes/windows/Retired/love/README.md#PrivescAlwaysInstallElevated)|
 
 
 
