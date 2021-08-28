@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.230 theNotebook.htb
+**IP-ADDR:** 10.10.10.230 theNotebook.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
@@ -18,9 +18,7 @@ PORT   STATE SERVICE VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-## Web server
-
-__web_page__
+**web server**
 
 ![](screenshots/web-fpage.png)
 
@@ -30,36 +28,36 @@ Registering with new account and notice cookie.
 
 ![](screenshots/jwt-auth.png)
 
-# Foothold:jwt_bypass
+# Foothold
 
-## [JWT](https://jwt.io/introduction/) bypass
+## JWT bypass
 
-* __Useful tool:__ 
+* **Useful tool:** 
   * [jwt_tool](https://github.com/ticarpi/jwt_tool)
   * [jwt-hack](https://github.com/hahwul/jwt-hack)
 
-* __Resources__
+* **Resources**
   * [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/JSON%20Web%20Token/README.md)
 * Online JWT Encoder – Decoder [jsonwebtoken.io](https://www.jsonwebtoken.io/)
 * Online jwt generator [jwtbuilder.jamiekurtz.com](https://jwt.io/)
 
 JWT authentication cookie is divided into three parts: header, payload, signatur. These values divided by `.`
 
-__JSON Web Token:__ `Base64(Header).Base64(Data).Base64(Signature)`
+**JSON Web Token:** `Base64(Header).Base64(Data).Base64(Signature)`
 
-* __Header:__ contain information about the JWT configuration.
-* __Data:__ used to store some users’ data.
-* __Signature:__ used to prevent data from being modified. The signature uses RS256 (RSA asymmetric encryption and private key signature) and HS256 (HMAC SHA256 symmetric encryption) algorithm.
+* **Header:** contain information about the JWT configuration.
+* **Data:** used to store some users’ data.
+* **Signature:** used to prevent data from being modified. The signature uses RS256 (RSA asymmetric encryption and private key signature) and HS256 (HMAC SHA256 symmetric encryption) algorithm.
 
 There are multiple ways to bypass [Vickie Li](https://twitter.com/vickieli7) show in his [medium blog](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)
 
-On this box we are doing __"KID manipulation"__ via __"SSRF"__
+On this box we are doing **"KID manipulation"** via **"SSRF"**
 
-__KID:__ it allows to specify the key to be used for verifying the token.
+**KID:** it allows to specify the key to be used for verifying the token.
 
-__Creating tampered jwt__
+**Creating tampered jwt**
 
-__Header__
+**Header**
 ```json
 {
   "typ": "JWT",
@@ -68,7 +66,7 @@ __Header__
 }
 ```
 
-__Data__
+**Data**
 ```json
 {
   "username": "test12",
@@ -92,7 +90,7 @@ then using hackbar to load tampered cookie
 
 ![](screenshots/hackbar-load.png)
 
-admin panel have file upload option which allowed any file to upload __reverse shell__ too.
+admin panel have file upload option which allowed any file to upload **reverse shell** too.
 
 ![](screenshots/file-upload.png)
 
@@ -100,13 +98,13 @@ upload php reverse shell get file name execute the file and get shell on the box
 
 ![](screenshots/web-shell.png)
 
-# Privesc:CVE-2019-5736
+# Privesc
 
 found home directory backup in the `/var/backups` folder which contains noah user home folder.
 
 ![](screenshots/back-rsa.png)
 
-## Root
+## Breaking Docker via runC
 
 User have sudo right to run `docker exec` as any user on the box with NOPASSWD.
 ```bash
@@ -118,7 +116,7 @@ User noah may run the following commands on thenotebook:
     (ALL) NOPASSWD: /usr/bin/docker exec -it webapp-dev01*
 ```
 
-__Docker version 18.06.0-ce, build 0ffa825__
+**Docker version 18.06.0-ce, build 0ffa825**
 
 searchsploit found exploit
 ```bash
@@ -137,11 +135,9 @@ noah@thenotebook:~$ ls -la /usr/sbin/runc
 -rwxr-xr-x 1 root root 7841912 Feb 18 13:45 /usr/sbin/runc
 ```
 
-__runc version 1.0.0~rc6+dfsg1__
+**runc version 1.0.0~rc6+dfsg1**
 
-### Exploit CVE-2019-5736
-
-* __[CVE-2019-5736](https://www.cvedetails.com/cve/CVE-2019-5736/):__ runc through 1.0-rc6, as used in Docker before 18.09.2 and other products, allows attackers to overwrite the host runc binary (and consequently obtain host root access) by leveraging the ability to execute a command as root within one of these types of containers: (1) a new container with an attacker-controlled image, or (2) an existing container, to which the attacker previously had write access, that can be attached with docker exec. This occurs because of file-descriptor mishandling, related to /proc/self/exe.
+* **[CVE-2019-5736](https://www.cvedetails.com/cve/CVE-2019-5736/):** runc through 1.0-rc6, as used in Docker before 18.09.2 and other products, allows attackers to overwrite the host runc binary (and consequently obtain host root access) by leveraging the ability to execute a command as root within one of these types of containers: (1) a new container with an attacker-controlled image, or (2) an existing container, to which the attacker previously had write access, that can be attached with docker exec. This occurs because of file-descriptor mishandling, related to /proc/self/exe.
 
 * [PoC by Frichetten@github](https://github.com/Frichetten/CVE-2019-5736-PoC)
 * [Exploit](https://www.exploit-db.com/exploits/46369)

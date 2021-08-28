@@ -1,13 +1,7 @@
 ![](Laboratory_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-# Scanning
-
-## Nmap
-
-`ports=$(nmap -Pn -p- --min-rate=1000 -T4 10.10.10.205 | grep open | awk -F / '{print $1}' ORS=',') echo $ports && nmap -p$ports -sV -sC -v -T2 -oA scans/nmap.full 10.10.10.205`
 
 # Scanning
 
@@ -29,10 +23,10 @@ PORT    STATE SERVICE  VERSION
 |_Not valid after:  2024-03-03T10:39:28
 ```
 
-* __Port_80__ redirect to `https://laboratory.htb/`
-* there is also a __[Subject Alternative Name](https://www.digicert.com/faq/subject-alternative-name.htm): DNS :__ `git.laboratory.htb`
+* **Port_80** redirect to `https://laboratory.htb/`
+* there is also a **[Subject Alternative Name](https://www.digicert.com/faq/subject-alternative-name.htm): DNS :** `git.laboratory.htb`
 * add both in `/etc/hosts` file
-* __Nothing__ in the `https://laboratory.htb/`
+* **Nothing** in the `https://laboratory.htb/`
 * `git.laboratory.htb` is a GitLab Instance.
 * `git.laboratory.htb` redirected to `https://git.laboratory.htb/users/sign_in`
 
@@ -45,22 +39,22 @@ PORT    STATE SERVICE  VERSION
 	  /robots.txt (Status: 200)
 
 * found `robots.txt`
-  * __robots.txt__ has some  `Disallow` directory
+  * **robots.txt** has some  `Disallow` directory
   * there is only one `allow` dir
 
 		  Allow: /users/sign_in
 
 * and the only allowed dir is `/users/sign_in` where `https://git.laboratory.htb` is redirected.
 
-* __Goto: sign_in__ page there is a register option to create a gitlab account, create a new account and login.
+* **Goto: sign_in** page there is a register option to create a gitlab account, create a new account and login.
 
 ## Gitlab
 
-running version on the server __GitLab Community Edition 12.8.1__
+running version on the server **GitLab Community Edition 12.8.1**
 
-__vulnerability :__ upto GitLab version <12.9.1 is vulnerable for __Arbitrary file read (Path Traversal) to RCE exploit__ by *getting `secret_key_base` from GitLab Instance using AFR and generate malicious payload cookie to get reverse shell*
+**vulnerability :** upto GitLab version <12.9.1 is vulnerable for **Arbitrary file read (Path Traversal) to RCE exploit** by *getting `secret_key_base` from GitLab Instance using AFR and generate malicious payload cookie to get reverse shell*
 
-__source of complete explotation :__ https://hackerone.com/reports/827052
+**source of complete explotation :** https://hackerone.com/reports/827052
 
 # User Exploit
 
@@ -77,7 +71,7 @@ __source of complete explotation :__ https://hackerone.com/reports/827052
     * The file will have been copied to the project
 
 
-__secret_key_base :__ `3231f54b33e0c1ce998113c083528460153b19542a70173b4458a21e845ffa33cc45ca7486fc8ebb6b2727cc02feea4c3adbe2cc7b65003510e4031e164137b3`
+**secret_key_base :** `3231f54b33e0c1ce998113c083528460153b19542a70173b4458a21e845ffa33cc45ca7486fc8ebb6b2727cc02feea4c3adbe2cc7b65003510e4031e164137b3`
 
 * generate malicious payload cookie
 
@@ -271,7 +265,7 @@ COMMANDS:
  +++ exited (status 0) +++
 ```
 
-* download binary in my local machine and open it in __ghidra__ and view the main function -
+* download binary in my local machine and open it in **ghidra** and view the main function -
 
 	  void main(void)
 
@@ -283,13 +277,13 @@ COMMANDS:
 	  return;
 	  }
 
-  * in the main function its running `chmod` but without specifing it's absolute path and use `$PATH` variable to determine it's path and here __path hijacking__ vulnerbility comes into play.
+  * in the main function its running `chmod` but without specifing it's absolute path and use `$PATH` variable to determine it's path and here **path hijacking** vulnerbility comes into play.
 
 # Root Exploit
 
 ## Path hijacking
 
-* __Referense:__ hackingarticles.in [article](https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/)
+* **Referense:** hackingarticles.in [article](https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/)
 
 * a simple bash script
 

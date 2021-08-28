@@ -1,11 +1,7 @@
 ![](cache-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-||
-|-----------|
-|Start with nmap found two ssh ports 22,2201 and web_server on port 80. from the server get some creds. After some bruteforcing wfuzz discover a __virtual host__. vHost is running __OprnEMR__ CMS and the running version is vulnerable for __Authenticated RCE__ and __sqli__ vulnerability. using sqli get some creds and then use the RCE to get shell as __www-data__ on the box and get the __User_flag__ from user `ash`. __Memcached__ is running in the local port 11211 and after dunp Memcache data get esclated user creds and that user is in the docker group. using the docker image to esclate to root user and get the __Root_flag__.|
 
 # Scanning
 
@@ -60,16 +56,16 @@ PORT     STATE SERVICE VERSION
 
 ## Google
 
-__Search :__ `openEMR`
+**Search :** `openEMR`
 
-__search results__
+**search results**
 
 * [OpenEMR](https://www.open-emr.org/) is a medical practice management software which also supports Electronic Medical Records. It is ONC Complete Ambulatory EHR certified and it features fully integrated electronic medical records, practice management for a medical practice, scheduling, and electronic billing.
 * 2018 openEMR releases are `5.0.1 to 5.0.1.6
 
-__search :__ `openEMR 5.0.1 - 5.0.1.6 vulnerabilities`
+**search :** `openEMR 5.0.1 - 5.0.1.6 vulnerabilities`
 
-__search results__
+**search results**
 
 * OpenEMR <= 5.0.1 - (Authenticated) Remote Code Execution, [ExploitDB](https://www.exploit-db.com/exploits/45161)
 - complete documentation on openEMR 5.0.1.3 vulnerabilities, [open-emr.org doc](https://www.open-emr.org/wiki/images/1/11/Openemr_insecurity.pdf)
@@ -77,11 +73,11 @@ __search results__
 
 # User Exploiting
 
-__*Tried the Authenticated RCE exploit with `ash` creds but it did not worked, after SQLi it helps so i keep it.*__
+**_Tried the Authenticated RCE exploit with `ash` creds but it did not worked, after SQLi it helps so i keep it._**
 
 ## SQLi
 
-__why__
+**why**
 *[From openEMR document](https://www.open-emr.org/wiki/images/1/11/Openemr_insecurity.pdf)*
 * An unauthenticated user is able to bypass the Patient Portal Login by simply navigating to the registration page and modifying the requested url
 * Some examples of pages in the portal directory that are accessible after browsing to the registration page include:
@@ -101,7 +97,7 @@ __why__
 
 * as document say from registration page we can modify these pages requests and access to the database using sql injection
 
-__how__
+**how**
 
 * navigating to the registration page
 * request for `hms.htb/portal/add_edit_event_user.php?eid=1`
@@ -109,8 +105,8 @@ __how__
 
 ### sqlmap
 
-* __Frist__, capture `hms.htb/portal/add_edit_event_user.php?eid=1` from `registration page` in burpSuite.
-* __Second__, than dump data using sqlmap tool,
+* **Frist**, capture `hms.htb/portal/add_edit_event_user.php?eid=1` from `registration page` in burpSuite.
+* **Second**, than dump data using sqlmap tool,
 
 	  sqlmap -r emr.req --dbs --batch
 	  sqlmap -r emr.req --dbs --batch openemr --tables
@@ -133,7 +129,7 @@ __how__
 
 #### john
 
-__hash :__ `openemr_admin:$2a$05$l2sTLIG6GTBeyBf7TAKL6.ttEwJDmxs9bI6LXqlfCpEcY6VF6P0B`
+**hash :** `openemr_admin:$2a$05$l2sTLIG6GTBeyBf7TAKL6.ttEwJDmxs9bI6LXqlfCpEcY6VF6P0B`
 
 `john -w=/usr/share/wordlists/rockyou.txt hash`
 ```

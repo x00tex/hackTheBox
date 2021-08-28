@@ -1,13 +1,13 @@
 ![](scriptKiddie_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.226 scriptKiddie.htb
+**IP-ADDR:** 10.10.10.226 scriptKiddie.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
@@ -21,23 +21,21 @@ PORT     STATE SERVICE VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-## Port 5000
-
-__Service:__ Werkzeug httpd 0.16.1 (Python 3.8.5)
+Port 5000 running Werkzeug httpd 0.16.1 (Python 3.8.5)
 
 ![](screenshots/web-page.png)
 
 * There is no command injection or lfi.
 * searchsploit and nmap don't have any known vulnerability.
 * msfvenom have a temlate option which is vulnerable.
-  * __Description:__ This module exploits a command injection vulnerability in Metasploit Framework's msfvenom payload generator when using a crafted APK file as an Android payload template. Affects Metasploit Framework <= 6.0.11 and Metasploit Pro <= 4.18.0. The file produced by this module is a relatively empty yet valid-enough APK file. To trigger the vulnerability, the victim user should do the following: `msfvenom -p android/<...> -x` 
+  * **Description:** This module exploits a command injection vulnerability in Metasploit Framework's msfvenom payload generator when using a crafted APK file as an Android payload template. Affects Metasploit Framework <= 6.0.11 and Metasploit Pro <= 4.18.0. The file produced by this module is a relatively empty yet valid-enough APK file. To trigger the vulnerability, the victim user should do the following: `msfvenom -p android/<...> -x` 
   * [CVE-2020-7384 Rapid7](https://www.rapid7.com/db/modules/exploit/unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection/)
     * msf module: `exploit/unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection`
   * [Exploit script](https://www.exploit-db.com/exploits/49491)
 
-# Foothold:command_injection
+# Foothold
 
-## msfvenom apk injection
+## Command Injection
 
 The command vulnerability is in step 2 of this process from [apk.rb#L194-L197](https://github.com/rapid7/metasploit-framework/blob/64695f1/lib/msf/core/payload/apk.rb#L194-L197). keytool is executed using the following command line:
 ```rb
@@ -61,7 +59,7 @@ This command string is passed to `Open3.popen3()` in [apk.rb#L29-L36](https://gi
   end
 ```
 
-This gives rise to a command injection vulnerability. If a crafted APK file has a signature with an __"Owner"__ field containing:
+This gives rise to a command injection vulnerability. If a crafted APK file has a signature with an **"Owner"** field containing:
 ```bash
 #A single quote (to escape the single-quoted string)
 #Followed by shell metacharacters
@@ -76,7 +74,7 @@ When that APK file is used as an msfvenom template, arbitrary commands can be ex
 
 ![](screenshots/template-injection.png)
 
-## Exploit
+### Exploit
 
 This is a command injection vulnerability. When user supply a template apk to msfvenom , it takes application read it's certificate and use cert's owner for resign apk but don't check for strings certificate.
 
@@ -105,7 +103,7 @@ and this apk execute arbitrary code in the server and give reverse shell
 
 ![](screenshots/get-shell.png)
 
-# Privesc:msfconsole_with_sudo
+# Privesc
 
 * Get shell as user "kid"
 * user "pwn" have a bash script that taking content from user "kid" home folder.

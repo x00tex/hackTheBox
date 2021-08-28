@@ -1,12 +1,13 @@
 ![](ready_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
-# Scanning
+# Enumeration
 
-## Nmap
+**IP-ADDR:** 10.10.10.220 ready.htb
 
+**nmap scan:**
 ```bash
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
@@ -24,17 +25,17 @@ PORT     STATE SERVICE VERSION
 |_http-trane-info: Problem with XML parsing of /evox/about
 ```
 
-# Foothold:gitlab_11.4.7_ssrf
+Port 5080 running service nginx http server
 
-## Port 5080
-
-__service:__ nginx http server
-
-Running gitlab instance __Version CE 11.4.7__ *get in help section after register with new user*
+Running gitlab instance **Version CE 11.4.7** *get in help section after register with new user*
 
 ![](screenshots/running-gitlab.png)
 
-Searching for exploit on exploitDB
+# Foothold
+
+## gitlab 11.4.7 ssrf
+
+Searching for gitlab exploit on exploitDB
 ```bash
 ❯ searchsploit gitlab 11.4.7
 ---------------------------------------------- ---------------------------------
@@ -49,7 +50,7 @@ GitLab 11.4.7 - Remote Code Execution (Authen | ruby/webapps/49257.py
 
 *liveoverflow explain in his [blog](https://liveoverflow.com/gitlab-11-4-7-remote-code-execution-real-world-ctf-2018/) AWA in youtube [video](https://youtu.be/LrLJuyAdoAg)*
 
-__Verify ssrf__
+**Verify ssrf**
 
 Using IPv6 address to bypass the filter on localhost.
 
@@ -85,7 +86,7 @@ Intercept "project import" request replace import url with paylad.
 
 ![](screenshots/rev_shell.png)
 
-# Privesc:docker_privileged_mode
+# Privesc
 
 * Inside docker container
 ```bash
@@ -113,12 +114,12 @@ Now running [deepce.sh](https://github.com/stealthcopter/deepce) script found Pr
 [+] Privileged Mode ......... Yes
 ```
 
-__Docker Privileged Mode:__
+## docker container with privileged
 
 * [Escaping Docker Privileged Containers by Vickie Li](https://betterprogramming.pub/escaping-docker-privileged-containers-a7ae7d17f5a1)
 * [hacktricks.xyz technique](https://book.hacktricks.xyz/linux-unix/privilege-escalation/docker-breakout#privileged-flag)
 
-__Root-0x1__
+**Root-0x1**
 
 Exploit docker Privileged Mode with deepce script
 ```bash
@@ -126,7 +127,7 @@ Exploit docker Privileged Mode with deepce script
 ```
 ![](screenshots/exploit-deepce.png)
 
-__Root-0x2__
+**Root-0x2**
 
 The `--privileged` (Privileged Mode) flag allows the container to have access to the host devices. So container root user can mount host.
 

