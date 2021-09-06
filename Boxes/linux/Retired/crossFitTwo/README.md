@@ -92,7 +92,7 @@ async def lets_talk():
         print(f"> {msg}")
 
 
-if **name** == "**main**":
+if __name__ == "__main__":
     try:
         if len(sys.argv) == 1:
             parser.print_help()
@@ -266,7 +266,7 @@ async def lets_talk():
         msg = await ws.recv()
         print(f"> {msg}")
 
-if **name** == "**main**":
+if __name__ == "__main__":
     try:
         if len(sys.argv) == 1:
             parser.print_help()

