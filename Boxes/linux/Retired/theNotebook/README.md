@@ -41,7 +41,7 @@ Registering with new account and notice cookie.
 * Online JWT Encoder – Decoder [jsonwebtoken.io](https://www.jsonwebtoken.io/)
 * Online jwt generator [jwtbuilder.jamiekurtz.com](https://jwt.io/)
 
-JWT authentication cookie is divided into three parts: header, payload, signatur. These values divided by `.`
+JWT authentication cookie is divided into three parts: header, payload, signature. These values divided by `.`
 
 **JSON Web Token:** `Base64(Header).Base64(Data).Base64(Signature)`
 
@@ -49,7 +49,7 @@ JWT authentication cookie is divided into three parts: header, payload, signatur
 * **Data:** used to store some users’ data.
 * **Signature:** used to prevent data from being modified. The signature uses RS256 (RSA asymmetric encryption and private key signature) and HS256 (HMAC SHA256 symmetric encryption) algorithm.
 
-There are multiple ways to bypass [Vickie Li](https://twitter.com/vickieli7) show in his [medium blog](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)
+There are multiple ways to bypass [Vickie Li](https://twitter.com/vickieli7) show in her [medium blog](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)
 
 On this box we are doing **"KID manipulation"** via **"SSRF"**
 
