@@ -141,7 +141,7 @@ However, if we have a `\x0b` (vertical tab) before the "chunked" string (note: `
 In this case, the `Transfer-Encoding` is not detected by HAProxy, and so the `Content-Length` is used. However, because the `Transfer-Encoding` remains in the request sent to the backend, it means that if a backend server manages to parse the `Transfer-Encoding` header and proceeds to treat the request as a TE encoded request, a desync could occur and the backend TCP socket could be poisoned. This could then lead to HTTP request smuggling.
 
 So if the backend server allowed `Transfer-Encoding` then backend server give priority to `Transfer-Encoding` header and terminate request at terminating chunk `0` and anything after that treated as second request.
-* connection must be `keep-alive`
+* If not worked then use connection as `keep-alive`
 
 ![](screenshots/haproxy-http-smuggling.png)
 
@@ -153,7 +153,7 @@ If everything goes well, our comment contians admin session cookie
 
 ![](screenshots/admin-cookie.png)
 
-Get admin cookie because while backend server waiting to complete 300 bytes of data of our request while frontend server forward another user's request to backend and this request concatenate to our request to complete 300 bytes. 
+Got admin cookie because while backend server waiting to complete 300 bytes of data of our request while frontend server forward another user's request to backend and this request concatenate to our request to complete 300 bytes. 
 
 And replacing sessoin cookie with admin cookie ge to the admin panel
 
@@ -202,11 +202,10 @@ This application is same, where we exploit http request smuggling in foothold.
 
 ![](screenshots/container-web-app.png)
 
-These containers' web application accessible on `172.17.0.1` with series of port from 6000-6015 on local host and on 5000 from remote And every container process 
+* Every container of this application is runnning some services that doing there parts(guessing)
 
-![](screenshots/container-process.png)
+  ![](screenshots/container-process.png)
 
-* Every container is ruynning some things that doing there part(guessing)
   * Running `/usr/local/bin/gunicorn` server.
   * Running `/home/haproxy/haproxy` server.
   * Executing `/home/bot/bot.py` which give us admin token from http smuggling attack.
