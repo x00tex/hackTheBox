@@ -6,6 +6,14 @@
   <img align="float:right" alt="size" src="https://img.shields.io/github/repo-size/x00tex/hackTheBox">
 </p>
 
+**New retired box: [Explore](Boxes/android/Retired/explore/README.md)**
+
+## Android
+
+|Box|Difficulty|Writeup|Foothold|Privesc|
+|---|----------|-------|--------|-------|
+|<a href="https://app.hackthebox.eu/machines/Explore"><img width="25" hight="25" alt="explore" src="assets/explore.webp"></a>|<span style="color:green">Easy</span>|[Explore](Boxes/android/Retired/explore/README.md)|[ES Explorer CVE-2019–6447](Boxes/android/Retired/explore/README.md#es-file-explorer-open-port-vulnerability)|[`adb` Root](Boxes/android/Retired/explore/README.md#adb-root)|
+
 
 ## :penguin:*nix
 
