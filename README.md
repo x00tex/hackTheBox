@@ -6,9 +6,10 @@
   <img align="float:right" alt="size" src="https://img.shields.io/github/repo-size/x00tex/hackTheBox">
 </p>
 
-**New retired box: [Explore](Boxes/android/Retired/explore/README.md)**
+**New retired box:** [Seal](Boxes/linux/Retired/seal/README.md)
 
-## Android
+
+## <img width="20" hight="20" src="assets/android.png"> Android
 
 |Box|Difficulty|Writeup|Foothold|Privesc|
 |---|----------|-------|--------|-------|
@@ -30,6 +31,7 @@
 |<a href="https://app.hackthebox.eu/machines/Ready"><img width="25" hight="25" alt="ready" src="assets/ready.webp"></a>|<span style="color:orange">Medium</span>|[Ready](Boxes/linux/Retired/ready/README.md)|[gitlab <11.4.8 SSRF via IPv6](Boxes/linux/Retired/ready/README.md#gitlab-1148-ssrf-via-ipv6) And [redis server RCE](Boxes/linux/Retired/ready/README.md#new-line-injection-to-exploit-internal-redis-server)|[docker container with `--privileged`](Boxes/linux/Retired/ready/README.md#docker-container-with-privileged)|
 |<a href="https://app.hackthebox.eu/machines/Schooled"><img width="25" hight="25" alt="schooled" src="assets/schooled.webp"></a>|<span style="color:orange">Medium</span>|[Schooled](Boxes/linux/Retired/schooled/README.md)|[Moodle LMS Enumeration](Boxes/linux/Retired/schooled/README.md#moodle-lms-enumeration) And [XSS in "Moodle"](Boxes/linux/Retired/schooled/README.md#xss-in-moodle) And [Privilege Escalation in "Moodle"](Boxes/linux/Retired/schooled/README.md#privilege-escalation-in-moodle) And [Moodle Admin RCE](Boxes/linux/Retired/schooled/README.md#moodle-admin-rce)|[`pkg` with sudo](Boxes/linux/Retired/schooled/README.md#pkg-with-sudo)|
 |<a href="https://app.hackthebox.eu/machines/ScriptKiddie"><img width="25" hight="25" alt="scriptKiddie" src="assets/scriptKiddie.webp"></a>|<span style="color:green">Easy</span>|[scriptKiddie](Boxes/linux/Retired/scriptKiddie/README.md)|[command injection](Boxes/linux/Retired/scriptKiddie/README.md#command-injection)|[`msfconsole` with sudo](Boxes/linux/Retired/scriptKiddie/README.md#msfconsole-with-sudo)|
+|<a href="https://app.hackthebox.eu/machines/Seal"><img width="25" hight="25" alt="seal" src="assets/seal.webp"></a>|<span style="color:orange">Medium</span>|[Seal](Boxes/linux/Retired/seal/README.md)|[server's url Parser Logic](Boxes/linux/Retired/seal/README.md#server-url-parser-logic)|[`ansible-playbook` Command with sudo](Boxes/linux/Retired/seal/README.md#ansible-playbook-command-with-sudo)|
 |<a href="https://app.hackthebox.eu/machines/Sink"><img width="25" hight="25" alt="sink" src="assets/sink.webp"></a>|<span style="color:red">INSANE :warning:</span>|[Sink](Boxes/linux/Retired/sink/README.md)|[http Request Smuggling](Boxes/linux/Retired/sink/README.md#http-request-smuggling)|[AWS secretsmanager](Boxes/linux/Retired/sink/README.md#aws-secretsmanager) And [AWS kms decrypt](Boxes/linux/Retired/sink/README.md#aws-kms-decrypt)|
 |<a href="https://app.hackthebox.eu/machines/Spectra"><img width="25" hight="25" alt="spectra" src="assets/spectra.webp"></a>|<span style="color:green">Easy</span>|[Spectra](Boxes/linux/Retired/spectra/README.md)|[wpadmin reverse shell](Boxes/linux/Retired/spectra/README.md#wpadmin-reverse-shell)|[`initctl` with sudo](Boxes/linux/Retired/spectra/README.md#initctl-with-sudo)|
 |<a href="https://app.hackthebox.eu/machines/Spider"><img width="25" hight="25" alt="spider" src="assets/spider.webp"></a>|<span style="color:red">HARD</span>|[Spider](Boxes/linux/Retired/spider/README.md)|[SSTI](Boxes/linux/Retired/spider/README.md#ssti) And [SQLi in auth token](Boxes/linux/Retired/spider/README.md#sqli-in-auth-token) And [Blind restricted SSTI](Boxes/linux/Retired/spider/README.md#blind-restricted-ssti)|[XXE to inject payload in auth token](Boxes/linux/Retired/spider/README.md#xxe-to-inject-payload-in-auth-token)|
@@ -46,7 +48,9 @@
 |<a href="https://app.hackthebox.eu/machines/Breadcrumbs"><img width="25" hight="25" alt="breadcrumbs" src="assets/breadcrumbs.webp"></a>|<span style="color:red">Hard</span>|[Breadcrumbs](Boxes/windows/Retired/breadcrumbs/README.md)|[LFI](Boxes/windows/Retired/breadcrumbs/README.md#lfi) And [File upload to RCE](Boxes/windows/Retired/breadcrumbs/README.md#file-upload-to-rce)|[Stickynotes backups](Boxes/windows/Retired/breadcrumbs/README.md#stickynotes-backups) And [sql injection: union](Boxes/windows/Retired/breadcrumbs/README.md#sql-injection)|
 |<a href="https://app.hackthebox.eu/machines/Love"><img width="25" hight="25" alt="love" src="assets/love.webp"></a>|<span style="color:green">Easy</span>|[Love](Boxes/windows/Retired/love/README.md)|[File upload to RCE](Boxes/windows/Retired/love/README.md#file-upload-to-rce)|[abusing `AlwaysInstallElevated` policy](Boxes/windows/Retired/love/README.md#abusing-alwaysinstallelevated-policy)|
 |<a href="https://app.hackthebox.eu/machines/Proper"><img width="25" hight="25" alt="proper" src="assets/proper.webp"></a>|<span style="color:red">Hard</span>|[Proper](Boxes/windows/Retired/proper/README.md)|[sql injection: blind](Boxes/windows/Retired/proper/README.md#sql-injection) And [RFI via SMB](Boxes/windows/Retired/proper/README.md#smb-connect-via-remote-file-inclusion) And [Race condition with inotify](Boxes/windows/Retired/proper/README.md#race-condition-with-inotify)|[](Boxes/windows/Retired/proper/README.md)|
-
+<!--
+|<a href="https://app.hackthebox.eu/machines/Pivotapi"><img width="25" hight="25" alt="pivotapi" src="assets/pivotapi.webp"></a>|<span style="color:red">INSANE :warning:</span>|[Pivotapi](Boxes/windows/Retired/pivotapi/README.md)|[](Boxes/windows/Retired/pivotapi/README.md)|[](Boxes/windows/Retired/pivotapi/README.md)|
+-->
 
 
 <details>
@@ -158,3 +162,7 @@
 ## issues
 
 - [ ] Grammatical/Spelling mistakes :sweat_smile:.
+
+## Disclaimer
+
+These are not complete walkthrough type writeups, only the technique which i used to pwn the box not the complete path of pwning the box.
