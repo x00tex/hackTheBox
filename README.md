@@ -6,7 +6,7 @@
   <img align="float:right" alt="size" src="https://img.shields.io/github/repo-size/x00tex/hackTheBox">
 </p>
 
-**New retired box:** [Seal](Boxes/linux/Retired/seal/README.md)
+**New retired box:** [BountyHunter](Boxes/linux/Retired/bountyHunter/README.md)
 
 
 ## <img width="20" hight="20" src="assets/android.png"> Android
@@ -21,6 +21,7 @@
 |Box|Difficulty|Writeup|Foothold|Privesc|
 |---|----------|-------|--------|-------|
 |<a href="https://app.hackthebox.eu/machines/Armageddon"><img width="25" hight="25" alt="armageddon" src="assets/armageddon.webp"></a>|<span style="color:green">Easy</span>|[armageddon](Boxes/linux/Retired/armageddon/README.md)|[Drupal property injection: Drupalgeddon 2](Boxes/linux/Retired/armageddon/README.md#drupal-property-injection-drupalgeddon-2)|[`snap install` with sudo](Boxes/linux/Retired/armageddon/README.md#snap-install-with-sudo)|
+|<a href="https://app.hackthebox.eu/machines/BountyHunter"><img width="25" hight="25" alt="bountyHunter" src="assets/bountyHunter.webp"></a>|<span style="color:green">Easy</span>|[BountyHunter](Boxes/linux/Retired/bountyHunter/README.md)|[xxe](Boxes/linux/Retired/bountyHunter/README.md#xxe)|[python script logic](Boxes/linux/Retired/bountyHunter/README.md#python-script-logic)|
 |<a href="https://app.hackthebox.eu/machines/Cap"><img width="25" hight="25" alt="cap" src="assets/cap.webp"></a>|<span style="color:green">Easy</span>|[Cap](Boxes/linux/Retired/cap/README.md)|[Parameter Manipulation](Boxes/linux/Retired/cap/README.md#parameter-manipulation) And [PCAP file analysis](Boxes/linux/Retired/cap/README.md#pcap-file-analysis)|[python with `setuid` capability](Boxes/linux/Retired/cap/README.md#python-with-setuid-capability)|
 |<a href="https://app.hackthebox.eu/machines/CrossFitTwo"><img width="25" hight="25" alt="CrossFitTwo" src="assets/crossFitTwo.webp"></a>|<span style="color:red">INSANE :warning:</span>|[CrossFitTwo](Boxes/linux/Retired/crossFitTwo/README.md)|[Websocket](Boxes/linux/Retired/crossFitTwo/README.md#websocket) And [SQL injection: blind/Union](Boxes/linux/Retired/crossFitTwo/README.md#sql-injection) And [DNS Hijacking](Boxes/linux/Retired/crossFitTwo/README.md#dns-hijacking) And [CSRF](Boxes/linux/Retired/crossFitTwo/README.md#csrf)|[Node module hijack](Boxes/linux/Retired/crossFitTwo/README.md#node-module-hijack) And [Yubikey](Boxes/linux/Retired/crossFitTwo/README.md#yubikey)|
 |<a href="https://app.hackthebox.eu/machines/Dynstr"><img width="25" hight="25" alt="Dynstr" src="assets/dynstr.webp"></a>|<span style="color:orange">Medium</span>|[Dynstr](Boxes/linux/Retired/dynstr/README.md)|[ISC BIND DNSserver](Boxes/linux/Retired/dynstr/README.md#isc-bind-dnsserver) And [Command Injection in Bind API](Boxes/linux/Retired/dynstr/README.md#command-injection-in-dyn-api)|[DNS pointer record(PTR)](Boxes/linux/Retired/dynstr/README.md#dns-pointer-recordptr) And [Wildcard in `cp` Command](Boxes/linux/Retired/dynstr/README.md#wildcard-in-cp-command)|
