@@ -199,7 +199,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
   * audit logs create by linux [auditclt](https://linux.die.net/man/8/auditctl) service.
 * **Note :** that audit logs store users commands inputs in `DATA` field in `hex` form.
 
-* I grep all `su` commands from `audit logs` and found some intresting data
+* I grep all `su` commands from `audit logs` and found some interesting data
 
 **Final result**
 

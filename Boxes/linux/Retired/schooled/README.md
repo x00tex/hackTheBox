@@ -90,7 +90,7 @@ from login page `http://moodle.schooled.htb/moodle/login/` get "create new accou
 
 than create student account with email `<username>@student.schooled.htb`
 
-Don't find anything intresting from student account. 
+Don't find anything interesting from student account. 
 
 ### version identifing
 

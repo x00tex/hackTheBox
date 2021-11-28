@@ -210,7 +210,7 @@ cat todo.txt
 ```bash
 -rw------- 1 root root 3368 Dec 22 12:01 .bash_history
 ```
-* and cat the `.bash_history` file found some intresting data - 
+* and cat the `.bash_history` file found some interesting data - 
 ```bash
 curl -s --unix-socket /var/run/docker.sock http://localhost/images/json
 ```

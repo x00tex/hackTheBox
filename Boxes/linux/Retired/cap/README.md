@@ -61,7 +61,7 @@ open it in wireshark and view `tcp.stream eq 3` which contains ftp traffic packe
 
 and get ftp creds: `nathan:Buck3tH4TF0RM3!`
 
-ftp have read access to file system but nothing intresting here.
+ftp have read access to file system but nothing interesting here.
 
 ![](screenshots/ftp-access.png)
 

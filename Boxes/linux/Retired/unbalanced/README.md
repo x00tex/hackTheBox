@@ -119,7 +119,7 @@ encfs_decrypt
 
 * Host is found in `squid.conf` and then i rewind that there a Squid http proxy service running on port 873 in the box.
 * i already add proxy in my browser and now found a host that can accessable from the proxy.
-  * i can access to `intranet.unbalanced.htb` from `squid-proxy` i set in the foxyproxy, but i don't find anything intresting in host web page.
+  * i can access to `intranet.unbalanced.htb` from `squid-proxy` i set in the foxyproxy, but i don't find anything interesting in host web page.
 
 ### [squid:CacheManager](https://wiki.squid-cache.org/Features/CacheManager)
 

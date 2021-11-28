@@ -288,7 +288,7 @@ if __name__ == "__main__":
 
 ### relayd
 
-While checking conf files, one intresting file found is httpd server.
+While checking conf files, one interesting file found is httpd server.
 
 * OpenBSD httpd server config file default path is `/etc/httpd.conf`
 

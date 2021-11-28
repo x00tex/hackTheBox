@@ -6,7 +6,7 @@
   <img align="float:right" alt="size" src="https://img.shields.io/github/repo-size/x00tex/hackTheBox">
 </p>
 
-**New retired box:** [BountyHunter](Boxes/linux/Retired/bountyHunter/README.md)
+**New retired box:** [Intelligence](Boxes/windows/Retired/intelligence/README.md)
 
 
 ## <img width="20" hight="20" src="assets/android.png"> Android
@@ -47,6 +47,7 @@
 |---|----------|-------|--------|-------|
 |<a href="https://app.hackthebox.eu/machines/Atom"><img width="25" hight="25" alt="atom" src="assets/atom.webp"></a>|<span style="color:orange">Medium</span>|[Atom](Boxes/windows/Retired/atom/README.md)|[Electron-Updater RCE](Boxes/windows/Retired/atom/README.md#electron-updater-rce)|[Kanban credentials Encryption Flaw](Boxes/windows/Retired/atom/README.md#kanban-credentials-encryption-flaw)|
 |<a href="https://app.hackthebox.eu/machines/Breadcrumbs"><img width="25" hight="25" alt="breadcrumbs" src="assets/breadcrumbs.webp"></a>|<span style="color:red">Hard</span>|[Breadcrumbs](Boxes/windows/Retired/breadcrumbs/README.md)|[LFI](Boxes/windows/Retired/breadcrumbs/README.md#lfi) And [File upload to RCE](Boxes/windows/Retired/breadcrumbs/README.md#file-upload-to-rce)|[Stickynotes backups](Boxes/windows/Retired/breadcrumbs/README.md#stickynotes-backups) And [sql injection: union](Boxes/windows/Retired/breadcrumbs/README.md#sql-injection)|
+|<a href="https://app.hackthebox.eu/machines/Intelligence"><img width="25" hight="25" alt="intelligence" src="assets/intelligence.webp"></a>|<span style="color:orange">Medium</span>|[Intelligence](Boxes/windows/Retired/intelligence/README.md)|[Enumeration](Boxes/windows/Retired/intelligence/README.md#enumeration) And [NTLM Relay Attack](Boxes/windows/Retired/intelligence/README.md#ntlm-relay-attack)|[BloodHound](Boxes/windows/Retired/intelligence/README.md#bloodhound) And [Reading GMSA Password](Boxes/windows/Retired/intelligence/README.md#reading-gmsa-password) And [Silver ticket Attack](Boxes/windows/Retired/intelligence/README.md#silver-ticket-attack)|
 |<a href="https://app.hackthebox.eu/machines/Love"><img width="25" hight="25" alt="love" src="assets/love.webp"></a>|<span style="color:green">Easy</span>|[Love](Boxes/windows/Retired/love/README.md)|[File upload to RCE](Boxes/windows/Retired/love/README.md#file-upload-to-rce)|[abusing `AlwaysInstallElevated` policy](Boxes/windows/Retired/love/README.md#abusing-alwaysinstallelevated-policy)|
 |<a href="https://app.hackthebox.eu/machines/Proper"><img width="25" hight="25" alt="proper" src="assets/proper.webp"></a>|<span style="color:red">Hard</span>|[Proper](Boxes/windows/Retired/proper/README.md)|[sql injection: blind](Boxes/windows/Retired/proper/README.md#sql-injection) And [RFI via SMB](Boxes/windows/Retired/proper/README.md#smb-connect-via-remote-file-inclusion) And [Race condition with inotify](Boxes/windows/Retired/proper/README.md#race-condition-with-inotify)|[](Boxes/windows/Retired/proper/README.md)|
 <!--
@@ -160,10 +161,7 @@
 </details>
 
 
-## issues
-
-- [ ] Grammatical/Spelling mistakes :sweat_smile:.
-
 ## Disclaimer
 
-These are not complete walkthrough type writeups, only the technique which i used to pwn the box not the complete path of pwning the box.
+* These are not complete walkthrough type writeups, only the technique which i used to pwn the box not the complete path of pwning the box.
+* Grammatical/Spelling mistakes.

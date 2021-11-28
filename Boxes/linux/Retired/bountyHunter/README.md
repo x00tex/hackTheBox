@@ -31,7 +31,7 @@ This page takes users input and send it in xml form as base64 encoded strings.
 
 ![](screenshots/xml-data.png)
 
-From gobuster found a intresting file.
+From gobuster found a interesting file.
 ```bash
 gobuster dir -u "http://10.10.11.100" -w /usr/share/seclists/Discovery/Web-Content/raft-small-files-lowercase.txt
 

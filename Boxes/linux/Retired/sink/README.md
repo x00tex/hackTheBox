@@ -45,7 +45,7 @@ PORT     STATE SERVICE VERSION
 * Port 5000 is running "gunicorn/20.0.0" server.
 * Gitea running Version: 1.12.6
 * There is no signup option in gitea.
-* Only intresting thing found is, user "root" contributions but can not see them
+* Only interesting thing found is, user "root" contributions but can not see them
 
   ![](screenshots/root-contributions.png)
 
@@ -176,7 +176,7 @@ With `root:FaH@3L>Z3})zzfQ3` creds logged in successfully and found some reposit
 
 ![](screenshots/root-repos.png)
 
-__Some intresting Information collected from these repositories:__
+__Some interesting Information collected from these repositories:__
 
 * Got ssh key for user "marcus" from http://10.10.10.225:3000/root/Key_Management/commit/b01a6b7ed372d154ed0bc43a342a5e1203d07b1e commit in root's "Key_Management" repository.
 

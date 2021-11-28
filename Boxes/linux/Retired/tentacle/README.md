@@ -390,7 +390,7 @@ and ssh to "admin" with user "j.nakazawa" token
 
 ## kadmin
 
-Runing linpeas from "admin" found some intresting kerberos information.
+Runing linpeas from "admin" found some interesting kerberos information.
 
 Found [kadmin](https://web.mit.edu/kerberos/krb5-1.12/doc/admin/admin_commands/kadmin_local.html) utility
 ```bash

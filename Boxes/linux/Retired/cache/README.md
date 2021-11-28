@@ -23,7 +23,7 @@ PORT     STATE SERVICE VERSION
 
 	  functionality.js
 
-* going to `functionality.js` revels some intresting data
+* going to `functionality.js` revels some interesting data
 
 	  ...
 	  if(Password != 'H@v3_fun')

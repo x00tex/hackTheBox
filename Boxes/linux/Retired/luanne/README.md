@@ -136,7 +136,7 @@ Session completed
 
 ## Enumeration
 
-* login to port 80 worked but nothing intresting there,
+* login to port 80 worked but nothing interesting there,
 * and login to port 9001 not working.
 * home direcotry have a `r.michaels` user directory and r.michaels is a user -
 

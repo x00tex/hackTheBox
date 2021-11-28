@@ -39,7 +39,7 @@ python es_poc.py --cmd getDeviceInfo --ip 10.10.10.247
 
 ![](screenshots/es-poc.png)
 
-while exploring ES File Explorer server commands found an intresting file with `listPics` 
+while exploring ES File Explorer server commands found an interesting file with `listPics` 
 
 ![](screenshots/creds-in-img.png)
 

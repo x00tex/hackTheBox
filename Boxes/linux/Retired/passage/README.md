@@ -76,7 +76,7 @@ PORT   STATE SERVICE VERSION
 
     ![](screenshots/owned-by-root.png)
 
-* searching about these files find something intresting about USBCreator [here](https://unit42.paloaltonetworks.com/usbcreator-d-bus-privilege-escalation-in-ubuntu-desktop/)
+* searching about these files find something interesting about USBCreator [here](https://unit42.paloaltonetworks.com/usbcreator-d-bus-privilege-escalation-in-ubuntu-desktop/)
 
   * flaw in the USBCreator D-Bus interface which:
 

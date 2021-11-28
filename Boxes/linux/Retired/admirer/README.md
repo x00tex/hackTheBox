@@ -198,7 +198,7 @@ dump.sql  html.tar.gz
 
 	  SELECT * from ladmirer.test;
 	
-	**_intresting data inside dump_**
+	**_interesting data inside dump_**
 
 	  $servername = \"localhost\";
 	  $username = \"waldo\";

@@ -80,7 +80,7 @@ Extract flask auth token secret key with ssti than exploit sql inection in auth 
 
 ## SSTI
 
-After login, get extra option "User information" which show user information and intresting thing is that these input fields are readonly
+After login, get extra option "User information" which show user information and interesting thing is that these input fields are readonly
 
 ![](screenshots/readonly-input.png)
 
@@ -148,7 +148,7 @@ Directory `/a1836bb97e5f4ce6b3e8f25693c1a16c.unfinished.supportportal` takes to 
 
 ![](screenshots/support-forum.png)
 
-"Contact number or email" field throughing some intresting error that relate to SSTI
+"Contact number or email" field throughing some interesting error that relate to SSTI
 
 ![](screenshots/fourm-error1.png)
 
@@ -224,7 +224,7 @@ chivato:rghorsfruUEFHEfhes83214
 
 ![](screenshots/port-forward.png)
 
-There is nothing intresting on wepapp expect the "cookie"
+There is nothing interesting on wepapp expect the "cookie"
 
 ![](screenshots/game-cookie.png)
 

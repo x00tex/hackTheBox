@@ -74,7 +74,7 @@ Intercept search request in the burpsuite and found extra parameter in the searc
 
 ![](screenshots/intercept-search.png)
 
-Changing the method value to 1 give an intresting error.
+Changing the method value to 1 give an interesting error.
 
 ![](screenshots/wepapp-method.png)
 

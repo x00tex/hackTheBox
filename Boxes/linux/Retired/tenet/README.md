@@ -67,7 +67,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
       ❯ curl 10.10.10.223/users.txt
       Success
 
-* move on to wordpress, I ran wpscan on wordpress but there is nothing intresting in the wpsacn result and the wordpress version is `5.6` UP-TO-DATE.
+* move on to wordpress, I ran wpscan on wordpress but there is nothing interesting in the wpsacn result and the wordpress version is `5.6` UP-TO-DATE.
 
 
 # Foothold:php_object-injection

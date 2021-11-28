@@ -41,7 +41,7 @@ webserver is running **[LiteCart](https://www.litecart.net/en/) CMS** - A free o
 
 * Found a tar archive
 * this file contains the backup of the webserver.
-* after some time enumerating the backup i found some intresting data.
+* after some time enumerating the backup i found some interesting data.
 
 * in the `includes/config.inc.php` [file] found a password hash and database configuration -
 
@@ -259,7 +259,7 @@ uid=111(mysql) gid=113(mysql) groups=113(mysql)
 
 * **[pam_unix](https://linux.die.net/man/8/pam_unix):** It uses standard calls from the system's libraries to retrieve and set account information as well as authentication. Usually this is obtained from the /etc/passwd and the /etc/shadow file as well if shadow is enabled.
 
-* one intresting thing i found while searching about this file is that this file also used in persistence compromised attack where attacker modified the file and backdoored it with a master password to access root witout any interruption and i also found a script for this at  [zephrax@github](https://github.com/zephrax/linux-pam-backdoor)
+* one interesting thing i found while searching about this file is that this file also used in persistence compromised attack where attacker modified the file and backdoored it with a master password to access root witout any interruption and i also found a script for this at  [zephrax@github](https://github.com/zephrax/linux-pam-backdoor)
 
 
 # Root Privesc

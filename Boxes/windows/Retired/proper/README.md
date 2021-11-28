@@ -18,7 +18,7 @@ PORT   STATE SERVICE VERSION
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 ```
 
-Intresting javascript code snippet in `/index.html`
+interesting javascript code snippet in `/index.html`
 
 ![](screenshots/javascript-in-index.png)
 
