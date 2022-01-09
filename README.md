@@ -6,7 +6,7 @@
   <img align="float:right" alt="size" src="https://img.shields.io/github/repo-size/x00tex/hackTheBox">
 </p>
 
-**New retired box:** -
+**New retired box:** [Previse](Boxes/linux/Retired/previse/README.md)
 
 
 ## <img width="20" hight="20" src="assets/android.png"> Android
@@ -30,6 +30,7 @@
 |<a href="https://app.hackthebox.eu/machines/Ophiuchi"><img width="25" hight="25" alt="ophiuchi" src="assets/ophiuchi.webp"></a>|<span style="color:orange">Medium</span>|[ophiuchi](Boxes/linux/Retired/ophiuchi/README.md)|[SnakeYAML Deserilization](Boxes/linux/Retired/ophiuchi/README.md#snakeyaml-deserilization)|[wasm reversing](Boxes/linux/Retired/ophiuchi/README.md#wasm-reversing)|
 |<a href="https://app.hackthebox.eu/machines/Pikaboo"><img width="25" hight="25" alt="pikaboo" src="assets/pikaboo.webp"></a>|<span style="color:red">Hard</span>|[Pikaboo](Boxes/linux/Retired/pikaboo/README.md)|[URL parser logic in nginx server](Boxes/linux/Retired/pikaboo/README.md#url-parser-logicdirectory-traversal-in-nginx) And [lfi to RCE via ftp log](Boxes/linux/Retired/pikaboo/README.md#lfi)|[Perl jam: Command Injection](Boxes/linux/Retired/pikaboo/README.md#perl-command-injection)|
 |<a href="https://app.hackthebox.eu/machines/Pit"><img width="25" hight="25" alt="pit" src="assets/pit.webp"></a>|<span style="color:orange">Medium</span>|[Pit](Boxes/linux/Retired/pit/README.md)|[SNMP Enumeration](Boxes/linux/Retired/pit/README.md#snmp-enumeration) And [Login Form Bruteforce with hydra](Boxes/linux/Retired/pit/README.md#login-form-bruteforce-with-hydra) And [SeedDMS RCE](Boxes/linux/Retired/pit/README.md#seeddms-rce)|[Access control list(ACL)](Boxes/linux/Retired/pit/README.md#access-control-listacl) And [SNMP Extend Command](Boxes/linux/Retired/pit/README.md#snmp-extend-command)|
+|<a href="https://app.hackthebox.eu/machines/Previse"><img width="25" hight="25" alt="previse" src="assets/previse.webp"></a>|<span style="color:green">Easy</span>|[Previse](Boxes/linux/Retired/previse/README.md)|[Blind Command Injection](Boxes/linux/Retired/previse/README.md#blind-command-injection)|[Absolute Path Injection](Boxes/linux/Retired/previse/README.md#absolute-path-injection)|
 |<a href="https://app.hackthebox.eu/machines/Ready"><img width="25" hight="25" alt="ready" src="assets/ready.webp"></a>|<span style="color:orange">Medium</span>|[Ready](Boxes/linux/Retired/ready/README.md)|[gitlab <11.4.8 SSRF via IPv6](Boxes/linux/Retired/ready/README.md#gitlab-1148-ssrf-via-ipv6) And [redis server RCE](Boxes/linux/Retired/ready/README.md#new-line-injection-to-exploit-internal-redis-server)|[docker container with `--privileged`](Boxes/linux/Retired/ready/README.md#docker-container-with-privileged)|
 |<a href="https://app.hackthebox.eu/machines/Schooled"><img width="25" hight="25" alt="schooled" src="assets/schooled.webp"></a>|<span style="color:orange">Medium</span>|[Schooled](Boxes/linux/Retired/schooled/README.md)|[Moodle LMS Enumeration](Boxes/linux/Retired/schooled/README.md#moodle-lms-enumeration) And [XSS in "Moodle"](Boxes/linux/Retired/schooled/README.md#xss-in-moodle) And [Privilege Escalation in "Moodle"](Boxes/linux/Retired/schooled/README.md#privilege-escalation-in-moodle) And [Moodle Admin RCE](Boxes/linux/Retired/schooled/README.md#moodle-admin-rce)|[`pkg` with sudo](Boxes/linux/Retired/schooled/README.md#pkg-with-sudo)|
 |<a href="https://app.hackthebox.eu/machines/ScriptKiddie"><img width="25" hight="25" alt="scriptKiddie" src="assets/scriptKiddie.webp"></a>|<span style="color:green">Easy</span>|[scriptKiddie](Boxes/linux/Retired/scriptKiddie/README.md)|[command injection](Boxes/linux/Retired/scriptKiddie/README.md#command-injection)|[`msfconsole` with sudo](Boxes/linux/Retired/scriptKiddie/README.md#msfconsole-with-sudo)|
@@ -166,5 +167,5 @@
 
 ## Disclaimer
 
-* These are not complete walkthrough type writeups, only the technique which i used to pwn the box not the complete path of pwning the box.
+* These write up are based on someone's learning processes, who's constantly learning.
 * Grammatical/Spelling mistakes.
