@@ -1,0 +1,4 @@
+csrfmiddlewaretoken=csrf-token
+login=admin
+password=SuperSecurePassword@HTB2021
+

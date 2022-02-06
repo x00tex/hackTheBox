@@ -260,4 +260,4 @@ echo poorduck > header.inc; inotifywait -e close header.inc; inotifywait -e open
 - [ ] [EoP - Privileged File Write](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#eop---privileged-file-write)
 
 * [0xdf writeup](https://0xdf.gitlab.io/2021/08/21/htb-proper.html#shell-as-root)
-* [ippsec video](https://www.youtube.com/watch?v=yqNSTM9oGZE)
+* [ippsec video](https://www.youtube.com/watch?v=yqNSTM9oGZE&t=2920s)
