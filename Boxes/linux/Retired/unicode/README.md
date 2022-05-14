@@ -192,7 +192,7 @@ import re
 import netifaces as ni
 # from os import getcwd
 
-host = 'http://hackmedia.htb'  # **IMPORTANT** add "10.10.11.126 hackmedia.htb" in python "/etc/hosts" file.
+host = 'http://hackmedia.htb'  # **IMPORTANT** add "10.10.11.126 hackmedia.htb" in "/etc/hosts" file.
 files_path = '.'  # getcwd()
 ip = ni.ifaddresses('tun0')[ni.AF_INET][0]['addr']
 jwks_serv_ip = ip
@@ -316,9 +316,9 @@ to make it easy we can encode `︰` in base64 and after pasting in burp decode b
 
 from nginx config file found about `db.yaml`
 
-s![](screenshots/nginx-config.png)
+![](screenshots/nginx-config.png)
 
-And, From `db.yaml` get user creds.
+And, From `db.yaml` got user creds.
 
 ![](screenshots/user-creds.png)
 
