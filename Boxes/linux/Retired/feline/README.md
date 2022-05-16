@@ -1,6 +1,6 @@
 ![](feline_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -34,7 +34,7 @@ PORT     STATE SERVICE VERSION
 /opt/samples/uploads
 ```
 
-* get the error but dont't know what to do with it and don't find anythng else so i review tomcat 9 security reports to find anything relatesd to this error : https://tomcat.apache.org/security-9.html
+* get the error but don't know what to do with it and don't find anything else so i review tomcat 9 security reports to find anything related to this error : https://tomcat.apache.org/security-9.html
 
 * notice one fixed issue
 
@@ -44,7 +44,7 @@ PORT     STATE SERVICE VERSION
 
 * and why this, because it's point clearly says that - **an attacker is able to control the contents and name of a file on the server**
 
-**vulnerability:** Apache Tomcat RCE by deserialization, **[redtimmy.com Article](https://www.redtimmy.com/apache-tomcat-rce-by-deserialization-cve-2020-9484-write-up-and-exploit/)**
+**vulnerability:** Apache Tomcat RCE by de-serialization, **[redtimmy.com Article](https://www.redtimmy.com/apache-tomcat-rce-by-deserialization-cve-2020-9484-write-up-and-exploit/)**
 
 ## Exploit surface
 
@@ -52,11 +52,11 @@ PORT     STATE SERVICE VERSION
 
 1. The `PersistentManager` is enabled and it’s using a `FileStore`
 2. The attacker is able to upload a file with **arbitrary content**, has control over the filename and knows the location where it is uploaded
-3. There are gadgets in the `classpath` that can be used for a Java deserialization attack
+3. There are gadgets in the `classpath` that can be used for a Java de-serialization attack
 
 **Attack**
 
-using a specifically crafted request, the attacker will be able to trigger remote code execution via deserialization of the file under their control.
+using a specifically crafted request, the attacker will be able to trigger remote code execution via de-serialization of the file under their control.
 
 **exploit**
 
@@ -66,7 +66,7 @@ using a specifically crafted request, the attacker will be able to trigger remot
   * It will first check if it has that session in memory.
   * It does not. But the currently running Manager is a `PersistentManager`, so it will also check if it has the session on **disk**.
   * It will check at location directory + sessionid + ".session", which evaluates to `./session/../../../../../../opt/samples/uploads/anything.session`
-    * And here we need create create a malicious Java Runtime Environment serialized Object and upload as `.session` extention to exploit unsafe Java object deserialization vulnerability because when requesting it from `JSESSIONID` as cookie, `PersistentManager` check for session cookie in the disk and cookies are store with `.session` extention.
+    * And here we need create create a malicious Java Runtime Environment serialized Object and upload as `.session` extension to exploit unsafe Java object de-serialization vulnerability because when requesting it from `JSESSIONID` as cookie, `PersistentManager` check for session cookie in the disk and cookies are store with `.session` extension.
 
   * If the file exists, it will deserialize it and parse the session information from it
 

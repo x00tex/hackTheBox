@@ -71,7 +71,7 @@ Back to web application, if user parse invalid tag `!foo`, rather than giving se
 
 `snakeYAML` is a marshaling library in JAVA.
 
-There is a slight [diffrence between Marshaling and serialization](https://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling)
+There is a slight [difference between Marshaling and serialization](https://stackoverflow.com/questions/770474/what-is-the-difference-between-serialization-and-marshaling)
 
 * Marshaling and serialization are loosely synonymous in the context of remote procedure call, but semantically different as a matter of intent. In particular, marshaling is about getting parameters from here to there, while serialization is about copying structured data to or from a primitive form such as a byte stream.
 
@@ -173,11 +173,11 @@ User admin may run the following commands on ophiuchi:
 
 **[wasmer-go](https://github.com/wasmerio/wasmer-go)** is A complete and mature WebAssembly runtime for Go.
 
-Reviewing `index.go` First thing notice is that script intracting with two exteranl file but not using these file absolute path.
+Reviewing `index.go` First thing notice is that script interacting with two external file but not using these file absolute path.
 
 ![](screenshots/index-go.png)
 
-rather than binaries if script not use absolute path when invoke any file from specific directory it is error out and not use env varibales to find the file.
+rather than binaries if script not use absolute path when invoke any file from specific directory it is error out and not use env variables to find the file.
 
 If user execute `index.go` from outside `/opt/wasm-functions` directory it error-out.
 
@@ -192,7 +192,7 @@ sudo -u root /usr/bin/go run /opt/wasm-functions/index.go
 
 ![](screenshots/still-something.png)
 
-executed successfully but there is something else that stoping script from executing `deploy.sh`.
+executed successfully but there is something else that stopping script from executing `deploy.sh`.
 
 **Checking main function**
 ```go

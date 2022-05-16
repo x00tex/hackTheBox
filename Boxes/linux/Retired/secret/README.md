@@ -33,13 +33,13 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ## Webapp source code review
 
-Download the source code and audit them. The esist way to audit node application is, Go to app directory and run `npm audit` and it will show if there is any out-dated or vulnerable dependency used in the application.
+Download the source code and audit them. The easiest way to audit node application is, Go to app directory and run `npm audit` and it will show if there is any out-dated or vulnerable dependency used in the application.
 
 ![](screenshots/npm-audit.png)
 
 And right of the bat we found a high/critical Severity vulnerability in dependency that is used in this application. But none of these vulnerability are useful in this scenario. Moving on and reviewing source code.
 
-Ater testing and reviewing source code 
+After testing and reviewing source code 
 
 * Application have API based Authentication.
 * This Authentication system uses jwt token.
@@ -50,7 +50,7 @@ Ater testing and reviewing source code
 
   ![](screenshots/env-file.png)
 
-* Then there is a `.git` direcotry in the zip file
+* Then there is a `.git` directory in the zip file
   
   ![](screenshots/git-dir.png)
 
@@ -69,7 +69,7 @@ reverting git commit back to 2 commits and got the secret token from `.env` file
 
     ![](screenshots/priv-route.png)
 
-And finally, This lead to commnad injection by creating jwt token with admin's username from `/log` endpoint.
+And finally, This lead to command injection by creating jwt token with admin's username from `/log` endpoint.
 
 ![](screenshots/command-injection.png)
 
@@ -104,12 +104,12 @@ except TypeError as e:
 
 ## Core dump
 
-There is a suid bianry in `/opt` directory. This binary counts the words/directory from given path. binary source code also available in the same direcotry in `code.c` file.
+There is a suid binary in `/opt` directory. This binary counts the words/directory from given path. binary source code also available in the same directory in `code.c` file.
 
 ![](screenshots/count-suid.png)
 
 
-Read thorugh the code, in the main function after reading the file, function is enabling coredump with "PR_SET_DUMPABLE".
+Read thorough the code, in the main function after reading the file, function is enabling coredump with "PR_SET_DUMPABLE".
 
 ![](screenshots/binary-source.png)
 
@@ -118,7 +118,7 @@ Read thorugh the code, in the main function after reading the file, function is 
 
 * above binary is a suid binary and Linux disables core dumps for setuid programs.
 * The memory of a setuid program might (is likely to, even) contain confidential data.
-* For enabling coredump in suid bianry
+* For enabling coredump in suid binary
   * Enable setuid core dumps in general by setting the `fs.suid_dumpable` sysctl to `2`, e.g. with `echo 2 >/proc/sys/fs/suid_dumpable`. (Note: `2`, not `1`; `1` means “I'm debugging the system as a whole and want to remove all security”.)
   * Call **`prctl(PR_SET_DUMPABLE, 1)`** from the program.
 * And final, To dump core memory in a file the "core file size" limit is set to more than 0 or unlimited. this can be set with `ulimit` command with `-c` flag.
@@ -140,7 +140,7 @@ Now to next thing is, this binary is is dropping user privileges before setting 
 
 ![](screenshots/drop-privs.png)
 
-* If bianry is owned by root but dropped his privilege while executing before calling coredump. This cause dumped file owned by that low privilege user.
+* If binary is owned by root but dropped his privilege while executing before calling coredump. This cause dumped file owned by that low privilege user.
 
 I done the 2 tests in my test environment and check if core file dropped the permissions if binary dropped his permission before enabling coredump.
 
@@ -149,11 +149,11 @@ I done the 2 tests in my test environment and check if core file dropped the per
 
 ### force coredump
 
-Next this is to force bianry to dumped core memory.
+Next this is to force binary to dumped core memory.
 
-In normal case, if we `kill` or `ctrl+c` bianry, it might exit quietly without any error and there for no core mmmory to dump.
+In normal case, if we `kill` or `ctrl+c` binary, it might exit quietly without any error and there for no core memory to dump.
 
-But in the `kill` command there are some signals that caused a bianry to drop core momory. check [signal man page](https://man7.org/linux/man-pages/man7/signal.7.html) ;**[source of this information](https://stackoverflow.com/questions/979141/how-to-programmatically-cause-a-core-dump-in-c-c)**
+But in the `kill` command there are some signals that caused a binary to drop core memory. check [signal man page](https://man7.org/linux/man-pages/man7/signal.7.html) ;**[source of this information](https://stackoverflow.com/questions/979141/how-to-programmatically-cause-a-core-dump-in-c-c)**
 
 ![](screenshots/kill-signals.png)
 
@@ -179,7 +179,7 @@ now saving crash file with apport:
 
 If any process in the system dies due to a signal that is commonly referred to as a 'crash' (segmentation violation, bus error, floating point exception, etc.), or e.g. a packaged Python application raises an uncaught exception, the apport backend is automatically invoked. It produces an initial crash report in a file in `/var/crash/` (the file name is composed from the name of the crashed executable and the user id).
 
-That means in target box we can find the coredump in `/var/crash/` in the bianry's crash report.
+That means in target box we can find the coredump in `/var/crash/` in the binary's crash report.
 
 but how this is helpful in privilege escalation.
 
@@ -193,7 +193,7 @@ gdb ./executable core
 (gdb) bt #view the backtrace
 ```
 
-for apport crash report, use `apport-unpack` unility.
+for apport crash report, use `apport-unpack` utility.
 
 ```bash
 apport-unpack /var/crash/binary.crash unpackPath
@@ -213,11 +213,11 @@ or open with `strings` command to display readable text from the core file.
 
 here is the thing with coredump file that This file contains the memory, register values, and the call stack of an application at the point of crashing.
 
-and our target bianry have root level access in the filesystem because of the suid ability and binary have `filecount` function which reads the file we specified.
+and our target binary have root level access in the filesystem because of the suid ability and binary have `filecount` function which reads the file we specified.
 
 ![](screenshots/read-file-path.png)
 
-and if we cause coredump before bianry exit. coredump must have the content of that file in the crash logs.
+and if we cause coredump before binary exit. coredump must have the content of that file in the crash logs.
 
 * box have tmux and all required tools, run tmux to get multiple terminals in the same sessions.
 

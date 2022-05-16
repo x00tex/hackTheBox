@@ -66,7 +66,7 @@ PORT      STATE SERVICE       VERSION
 
 ## WebApp
 
-webapp have a search option which seach book in the database.
+webapp have a search option which search book in the database.
 
 ![](screenshots/webapp.png)
 
@@ -78,7 +78,7 @@ Changing the method value to 1 give an interesting error.
 
 ![](screenshots/wepapp-method.png)
 
-adding `book` post parameter and send the request and its value appere in the `file_get_contents` directory path.
+adding `book` post parameter and send the request and its value reflect in the `file_get_contents` directory path.
 
 ![](screenshots/add-book.png)
 
@@ -151,7 +151,7 @@ replacing `method` value to `1` return error from `\portal\authController.php`. 
 
 After reading `authController.php`, some things which i understand.
 
-1. There are two methods of login. `$_POST['method'] == 1` uses username and passowrd for **signup**. `$_POST['method'] == 0` use username and password for **login** and set php session cookie and jwt token.
+1. There are two methods of login. `$_POST['method'] == 1` uses username and password for **signup**. `$_POST['method'] == 0` use username and password for **login** and set php session cookie and jwt token.
 2. php session cookie generated manually from `cookie.php` file.
 
     ![](screenshots/cookie-code.png)
@@ -236,7 +236,7 @@ Loop Through all possible session IDs and when u get a positive hit, save that s
 
 ![](screenshots/file-upload.png)
 
-Than upload the file, intercept the request and change the file extention and forward that request. Go to `/portal/uploads/` and execute that php file.
+Than upload the file, intercept the request and change the file extension and forward that request. Go to `/portal/uploads/` and execute that php file.
 
 Here's my exploit script
 ```py
@@ -382,7 +382,7 @@ running strings over "plum.sqlite-wal" found "development" user's (looks like a)
 \id=fc0d8d70-055d-4870-a5de-d76943a68ea2 development: fN3)sN5Ee@g
 ```
 
-And passowrd work for ssh login
+And password work for ssh login
 
 ![](screenshots/ssh-dev.png)
 <!--development:fN3)sN5Ee@g-->
@@ -393,7 +393,7 @@ Download to local machine with smb
 
 ![](screenshots/smb-download-elf.png)
 
-open in ghidra, This bianry connecting to local server on port 1234 and retriving admin user password.
+open in ghidra, This binary connecting to local server on port 1234 and retrieving admin user password.
 
 ![](screenshots/elf-ghidra.png)
 

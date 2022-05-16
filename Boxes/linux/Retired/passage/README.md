@@ -1,6 +1,6 @@
 ![](passage_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -80,7 +80,7 @@ PORT   STATE SERVICE VERSION
 
   * flaw in the USBCreator D-Bus interface which:
 
-    Allows an attacker with access to a user in the sudoer group to bypass the password security policy imposed by the sudo program. The vulnerability allows an attacker to overwrite arbitrary files with arbitrary content, as root – without supplying a password. This trivially leads to elevated privileges, for instance, by overwriting the shadow file and setting a password for root.
+    Allows an attacker with access to a user in the sudoers group to bypass the password security policy imposed by the sudo program. The vulnerability allows an attacker to overwrite arbitrary files with arbitrary content, as root – without supplying a password. This trivially leads to elevated privileges, for instance, by overwriting the shadow file and setting a password for root.
 
 	* D-Bus is a messaging system that is a core system on many Linux systems, allowing for communications between processes running on the same system. This vulnerability is in how this process, interface mistakenly allows for an attacker to trigger it to do something unintended, arbitrary write as root.
 

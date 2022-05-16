@@ -25,7 +25,7 @@ PORT    STATE SERVICE     VERSION
 * There is a smb share but anonymous access is not allowed `//10.10.11.101/writer2_project	Mapping: DENIED, Listing: N/A`
 * **Enum4linux** found a user **`kyle`**
 
-Running **Gobuster** found **`/administrative`** and **`/static`** direcotry.
+Running **Gobuster** found **`/administrative`** and **`/static`** directory.
 
 `/administrative` have authentication bypass using sql injection
 ```sql
@@ -49,7 +49,7 @@ adding a stories also have url option in place of file upload.
 
 ![](screenshots/stories-url.png)
 
-Another direcotry `/static` which have file indexing. we can see our uploaded files in the `img` folder inside `static` direcotry. 
+Another directory `/static` which have file indexing. we can see our uploaded files in the `img` folder inside `static` directory. 
 
 ![](screenshots/static-index.png)
 
@@ -57,7 +57,7 @@ But looks like application is not vulnerable for file upload.
 
 There is a clint side filter `http://10.10.11.101/js/form-validator.js` which preventing ssrf from url in `/dashboard/stories/add`
 
-It is easy to bypass with brup there's only one catch, applicaiton is checking if url end with `.jpg`
+It is easy to bypass with brup there's only one catch, application is checking if url end with `.jpg`
 
 ![](screenshots/ssrf-in-storie.png)
 
@@ -67,7 +67,7 @@ Nothing useful back to `/administrative` sql injection
 
 ## UNION sqli to file read
 
-Fuzzing for UNION injection found after 6 columns and second column is reflacted on the web page.
+Fuzzing for UNION injection found after 6 columns and second column is reflected on the web page.
 ```sql
 UNION select 1,2,3,4,5,6;-- -
 ```
@@ -75,7 +75,7 @@ UNION select 1,2,3,4,5,6;-- -
 ![](screenshots/union-sqli.png)
 
 
-Nothing interested in the database but daatabase have FILE privileges And This allow us to read system file.
+Nothing interested in the database but database have FILE privileges And This allow us to read system file.
 ```sql
 UNION select 1,privilege_type,3,4,5,6 FROM information_schema.user_privileges;-- -
 ```
@@ -145,7 +145,7 @@ from writer import app as application
 application.secret_key = os.environ.get("SECRET_KEY", "")
 ```
 
-`__init__.py` file found in web root direcptry in app folder `writer`: `/var/www/writer.htb/writer/__init__.py`
+`__init__.py` file found in web root directory in app folder `writer`: `/var/www/writer.htb/writer/__init__.py`
 
 
 > Command injection in `__init__.py` **[Unintended Path](#command-injection-via-filename)**
@@ -155,7 +155,7 @@ application.secret_key = os.environ.get("SECRET_KEY", "")
 Found database creds from `__init__.py`: **`admin:ToughPasswordToCrack`**
 
 * Revise
-  * in the begining, we found a smb share: `//10.10.11.101/writer2_project`
+  * in the beginning, we found a smb share: `//10.10.11.101/writer2_project`
   * we have a user: `kyle`
   * and a password `ToughPasswordToCrack` which worked with user `kyle` on smb share: `kyle:ToughPasswordToCrack`
   * And a local dev server: `127.0.0.1:8080`
@@ -179,7 +179,7 @@ And request `http://127.0.0.1:8080/#.jpg` with ssrf we found in `/dashboard/stor
 ![](screenshots/web-shell.png)
 
 
-Pyhton script to automate the process
+Python script to automate the process
 ```py
 #! /usr/bin/python3
 
@@ -280,13 +280,13 @@ These groups owned some files
 /var/www/writer2_project
 ```
 
-we already explore "writer2_project" and `/var/spool/filter` is a emplty direcotry and `/etc/postfix/disclaimer` is a bash script with full read/write/execute permission.
+we already explore "writer2_project" and `/var/spool/filter` is a empty directory and `/etc/postfix/disclaimer` is a bash script with full read/write/execute permission.
 
 ## postfix automate scripts
 
 `/etc/postfix/disclaimer` script looks like a post processing script for received emails.
 
-And in Postfix these type of script exeuctes from `/etc/postfix/master.cf` config file.
+And in Postfix these type of script executes from `/etc/postfix/master.cf` config file.
 
 And we can check that `/etc/postfix/disclaimer` script is specified in the config file.
 ```bash
@@ -350,7 +350,7 @@ That means user "john" can write inside `/etc/apt/apt.conf.d` directory
 
 All of the files in `/etc/apt/apt.conf.d/` are instructions for the configuration of APT. APT includes them in alphabetical order, so that the last ones can modify a configuration element defined in one of the first ones.
 
-There are 2 invoke options in apt `Pre-Invoke` and  `Post-Invoke` that allows to run commands before and after the apt commnad execute.
+There are 2 invoke options in apt `Pre-Invoke` and  `Post-Invoke` that allows to run commands before and after the apt command execute.
 
 add any of the line based on the condition in apt config file.
 ```bash
@@ -358,7 +358,7 @@ APT::Update::Pre-Invoke  {"COMMAND";};
 APT::Update::Post-Invoke {"COMMAND";};
 ```
 
-But apt only execute root/sudo and thats why there is a cronjob is running that executes `/usr/bin/apt-get update` commnad in every few minutes, i found this by monitoring processes with `pspy`
+But apt only execute root/sudo and thats why there is a cronjob is running that executes `/usr/bin/apt-get update` command in every few minutes, i found this by monitoring processes with `pspy`
 ```bash
 2021/12/14 10:56:03 CMD: UID=0    PID=14803  | /usr/bin/apt-get update
 ```
@@ -390,7 +390,7 @@ os.system("mv {} {}.jpg".format(local_filename, local_filename))
 # ... [snip] ...
 ```
 
-With normal `http` protocal this function save loaded file from specified url as a tmp name
+With normal `http` protocol this function save loaded file from specified url as a tmp name
 ```py
 >>> import urllib.request
 >>> local_filename, headers = urllib.request.urlretrieve('http://127.0.0.1:8000/test.jpg')
@@ -421,7 +421,7 @@ os.system("mv {} {}.jpg".format(local_filename, local_filename))
 ![](screenshots/os-injection-test.png)
 
 
-but `file://` protocol only work in local filesystem. To achive command execution with this bug first we need to upload a image with system command in it's name.
+but `file://` protocol only work in local filesystem. To achieve command execution with this bug first we need to upload a image with system command in it's name.
 
 The fact that the image upload is just checking for `.jpg` anywhere in the filename.
 ```py

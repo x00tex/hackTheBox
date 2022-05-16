@@ -42,7 +42,7 @@ One thing to be noted that, it is possible to enumerate exist users with some sc
 
 ![](screenshots/user-enum.png)
 
-There are some funcanalities but looks like none of them really works, only one thing looks interesting is the cookie which comtains a auth token.
+There are some functionalities but looks like none of them really works, only one thing looks interesting is the cookie which contains a auth token.
 
 ![](screenshots/auth-token.png)
 
@@ -88,12 +88,12 @@ Then to create the new JWT with the created `publickey.crt`(public) and `pkcs8.k
 
 ![](screenshots/generate-token.png)
 
-In order to create a valid jku certificate you can download the original one anche change the needed parameters.
+In order to create a valid jku certificate you can download the original one and change the needed parameters.
 ```bash
 wget http://hackmedia.htb/static/jwks.json
 ```
 
-You can obtain the parametes "`e`" and "`n`" from a public certificate using python -
+You can obtain the parameter "`e`" and "`n`" from a public certificate using python -
 * There is a issue with formatting hacktricks shows this value in hex format but our target server using possibly base64 format. We can still get these values with python but with different module and different techniques.
 ```python
 from jwcrypto import jwk
@@ -107,7 +107,7 @@ print(json.loads(jwks)['e'])
 
 ![](screenshots/get-e-n.png)
 
-Replace `e` and `n` value in orignal `jwks.json` with new values.
+Replace `e` and `n` value in original `jwks.json` with new values.
 ```json
 {
     "keys": [
@@ -135,7 +135,7 @@ That means there are some filters and black/white list that preventing this.
 
 Found this on google which remind me something: https://www.netsparker.com/web-vulnerability-scanner/vulnerabilities/jwt-forgery-via-chaining-jku-parameter-with-open-redirect-/
 
-At the begining i notice a open redirect from `http://10.10.11.126/redirect/?url=google.com`. We can use it and try to bypass that filter.
+At the beginning i notice a open redirect from `http://10.10.11.126/redirect/?url=google.com`. We can use it and try to bypass that filter.
 
 After some testing i found out possible filters.
 * Application explicitly checks for `http://hackmedia.htb/static/`
@@ -160,7 +160,7 @@ And finally got the admin panel
 
 ## lfi
 
-There are only two working link on the admin dashboard. Both has same directory and parameter only value is diffrent
+There are only two working link on the admin dashboard. Both has same directory and parameter only value is different
 ```bash
 http://hackmedia.htb/display/?page=monthly.pdf
 http://hackmedia.htb/display/?page=quarterly.pdf
@@ -174,7 +174,7 @@ Tried some `../../` and immediately redirect to `/filenotfound` with a message: 
 
 That means this is a lfi but there are some filters we need to bypass.
 
-* Good resourse on WAF bypass: https://jlajara.gitlab.io/web/2020/02/19/Bypass_WAF_Unicode.html
+* Good resource on WAF bypass: https://jlajara.gitlab.io/web/2020/02/19/Bypass_WAF_Unicode.html
 
 And based on the box name, successfully bypass WAF with unicode character `︰` which Normalization as `..`
 
@@ -300,7 +300,7 @@ Hex value of **`︰`** >> `ef b8 b0` which represent of three unicode characters
 |`b8`|**`¸`**|
 |`b0`|**`°`**|
 
-And combinations of these three characters creats a unicode character **vertical two dot leader** `︰`
+And combinations of these three characters create a unicode character **vertical two dot leader** `︰`
 
 and when we past `︰` it converted to `0`.
 
@@ -343,7 +343,7 @@ After some testing, Found out
 
   ![](screenshots/pyexe-opts.png)
 
-* First 2 options don't return anything intresting.
+* First 2 options don't return anything interesting.
 * option 3 fetching urls and it's using `curl`
 
   ![](screenshots/curl-in-pyexe.png)

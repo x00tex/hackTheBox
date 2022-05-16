@@ -84,7 +84,7 @@ using [droopescan](https://github.com/droope/droopescan) tool to scan moodle cms
 
 Running version **`3.10.0-beta`(?)**
 
-from login page `http://moodle.schooled.htb/moodle/login/` get "create new account" option but when tring to create new account, get email address error.
+from login page `http://moodle.schooled.htb/moodle/login/` get "create new account" option but when trying to create new account, get email address error.
 
 ![](screenshots/newac-email.png)
 
@@ -94,7 +94,7 @@ Don't find anything interesting from student account.
 
 ### version identifing
 
-droopescan found version `3.10.0-beta` but if we compare `/mod/forum/upgrade.txt` changelogs with orignal [v3.10.0-beta](https://github.com/moodle/moodle/blob/v3.10.0-beta/mod/forum/upgrade.txt) from [github repo](https://github.com/moodle/moodle) there is something missing
+droopescan found version `3.10.0-beta` but if we compare `/mod/forum/upgrade.txt` changelogs with original [v3.10.0-beta](https://github.com/moodle/moodle/blob/v3.10.0-beta/mod/forum/upgrade.txt) from [github repo](https://github.com/moodle/moodle) there is something missing
 
 ![](screenshots/version-compare1.png)
 
@@ -114,13 +114,13 @@ found vulnerability list from [snyk vulnerability database](https://snyk.io/vuln
 
 ![](screenshots/moolde-snyk.png)
 
-There are 2 vulnerabilities looks intresing
+There are 2 vulnerabilities looks interesting
 
 [XSS](https://snyk.io/vuln/SNYK-PHP-MOODLEMOODLE-1049535): Affected versions of this package are vulnerable to Cross-site Scripting (XSS). The `moodlenetprofile` user profile field required extra sanitizing to prevent a stored XSS risk.
 
 [Privilege Escalation](https://snyk.io/vuln/SNYK-PHP-MOODLEMOODLE-1048845): Affected versions of this package are vulnerable to Privilege Escalation. Users with "Log in as" capability in a course context (typically, course managers) may gain access to some site administration capabilities by "logging in as" a System manager.
 
-**XSS** can be exploited from user and **Privilege Escalation** give access to admin panle from manager role and we already know the manager "Lianne Carter".
+**XSS** can be exploited from user and **Privilege Escalation** give access to admin panel from manager role and we already know the manager "Lianne Carter".
 
 ![](screenshots/school-manager.png)
 
@@ -139,7 +139,7 @@ save payload in `moodlenetprofile` field and wait.
 
 ![](screenshots/xss-exploited.png)
 
-this happend because xss payload saved in user profile and when other user visit to that user's profile script executed on there browser.
+this happened because xss payload saved in user profile and when other user visit to that user's profile script executed on there browser.
 
 From mathematics Lecturer "Manuel Phillips" course Announcements `http://moodle.schooled.htb/moodle/mod/forum/discuss.php?d=5`: "For students who wish to attend my lectures be sure that you have your MoodleNet profile set." when user enroll in his course, **teacher review that student profile**.
 
@@ -159,7 +159,7 @@ PoC from [HoangKien1020@github](https://github.com/HoangKien1020/CVE-2020-14321)
 
 *And also, we can use cookie editor but knowing multiple solutions for a problem could be useful in some situation.*
 
-First setup scope limitied to `schooled.htb` host so brup only granted only scoped host request.
+First setup scope limited to `schooled.htb` host so brup only granted only scoped host request.
 
 ![](screenshots/burp-set-scope.png)
 
@@ -187,7 +187,7 @@ And "Manuel Phillips" got manager role.
 
 ![](screenshots/manager-privesc3.png)
 
-**Third,** Now we need to add orignal manager "Lianne Carter" in the Participants.
+**Third,** Now we need to add original manager "Lianne Carter" in the Participants.
 
 Currently we are as manager role inside the course, that means we can login as any user from Participants list and if we add "Lianne Carter" in the Participants we can login as "Lianne Carter" and "Lianne Carter" have manager role over full website.
 
@@ -232,7 +232,7 @@ click on "install plugins" than "Install plugin from ZIP file" and upload `rce.z
 ![](screenshots/admin-rce2.png)
 
 Click install than continue and after that go to `http://moodle.schooled.htb/moodle/blocks/rce/lang/en/block_rce.php?cmd=id`
-*plugin deletes after few minuts*
+*plugin deletes after few minute*
 
 ![](screenshots/admin-rce3.png)
 

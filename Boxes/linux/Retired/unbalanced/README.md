@@ -1,6 +1,6 @@
 ![](unbalanced_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -118,7 +118,7 @@ encfs_decrypt
 **Internal Host :** intranet.unbalanced.htb
 
 * Host is found in `squid.conf` and then i rewind that there a Squid http proxy service running on port 873 in the box.
-* i already add proxy in my browser and now found a host that can accessable from the proxy.
+* i already add proxy in my browser and now found a host that can accessible from the proxy.
   * i can access to `intranet.unbalanced.htb` from `squid-proxy` i set in the foxyproxy, but i don't find anything interesting in host web page.
 
 ### [squid:CacheManager](https://wiki.squid-cache.org/Features/CacheManager)
@@ -365,7 +365,7 @@ f91a0994************************
 
 **Exploit Impact :** Pi-hole Web v4.3.2 (aka AdminLTE) allows Remote Code Execution by privileged dashboard users via a crafted DHCP static lease.
 
-**Exploit Reason :** defining MAC address while configuring DHCP leases form pi-hole is not validate the mac address properly so one can manipulate that mac address field and put reverse shell and excute it.
+**Exploit Reason :** defining MAC address while configuring DHCP leases form pi-hole is not validate the mac address properly so one can manipulate that mac address field and put reverse shell and execute it.
 
 **refer to [natedotred bolg](https://natedotred.wordpress.com/2020/03/28/cve-2020-8816-pi-hole-remote-code-execution/) for complete exploitation process.**
 

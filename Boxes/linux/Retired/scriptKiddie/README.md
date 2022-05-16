@@ -1,6 +1,6 @@
 ![](scriptKiddie_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Enumeration
@@ -27,7 +27,7 @@ Port 5000 running Werkzeug httpd 0.16.1 (Python 3.8.5)
 
 * There is no command injection or lfi.
 * searchsploit and nmap don't have any known vulnerability.
-* msfvenom have a temlate option which is vulnerable.
+* msfvenom have a template option which is vulnerable.
   * **Description:** This module exploits a command injection vulnerability in Metasploit Framework's msfvenom payload generator when using a crafted APK file as an Android payload template. Affects Metasploit Framework <= 6.0.11 and Metasploit Pro <= 4.18.0. The file produced by this module is a relatively empty yet valid-enough APK file. To trigger the vulnerability, the victim user should do the following: `msfvenom -p android/<...> -x` 
   * [CVE-2020-7384 Rapid7](https://www.rapid7.com/db/modules/exploit/unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection/)
     * msf module: `exploit/unix/fileformat/metasploit_msfvenom_apk_template_cmd_injection`

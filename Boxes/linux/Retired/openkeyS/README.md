@@ -1,6 +1,6 @@
 ![](openkeys_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -22,6 +22,7 @@ Running (JUST GUESSING): OpenBSD 4.X|6.X|5.X|3.X (95%)
 ## Web_server
 
 ### Gobuster
+
 `gobuster dir -u 10.10.10.199 -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -t 40`
 ```
 /includes (Status: 301)
@@ -64,7 +65,7 @@ Running (JUST GUESSING): OpenBSD 4.X|6.X|5.X|3.X (95%)
 
 * **[check_auth](dump/check_auth) file**
 
-* file is not excuting in linux because it made form OpenBSD.
+* file is not executing in linux because it made form OpenBSD.
 * i search for `OpenBSD check_auth` and found Authentication Bypass and Local Privilege Escalation Vulnerabilities.
 
 # User Exploit
@@ -143,7 +144,7 @@ OpenBSD openkeys.htb 6.6 GENERIC#353 amd64
 
 # Root Exploit
 
-* I found a script that autometiclly done that work.
+* I found a script that automatically done that work.
 
   [Script](https://raw.githubusercontent.com/bcoles/local-exploits/master/CVE-2019-19520/openbsd-authroot)
 

@@ -70,7 +70,7 @@ PORT      STATE SERVICE          VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-* In first visit, Don't find anything intresing anywhere. Only Apache httpd on port 80 contains a downloadable archive.
+* In first visit, Don't find anything interesting anywhere. Only Apache httpd on port 80 contains a downloadable archive.
 
 ![](screenshots/port-80.png)
 
@@ -107,7 +107,7 @@ From these tar archives get some information about that package.
 * This application written in [Electron framework](https://www.electronjs.org/)
 * Package created with [FPM](https://github.com/jordansissel/fpm)
 
-`data.tar.xz` contians all execuatable binaries under `./opt/unobtainium` folder.
+`data.tar.xz` contains all executable binaries under `./opt/unobtainium` folder.
 
 ![](screenshots/exec-app.png)
 

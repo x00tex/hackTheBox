@@ -1,6 +1,6 @@
 ![](delivery_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -56,10 +56,10 @@ PORT     STATE SERVICE VERSION
 ## Port 8065
 
 * MatterMost server in running on port 8065.
-  * **MatterMost:** Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organisations and companies, and mostly markets itself as an open-source alternative to Slack and Microsoft Teams.
+  * **MatterMost:** Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organizations and companies, and mostly markets itself as an open-source alternative to Slack and Microsoft Teams.
 
 * there is nothing and service is require login to access.
-* when creating new account, it requires email verification and give resopsce -
+* when creating new account, it requires email verification and give resource -
 
       Please verify your email address. Check your inbox for an email.
 
@@ -76,8 +76,8 @@ PORT     STATE SERVICE VERSION
 
   ![](screenshots/check-ticket.png)
 
-* but here is the twiest, when i create a new ticket it give me an email and say `"If you want to add more information to your ticket, just email 4478570@delivery.htb"`
-* That means i can add information in my created ticket by sending the infomation to that email.
+* but here is the twist, when i create a new ticket it give me an email and say `"If you want to add more information to your ticket, just email 4478570@delivery.htb"`
+* That means i can add information in my created ticket by sending the information to that email.
 * so, if i use that email to register on MetterMost server than i can get that verification link in my ticket and i got it.
 
   ![](screenshots/verify-me.png)
@@ -86,9 +86,9 @@ PORT     STATE SERVICE VERSION
 
   ![](screenshots/msg-from-ippsec.png)
 
-* first message contains some creds `maildeliverer:Youve_G0t_Mail!` of the server and using ssh i can able to get user flag directly without any explotation.
+* first message contains some creds `maildeliverer:Youve_G0t_Mail!` of the server and using ssh i can able to get user flag directly without any exploitation.
 
-*these creds also work in admin panel login `http://helpdesk.delivery.htb/scp/login.php` and initially i spend lot of time on admin panel for vulnerability but found nothing and then i tried to ssh in and it works so lesson here is that always try sshin fisrt if found any creds.*
+*these creds also work in admin panel login `http://helpdesk.delivery.htb/scp/login.php` and initially i spend lot of time on admin panel for vulnerability but found nothing and then i tried to ssh in and it works so lesson here is that always try sshin first if found any creds.*
 
 *second message is also a important hint for root*
 
@@ -106,7 +106,7 @@ PORT     STATE SERVICE VERSION
   ![](screenshots/i-use-sql.png)
 
 * and the second message comes here with a hint that the database server is contains some hashes that are crackable using hashcat.
-* but firt i need to find database creds and if MatterMost is using database that the creds are in the MatterMost config file as the tool documentation says **"Mattermost configuration settings are maintained in the `config.json`"**
+* but first i need to find database creds and if MatterMost is using database that the creds are in the MatterMost config file as the tool documentation says **"Mattermost configuration settings are maintained in the `config.json`"**
 
 * find the config file
 
@@ -179,9 +179,9 @@ MariaDB [mattermost]> SELECT * FROM  Users WHERE Username = "root";
 
 # Root shell
 
-* Crack hash using hashcat *but it not gonna work because fisrt we need to understand the second hint* **use hascat rules to easily crack all variations of common words or phrases.** _and that word or phrase is **PleaseSubscribe!**_
+* Crack hash using hashcat *but it not gonna work because first we need to understand the second hint* **use hascat rules to easily crack all variations of common words or phrases.** _and that word or phrase is **PleaseSubscribe!**_
 
-* searching on google found a perfact rule for this work from  [NotSoSecure@github](https://github.com/NotSoSecure/password_cracking_rules)
+* searching on google found a perfect rule for this work from  [NotSoSecure@github](https://github.com/NotSoSecure/password_cracking_rules)
 
 ```bash
 ❯ hashcat -a 0 -m 3200 hash word -r OneRuleToRuleThemAll.rule --debug-mode=1 --debug-file=matched.rule --force

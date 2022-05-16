@@ -1,6 +1,6 @@
 ![](bucket_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -29,6 +29,7 @@ PORT   STATE SERVICE VERSION
 - add `s3.bucket.htb` in the `/etc/hosts` file
 
 ## gobuster
+
 >s3.bucket.htb
 
 `gobuster dir -u http://s3.bucket.htb/ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 50`
@@ -62,9 +63,9 @@ PORT   STATE SERVICE VERSION
 
 ### /shell
 
-- `s3.bucket.htb/shell/` revealed a intrective `DynamoDB JavaScript Shell` .
+- `s3.bucket.htb/shell/` revealed a interactive `DynamoDB JavaScript Shell` .
 - using this shell we can talk to the backend database service and dump data from the server .
-- heading to the `API Templates` tab i found some prebuild templates .
+- heading to the `API Templates` tab i found some prebuilt templates .
 - i read [API Docs](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html) and build my own [simple templates](awsApiTmpl) .
 - reading through google i found a `awscli` tool similar as webshell but can run from the terminal, [tool](https://github.com/aws/aws-cli)
 
@@ -132,6 +133,7 @@ PORT   STATE SERVICE VERSION
                 }
 
 #### creds
+
 ```bash
 Mgmt:Management@#1@#
 Cloudadm:Welcome123!
@@ -242,7 +244,7 @@ Sysadm:n2vM-<_K_Q:.Aa2
 
 - some notable things,
 	- uploaded file sync only once and the automatically deleted after it
-	- file takes atleast 30-60sec to sync
+	- file takes 30-60sec to sync
 	- I can upload php shell and access from the main server
 
 
@@ -289,6 +291,7 @@ Sysadm:n2vM-<_K_Q:.Aa2
 - found reused password `n2vM-<_K_Q:.Aa2`
 
 ### creds
+
 `roy:n2vM-<_K_Q:.Aa2`
 
 ## ssh roy
@@ -311,7 +314,7 @@ dd3f563b************************
 	  LISTEN    0         511                127.0.0.1:8000               0.0.0.0:*
 
 - there is a local server running on port 8000
-- inside `/var/www` directory there are two directroies
+- inside `/var/www` directory there are two directories
 
 	  drwxr-x---+  4 root root 4096 Sep 23 10:56 bucket-app
 	  drwxr-xr-x   2 root root 4096 Nov  4 08:20 html
@@ -321,7 +324,7 @@ dd3f563b************************
 	  roy@bucket:/var/www/bucket-app$ ls -la | grep index.php
 	  `-rwxr-x---+  1 root root  17222 Sep 23 03:32 index.php`
 
-- `index.php` contians php code snippet.
+- `index.php` contains php code snippet.
 ```php
 <?php
 require 'vendor/autoload.php';
@@ -360,7 +363,7 @@ else
 
 	  if($_SERVER["REQUEST_METHOD"]==="POST")
 
-	- this define that the script excecute if user send a `POST` request .
+	- this define that the script execute if user send a `POST` request .
 
 - **line 05**, Second if statement
 
@@ -370,7 +373,7 @@ else
 
 - so i need to send a `POST` request with `action=get_alerts`
 
-- **line 07-12**, client veriable
+- **line 07-12**, client variable
 
 	  $client = new DynamoDbClient([
 	                          'profile' => 'default',
@@ -381,7 +384,7 @@ else
 
 	- this code configure aws client connection
 
-- **line 14-18**, iteration veriable
+- **line 14-18**, iteration variable
 
 	  $iterator = $client->getIterator('Scan', array(
 	                          'TableName' => 'alerts',
@@ -395,14 +398,14 @@ else
 - I think i need to create a table table before trigger that script
 - so i need to create a `alerts` table which contains item `Ransomwar`
 
-- **line 20-23**, foreach loop through the `$iterator` veriable
+- **line 20-23**, foreach loop through the `$iterator` variable
 
 	  foreach ($iterator as $item) {
 	                          $name=rand(1,10000).'.html';
 	                          file_put_contents('files/'.$name,$item["data"]);
 	                  }
 
-	- this code loop data that iterate from that table and set on `$item` veriable
+	- this code loop data that iterate from that table and set on `$item` variable
 	- the `$item` data go inside the php function `file_put_contents` , [php documentation](https://www.php.net/manual/en/function.file-put-contents.php)
 	- this function write `$item` variable data inside `files` directory as the name that `$name` variable defines `example-name: 4141.html`
 

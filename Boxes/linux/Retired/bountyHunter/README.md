@@ -119,7 +119,7 @@ This script doing something
 
 ![](screenshots/ticket-script.png)
 
-because script is not sanitizing input and directly send it to eval with some conditions, we only need to pass some checks and get code execuation.
+because script is not sanitizing input and directly send it to eval with some conditions, we only need to pass some checks and get code execution.
 ```bash
 # Skytrain Inc
 ## Ticket to hell

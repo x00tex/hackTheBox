@@ -164,7 +164,7 @@ marcus     6002  0.0  0.0 259044     4 ?        S    May29   0:00 (sd-pam)
 ... [snip] ...
 ```
 
-found cacti-backup serivce using 
+found cacti-backup service using 
 
 ![](screenshots/found-processes.png)
 

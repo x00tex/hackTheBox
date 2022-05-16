@@ -39,7 +39,7 @@ Another login page form subdomain
 
 ## SQLi
 
-back to the login sql injection, There's a reflacted field in login
+back to the login sql injection, There's a reflected field in login
 
 ![](screenshots/login-union-injection.png)
 
@@ -61,14 +61,14 @@ password cracked with john using rockyou.txt
 1:admin@goodgames.htb:2b22337f218b2d82dfc3b6f77e7cb8ec:admin:superadministrator
 ```
 
-And these creds resue in subdomain Flask Dashboard
+And these creds reuse in subdomain Flask Dashboard
 
 ![](screenshots/volt-logged-in.png)
 
 
 ## SSTI
 
-In the volt dashboard, found SSTI(Server-Side Template Injection) in `/settings` reflacted in the user's profile name
+In the volt dashboard, found SSTI(Server-Side Template Injection) in `/settings` reflected in the user's profile name
 
 ![](screenshots/ssti-in-name.png)
 

@@ -1,6 +1,6 @@
 ![](time_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -42,11 +42,11 @@ PORT   STATE SERVICE VERSION
   
   *this server using Jackson library for deserializing JSONs*
   
-**vulnerability :** deserialization vulnerability CVE-2019-12384
+**vulnerability :** de-serialization vulnerability CVE-2019-12384
 
 **Jackson gadgets - Anatomy of a vulnerability** doyensec.com [Report](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
 
-*an attacker may leverage this deserialization vulnerability to trigger attacks such as Server-Side Request Forgery (SSRF) and remote code execution.*
+*an attacker may leverage this de-serialization vulnerability to trigger attacks such as Server-Side Request Forgery (SSRF) and remote code execution.*
 
 * **attack**
 
@@ -121,11 +121,11 @@ You own the script: /usr/bin/timer_backup.sh
 
 * script specified some root task that means script is running as root
   * this script backup complete server directory in root
-* script is running in every ~10sec and after that script get reseted
+* script is running in every ~10sec and after that script get reset
 
 # Root Exploit
 
-*putting any reverseshell in the `timer_backup.sh` to get a root shell dosen't works properly because script exits as soon as it excuted and so shell too.*
+*putting any reverse-shell in the `timer_backup.sh` to get a root shell doesn't works properly because script exits as soon as it executed and so shell too.*
 *simplest way to get proper root shell is to put ssh key in the script so that we can ssh as root.*
 
 ## public ssh key
@@ -147,6 +147,7 @@ You own the script: /usr/bin/timer_backup.sh
 	  dffebc49************************
 
 ### cron tab that occurs root privesc
+
 `crontab -u root -l`
 ```bash
 */5 * * * * cp /root/timer_backup.sh /usr/bin/timer_backup.sh; chown pericles:pericles /usr/bin/timer.sh; chmod 766 /usr/bin/timer_backup.sh

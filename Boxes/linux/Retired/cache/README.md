@@ -1,6 +1,6 @@
 ![](cache-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -137,6 +137,7 @@ xxxxxx          openemr_admin
 ```
 
 ### creds
+
 `openemr_admin:xxxxxx`
 
 ## User Authenticated RCE
@@ -201,6 +202,7 @@ xxxxxx          openemr_admin
 	  END
 
 ### creds
+
 `luffy:0n3_p1ec3`
 ```
 ash@cache:~$ su - luffy

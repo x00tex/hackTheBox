@@ -25,7 +25,7 @@ http server redirect to: `forge.htb`
 
 ![](screenshots/web-page.png)
 
-Webapp have only file upload funcanility
+Webapp have only file upload functionality
 
 ![](screenshots/upload-page.png)
 
@@ -33,7 +33,7 @@ There are 2 options for file uploading.
 * Local file from filesystem.
 * Remote file form a url.
 
-And uploaded file are stored in the `/uploads/` direcotry with random file name withut any file extension. Only images get renders and all other file renders as plain text.
+And uploaded file are stored in the `/uploads/` directory with random file name without any file extension. Only images get renders and all other file renders as plain text.
 
 # Foothold
 
@@ -41,14 +41,14 @@ And uploaded file are stored in the `/uploads/` direcotry with random file name 
 
 file upload from remote url looks interesting.
 * There is a hidden parameter `remote` in url-file-upload post request contains value `1`.
-* server feching urls with python requests module, get form nc listener.
+* server fetching urls with python requests module, get form nc listener.
 
       curl -s -X 'POST' --data-binary 'url=http://127.1:21/&remote=1' 'http://forge.htb/upload'
 
   ![](screenshots/server-url-req.png)
 
-* localhost is blacklisted but can be bypasswd with `127.1` and this can lead to SSRF(?).
-* for bad urls server throughing errors and that way we can do port scan on local host.
+* localhost is blacklisted but can be bypassed with `127.1` and this can lead to SSRF(?).
+* for bad urls server through errors and that way we can do port scan on local host.
 * hostname `forge.htb` is also blocked but can be bypassed by using uppercase character: `FORGE.htb`
 
 Running Intruder to bruteforce port and found ftp server port `21`.
@@ -76,7 +76,7 @@ Fuzzing for subdomain, found `admin.forge.htb`.
     * FUZZ: admin
 ```
 
-But admin only accessable from localhost
+But admin only accessible from localhost
 ```bash
 ❯ curl -s http://admin.forge.htb
 Only localhost is allowed!
@@ -166,7 +166,7 @@ Got some interesting information from `/announcements`.
 
 * Ftp creds: `user:heightofsecurity123!`
 * admin `/upload` allows ftp protocol.
-* and fileupload from admin `/upload` can be done with `/upload?u=<url>`
+* and file upload from admin `/upload` can be done with `/upload?u=<url>`
 
 So we can now access to ftp server from admin `/upload` endpoint with `/upload?u=ftp://user:heightofsecurity123!@127.1:21`.
 
@@ -201,12 +201,12 @@ This script have 2 interesting things
 
 ![](screenshots/python-pdb.png)
 
-One is a passowrd `secretadminpassword` for connecting to the socket. Another is a exception `pdb.post_mortem(e.__traceback__)`
+One is a password `secretadminpassword` for connecting to the socket. Another is a exception `pdb.post_mortem(e.__traceback__)`
 
 [pdb](https://docs.python.org/3/library/pdb.html): The module pdb defines an interactive source code debugger for Python programs.
 
 And this exception occurs if socket quit unintended way.
 
-Run script with sudo and connect to the socket from another terminal, Enter passowrd then `Ctrl+c`, This will drop script to pdb shell where we can run system command with python `os` module as root.
+Run script with sudo and connect to the socket from another terminal, Enter password then `Ctrl+c`, This will drop script to pdb shell where we can run system command with python `os` module as root.
 
 ![](screenshots/rooted.png)

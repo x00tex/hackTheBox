@@ -37,7 +37,7 @@ Service Info: Host: ATOM; OS: Windows; CPE: cpe:/o:microsoft:windows
 
 * Windows version: `OS: Windows 10 Pro 19042 (Windows 10 Pro 6.3)`
 * Nothing in ssl certificate.
-* Radis rewuirer authAuthentication, [hacktricks](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
+* Radis require authAuthentication, [hacktricks](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
 
       ❯ redis-cli -h 10.10.10.237
       10.10.10.237:6379> info
@@ -52,7 +52,7 @@ Service Info: Host: ATOM; OS: Windows; CPE: cpe:/o:microsoft:windows
 
   ![](screenshots/web-page.png)
 
-* zip archive contains a windows execuatable.
+* zip archive contains a windows executable.
 
       ❯ file heedv1-Setup-1.0.0.exe
       heedv1-Setup-1.0.0.exe: PE32 executable (GUI) Intel 80386, for MS Windows, Nullsoft Installer self-extracting archive
@@ -152,7 +152,7 @@ Running winpeas found user "jason" password but it is not working.
 
 Enumerating user "jason" home folder find [PortableKanban](https://www.atlassian.com/agile/kanban) in `C:\Users\jason\Downloads\PortableKanban`.
 
-from kanban config file found that radis is useing by kanban.
+from kanban config file found that radis is using by kanban.
 
 ![](screenshots/kanban-config.png)
 

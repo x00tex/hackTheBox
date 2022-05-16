@@ -143,7 +143,7 @@ catherine:woBeeYareedahc7Oogeephies7Aiseci
 charles:RoyalQueenBee$
 ```
 
-User "catherine" is in the system and his passowrd worked with su. 
+User "catherine" is in the system and his password worked with su. 
 
 ```bash
 # ...[snip]...
@@ -152,9 +152,9 @@ patrick      861  0.0  0.1   6892  2192 ?        Ss   Nov26   0:00 /bin/bash /ho
 # ...[snip]...
 ```
 
-There are 2 zip file in `/var/bachup` direcotry owned by user "catherine"
+There are 2 zip file in `/var/backup` directory owned by user "catherine"
 
-unziping both archives and running both directory against `diff` found only 3 file diffrent to each other.
+unzipping both archives and running both directory against `diff` found only 3 file different to each other.
 ```bash
 diff main/allusers.json dev/allusers.json
 diff main/commands.go dev/commands.go
@@ -180,7 +180,7 @@ Found a password `CeilingCatStillAThingIn2021?` but not for user "root"
 
 ## lfi
 
-There is a one more service running on localhost, this port is running same app "devzat" but slightly diffrent.
+There is a one more service running on localhost, this port is running same app "devzat" but slightly different.
 
 "devzat" one that is running on localhost is a dev version which have one extra command `/file`
 

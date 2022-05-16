@@ -1,6 +1,6 @@
 ![](Laboratory_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -52,9 +52,9 @@ PORT    STATE SERVICE  VERSION
 
 running version on the server **GitLab Community Edition 12.8.1**
 
-**vulnerability :** upto GitLab version <12.9.1 is vulnerable for **Arbitrary file read (Path Traversal) to RCE exploit** by *getting `secret_key_base` from GitLab Instance using AFR and generate malicious payload cookie to get reverse shell*
+**vulnerability :** GitLab version <12.9.1 is vulnerable for **Arbitrary file read (Path Traversal) to RCE exploit** by *getting `secret_key_base` from GitLab Instance using AFR and generate malicious payload cookie to get reverse shell*
 
-**source of complete explotation :** https://hackerone.com/reports/827052
+**source of complete exploitation :** https://hackerone.com/reports/827052
 
 # User Exploit
 
@@ -121,7 +121,7 @@ running version on the server **GitLab Community Edition 12.8.1**
 
 	  curl -k -vvv 'https://git.laboratory.htb/users/sign_in/' -b "experimentation_subject_id=<COOKIE>"
 
-![](screenshots/git_pwn.gif)
+![](/assets/img/posts/laboratory/git_pwn.gif)
 
 ## User esclate
 
@@ -220,6 +220,7 @@ COMMANDS:
 * find dexter ssh key
 
 ## ssh USER:dexter
+
 ```diff
 ❯ pwncat -i ./id_rsa dexter@10.10.10.216
 [23:43:42] warning: 10.10.10.216: no working persistence methods found                                                                                                        connect.py:222
@@ -277,13 +278,13 @@ COMMANDS:
 	  return;
 	  }
 
-  * in the main function its running `chmod` but without specifing it's absolute path and use `$PATH` variable to determine it's path and here **path hijacking** vulnerbility comes into play.
+  * in the main function its running `chmod` but without specifying it's absolute path and use `$PATH` variable to determine it's path and here **path hijacking** vulnerability comes into play.
 
 # Root Exploit
 
 ## Path hijacking
 
-* **Referense:** hackingarticles.in [article](https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/)
+* **Reference:** hackingarticles.in [article](https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/)
 
 * a simple bash script
 

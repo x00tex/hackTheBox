@@ -102,7 +102,7 @@ Server is running version 1.9.10 and http smuggling Vulnerability found in HAPro
   * With `chunked` value Enable, Data is sent in a series of chunks. 
   * The Content-Length header is omitted.
   * At the beginning of each chunk(data) you need to add the length of the current chunk in hexadecimal format, followed by '`\r\n`' and then the chunk itself, followed by another '`\r\n`'.
-  * The terminating chunk is a regular chunk, with the exception that its length is zero and formated same as regular data chunks.
+  * The terminating chunk is a regular chunk, with the exception that its length is zero and formatted same as regular data chunks.
 * [RFC2616](https://datatracker.ietf.org/doc/html/rfc2616#section-4.4)
 
 **Resources for learning/understanding**
@@ -134,7 +134,7 @@ Server is running version 1.9.10 and http smuggling Vulnerability found in HAPro
 **And here is the [haproxy Vulnerability PoC](https://gist.github.com/ndavison/4c69a2c164b2125cd6685b7d5a3c135b) by [ndavison](https://github.com/ndavison)**
 
 
-When `Transfer-Encoding` and `Content-Length` is provided together, The request HAProxy sends to the backend has correctly prioritized `Transfer-Encoding`, and has stripped out the `content-length` and cut off everything, which went outside the boundry of the `Transfer-Encoding` request (Anything after `0`).
+When `Transfer-Encoding` and `Content-Length` is provided together, The request HAProxy sends to the backend has correctly prioritized `Transfer-Encoding`, and has stripped out the `content-length` and cut off everything, which went outside the boundary of the `Transfer-Encoding` request (Anything after `0`).
 
 However, if we have a `\x0b` (vertical tab) before the "chunked" string (note: `\x0c` aka form feed also works).
 
@@ -149,13 +149,13 @@ And you can add `0b` byte before `chunked` string from hex tab in repeater windo
 
 ![](screenshots/add-hex-0b.png)
 
-If everything goes well, our comment contians admin session cookie
+If everything goes well, our comment contains admin session cookie
 
 ![](screenshots/admin-cookie.png)
 
 Got admin cookie because while backend server waiting to complete 300 bytes of data of our request while frontend server forward another user's request to backend and this request concatenate to our request to complete 300 bytes. 
 
-And replacing sessoin cookie with admin cookie ge to the admin panel
+And replacing session cookie with admin cookie ge to the admin panel
 
 ![](screenshots/edit-cookie.png)
 
@@ -202,7 +202,7 @@ This application is same, where we exploit http request smuggling in foothold.
 
 ![](screenshots/container-web-app.png)
 
-* Every container of this application is runnning some services that doing there parts(guessing)
+* Every container of this application is running some services that doing there parts(guessing)
 
   ![](screenshots/container-process.png)
 
@@ -237,7 +237,7 @@ aws --endpoint-url="http://127.0.0.1:4566/" secretsmanager list-secrets
 
 ![](screenshots/aws-secretlist.png)
 
-There are 3 secret IDs(ARN), we  can retrive there secret string with; **Source** [aws docs](https://docs.aws.amazon.com/secretsmanager/latest/userguide/tutorials_basic.html)
+There are 3 secret IDs(ARN), we  can retrieve there secret string with; **Source** [aws docs](https://docs.aws.amazon.com/secretsmanager/latest/userguide/tutorials_basic.html)
 ```bash
 aws --endpoint-url="http://127.0.0.1:4566/" secretsmanager get-secret-value --secret-id <ARN>
 ```

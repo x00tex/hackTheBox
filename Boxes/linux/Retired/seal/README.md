@@ -64,7 +64,7 @@ PORT     STATE SERVICE    VERSION
 
 ![](screenshots/port8080-gitbucket.png)
 
-Create new accoount and login, found some "root" user repositories
+Create new account and login, found some "root" user repositories
 
 ![](screenshots/git-repos.png)
 
@@ -72,15 +72,15 @@ Create new accoount and login, found some "root" user repositories
 * Found 2 Users `Infra Admin:alex@seal.htb` and `Core Dev:luis@seal.htb`
   * `alex`
   * `luis`
-* `seal_market` repository contians source code for application running on https server.
+* `seal_market` repository contains source code for application running on https server.
 * From on of the `seal_market` repository commit found **Tomcat credential:** `tomcat:42MrHBf*z8{Z%`
-* successfully logged in as user "`luis`" with tomcat passowrd "`42MrHBf*z8{Z%`".
+* successfully logged in as user "`luis`" with tomcat password "`42MrHBf*z8{Z%`".
 * from nginx config `/root/seal_market/blob/master/nginx/sites-enabled/default`, nginx server worked as a proxy and redirect https server to local tomcat server `/root/seal_market/blob/master/tomcat/server.xml`. 
 * From `/root/seal_market/blob/master/nginx/sites-enabled/default`
   * There are 3 locations on the server 
     * Tomcat manager: `/manager/html` and `/host-manager/html`
     * seal_market app admin: `/admin/dashboard`
-  * These locations only accessable mutual authentication, There is no registration and login features for accessing.
+  * These locations only accessible mutual authentication, There is no registration and login features for accessing.
     * **[Mutual Authentication](https://www.docusign.com/blog/dsdev-mutual-tls-stuff-know):** The TLS handshake Certificate Request message is optionally sent by the server to the client. ... After sending the Certificate Request message and receiving a reply, the server verifies the client's certificate. When verification is successful, the server has authenticated the client.
 
 
@@ -88,13 +88,13 @@ Create new accoount and login, found some "root" user repositories
 
 ## server url Parser Logic
 
-This configuration colud bypass with `;` because of the Path Normalization bypass flaw.
+This configuration could bypass with `;` because of the Path Normalization bypass flaw.
 * [Breaking Parser Logic! By Orange Tsai](https://www.youtube.com/watch?v=CIhHpkybYsY)
 * [Tomcat specific](https://www.acunetix.com/vulnerabilities/web/tomcat-path-traversal-via-reverse-proxy-mapping/)
 
 When we send request to a simple nginx server `/test1/../test2` it normalized to `/test2` and if we add anything with `..` like `/..!/` it will not and if we send `/..;/` reverse proxies will not normalize this sequence and send it to Apache Tomcat as it is. Tomcat will threat the sequence `/..;/` as `/../` and normalize the path while.
 
-This can even bypass wtih `/;/manager/html`
+This can even bypass with `/;/manager/html`
 
 ![](screenshots/tomcat-manager.png)
 
@@ -121,7 +121,7 @@ edit the url and forward request
 
 ## `ansible-playbook` Command with sudo
 
-In `/opt` directory, there is a `run.yml` that creating backup of `/var/lib/tomcat9/webapps/ROOT/admin/dashboard` direcotry and using `copy_links=yes` parameter and if check [ansible synchronize_module docs](https://docs.ansible.com/ansible/2.3/synchronize_module.html)
+In `/opt` directory, there is a `run.yml` that creating backup of `/var/lib/tomcat9/webapps/ROOT/admin/dashboard` directory and using `copy_links=yes` parameter and if check [ansible synchronize_module docs](https://docs.ansible.com/ansible/2.3/synchronize_module.html)
 
 **`copy_links`** Copy symlinks as the item that they point to (the referent) is copied, rather than the symlink.
 
@@ -142,9 +142,9 @@ drwxr-xr-x 4 root root  4096 Mar  7  2015 scripts
 drwxrwxrwx 2 root root  4096 May  7 09:26 uploads
 ```
 
-and user "luis" home folder conatins .ssh direcotry.
+and user "luis" home folder contains .ssh directory.
 
-we can symlinks `/home/luis/.ssh` in `/var/lib/tomcat9/webapps/ROOT/admin/dashboard/uploads` and when next backup created it will add `.ssh` direcotry
+we can symlinks `/home/luis/.ssh` in `/var/lib/tomcat9/webapps/ROOT/admin/dashboard/uploads` and when next backup created it will add `.ssh` directory
 ```bash
 ln -s /home/luis/.ssh /var/lib/tomcat9/webapps/ROOT/admin/dashboard/uploads
 ```

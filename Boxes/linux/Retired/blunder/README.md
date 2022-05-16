@@ -1,6 +1,6 @@
 ![](blunder-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -8,7 +8,7 @@
 ## Nmap
 
 `ports=$(nmap -Pn -p- --min-rate=1000 -T4 10.10.10.191 | grep open | awk -F / '{print $1}' ORS=',') echo $ports && nmap -p$ports -sV -sC -v -T4 -oA scans/nmap.full 10.10.10.191`
-```
+```bash
 PORT   STATE  SERVICE VERSION
 21/tcp closed ftp
 80/tcp open   http    Apache httpd 2.4.41 ((Ubuntu))
@@ -16,22 +16,28 @@ PORT   STATE  SERVICE VERSION
 |_http-server-header: Apache/2.4.41 (Ubuntu)
 |_http-title: Blunder | A blunder of interesting facts
 ```
+
 ## Gobuster
+
 `gobuster dir -u http://10.10.10.191 -w /usr/share/seclists/Discovery/Web-Content/common.txt -x txt,php -t 50`
 ```
 /admin (Status: 301)
 /todo.txt (Status: 200)
 ```
+
 ### /admin
+
 - in the admin page I found [bludit CMS](https://github.com/bludit/bludit) admin login panel, 
 - Looking at the source code, the CMS version is identified as `3.9.2`
 
 ### /todo.txt
+
 `-Inform fergus that the new blog needs images - PENDING`
 
 potential username **fergus**
 
 ## Google
+
 **search :** `bludit 3.9.2 vulnerability`
 
 **2 CVEs Found**
@@ -43,7 +49,8 @@ potential username **fergus**
 # User Exploiting
 
 ## CVE-2019-17240
-**Discoverer**: Rastating
+
+**Discovered By**: Rastating
 **References**: [rastating.github.io](https://rastating.github.io/bludit-brute-force-mitigation-bypass/) Blog post.
 
 - requirements
@@ -66,6 +73,7 @@ potential username **fergus**
       fergus:RolandDeschain
 
 ## CVE-2019-16113
+
 **Discoverer**: Christasa
 **References**: [issue 1081](https://github.com/bludit/bludit/issues/1081)
 
@@ -78,6 +86,7 @@ potential username **fergus**
 ### Exploiting
 
 #### using ExploitDB Script
+
   - Title: Bludit 3.9.2 - Directory Traversal
   - Author: James Green
   - EDB-ID: [48701](https://www.exploit-db.com/exploits/48701)
@@ -87,6 +96,7 @@ potential username **fergus**
 *ippsec [video](https://www.youtube.com/watch?v=G5iw8c2vXuk&t=2460s)*
 
 #### MSF Module [Rapid7](https://www.rapid7.com/db/modules/exploit/linux/http/bludit_upload_images_exec)
+
 > exploit/linux/http/bludit_upload_images_exec
 
 	BLUDITPASS => RolandDeschain
@@ -162,6 +172,7 @@ potential username **fergus**
 
 
 ### Google
+
 **search :** `sudo ALL, !root privesc`
 
 **1 CVE Found**

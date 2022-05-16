@@ -76,7 +76,7 @@ I chosen an easy challenge from Reversing Challenges "Lucky Guess", for other ch
 
 ![](screenshots/the-chall.png)
 
-Challenge attachement contains a ELF 64-bit LSB pie executable bianry
+Challenge attachment contains a ELF 64-bit LSB pie executable binary
 
 opening that binary in ghidra found a function doing xoring 2 variables and return flag
 
@@ -124,7 +124,7 @@ So, This is a phishing attack where attacker could replace parent page if parent
 <a id="walkthrough_link" href="http://attacker" target="_blank">Lucky Guess</a>
 ```
 
-The issue is, if that link leads to a malicious page and mitigations aren’t in place, then JavaScript on **that page**(new tab page) can actually change the location of the **original page**(parent page). The mitigation for this is to also add `rel="noopener nofollow"` to the `<a>` tag as well.", *0xdf*
+The issue is, if that link leads to a malicious page and mitigation aren’t in place, then JavaScript on **that page**(new tab page) can actually change the location of the **original page**(parent page). The mitigation for this is to also add `rel="noopener nofollow"` to the `<a>` tag as well.", *0xdf*
 
 The goal here will be to host a page so that when the admin clicks on the link, it open in a new tab that’s now visible. The JavaScript in that tab will reverse tab-nab the original tab to send it to another page and that page is cloned `http://developer.htb/accounts/login/` page hosted on our server and when the admin is done reading my page and comes back, they’ll think they’ve been logged out for some reason, and log in again we get his creds.
 
@@ -212,7 +212,7 @@ This subdomain is running [sentry](https://sentry.io/for/django/) monitor for dj
 
 ![](screenshots/sentry-django.png)
 
-Registering new account and login don't give anything intresting. but login with django admin creds with email `Jacob@developer.htb` got admin panel in sentry.
+Registering new account and login don't give anything interesting. but login with django admin creds with email `Jacob@developer.htb` got admin panel in sentry.
 
 ## Django Deserialization
 
@@ -287,7 +287,7 @@ There are 2 services running so first thing is to find their config files.
 /var/www/developer_ctf/developer_ctf/settings.py
 ```
 
-Both config file contians clear text passwords for Postgres database
+Both config file contains clear text passwords for Postgres database
 
 ![](screenshots/sentry-config.png)  ![](screenshots/webapp-config.png)
 

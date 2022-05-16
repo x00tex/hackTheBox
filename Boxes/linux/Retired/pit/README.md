@@ -38,7 +38,7 @@ PORT     STATE SERVICE         VERSION
 
   ![](screenshots/centos-login.png)
 
-  * cookie header contians cockpit value. **[cockpit](https://cockpit-project.org/)** is a web-based graphical interface for servers, intended for everyone, especially those who are: new to Linux (including Windows admins) familiar with Linux and want an easy, graphical way to administer servers.
+  * cookie header contains cockpit value. **[cockpit](https://cockpit-project.org/)** is a web-based graphical interface for servers, intended for everyone, especially those who are: new to Linux (including Windows admins) familiar with Linux and want an easy, graphical way to administer servers.
 
 * **hostname:** `dms-pit.htb` from 9090 Port ssl certificate have **403 Forbidden**
 * **Port 80:** home is **nginx default page**.
@@ -64,7 +64,7 @@ There is a tool that convert these MIBs to human readable formate
 sudo apt install snmp-mibs-downloader
 ```
 
-after installed you can control them from `sudo vim /etc/snmp/snmp.conf` and adding comment on line `mibs :` to enable and remove comment to diable.
+after installed you can control them from `sudo vim /etc/snmp/snmp.conf` and adding comment on line `mibs :` to enable and remove comment to disable.
 
 **SNMP Versions**
 
@@ -95,7 +95,7 @@ Enumerating snmp with `snmpwalk` tool
   * First, install with `sudo apt-get install snmp-mibs-downloader`
   * Now, edit the file `/etc/snmp/snmp.conf` and commenting out `mibs :` line.
 
-some importent information from `snmpwalk`.
+some important information from `snmpwalk`.
 
 [netSnmpObjects](https://oidref.com/1.3.6.1.4.1.8072.1): Extend snmp functionality with external scripts and command.
 ```bash
@@ -143,7 +143,7 @@ root                 unconfined_u         s0-s0:c0.c1023       *
 ```
 
 
-[dskTable](https://oidref.com/1.3.6.1.4.1.2021.9): Disk watching information. Partions to be watched are configured by the snmpd.conf file of the agent.
+[dskTable](https://oidref.com/1.3.6.1.4.1.2021.9): Disk watching information. Partitions to be watched are configured by the snmpd.conf file of the agent.
 
 ```bash
 ❯ snmpwalk -v2c -c public 10.10.10.241 dskTable
@@ -187,9 +187,9 @@ SeedDMS versions < 5.1.11 - Remote Command Execution                            
 
 ## Login Form Bruteforce with hydra
 
-* Bruteforcing passowrd for username found in SNMP Enumeration: `michelle`.
+* Bruteforcing password for username found in SNMP Enumeration: `michelle`.
 
-using hydra to bruteforce passowrd.
+using hydra to bruteforce password.
 
 ![](screenshots/hydra-brute-body.png)
 
@@ -267,7 +267,7 @@ And get the user shell on host form cockpit terminal.
 
 But there is extra permission in this folder which identified by `+` in the end of the all permissions.
 
-This adds acl permissions to this direcotry
+This adds acl permissions to this directory
 
 **ACL**(Access control list) provides an additional, more flexible permission mechanism for file systems. It is designed to assist with UNIX file permissions. ACL allows you to give permissions for any user or group to any disc resource.
 

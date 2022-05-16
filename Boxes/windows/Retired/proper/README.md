@@ -26,7 +26,7 @@ from that javascript code `products-ajax.php` load product list
 
 ![](screenshots/product-list.png)
 
-in this url `/products-ajax.php?order=id+desc&h=a1b30d31d344a5a4e41e8496ccbdd26b` looks like `order` parameter conatins sql keyword `desc` in sql that means descending order and if try to change it to ascending `aes`, server return security error.
+in this url `/products-ajax.php?order=id+desc&h=a1b30d31d344a5a4e41e8496ccbdd26b` looks like `order` parameter contains sql keyword `desc` in sql that means descending order and if try to change it to ascending `aes`, server return security error.
 ```bash
 ❯ curl -i -s 'http://10.10.10.231/products-ajax.php?order=id+aes&h=a1b30d31d344a5a4e41e8496ccbdd26b'
 HTTP/1.1 403 Forbidden
@@ -58,7 +58,7 @@ On line 6 in file C:\inetpub\wwwroot\products-ajax.php
 Parameter missing or malformed.
 ```
 
-**Gobuster** running in backgroup found a directory
+**Gobuster** running in background found a directory
 ```bash
 /licenses             (Status: 301) [Size: 152] [--> http://10.10.10.231/licenses/]
 ```
@@ -71,7 +71,7 @@ After combine url parameters and source code snippets from response error.
 
 /products-ajax.php?order=id+desc&h=a1b30d31d344a5a4e41e8496ccbdd26b
 
-`order` parameter contains a value that used by server backend and h contians md5 hash, Generated from `order` parameter value and salt `hie0shah6ooNoim`.
+`order` parameter contains a value that used by server backend and h contains md5 hash, Generated from `order` parameter value and salt `hie0shah6ooNoim`.
 
 And indeed it is same.
 ```bash
@@ -136,9 +136,9 @@ Table: customers
 +----+------------------------------+----------------------------------------------+----------------------+
 ```
 
-sqlmap do the job and bruteforce all passowrd hashes.
+sqlmap do the job and bruteforce all password hashes.
 
-Login with customer creds, Found Same url formate inside `/licenses` dassboard
+Login with customer creds, Found Same url formate inside `/licenses` dashboard
 
 ![](screenshots/license-theme.png)
 
@@ -150,7 +150,7 @@ d9f7afc366cf839391aac8d0d333c7c5
 
 ![](screenshots/theme-get-content.png)
 
-this time server is doning `file_get_contents` on `theme` parameter.
+this time server is doing `file_get_contents` on `theme` parameter.
 
 ## SMB connect via remote file inclusion
 
@@ -215,7 +215,7 @@ If we go back to initial error, we can see  that there is a another security che
  34 |   if (strpos(file_get_contents($file),'<?') === false) { 
  35 |     include($file);
  ```
-This means, If included file contians `<?` anywhere in the file, it exit out and if not than **again** doing a another include on that file with `include()` function.
+This means, If included file contains `<?` anywhere in the file, it exit out and if not than **again** doing a another include on that file with `include()` function.
 
 * **`include()`** function is used to put data of one PHP file into another PHP file.
 
@@ -239,7 +239,7 @@ Events:
 	close		file or directory closed, regardless of read/write mode
 ```
 
-With that tool finaly get php code execuated on the server, only issue occurred is that there is some delay between 2 includes, after first closing and second opening of the file. For that i setup 2 event listener, first for closing and second for opening.
+With that tool finally get php code executed on the server, only issue occurred is that there is some delay between 2 includes, after first closing and second opening of the file. For that i setup 2 event listener, first for closing and second for opening.
 ```bash
 echo poorduck > header.inc; inotifywait -e close header.inc;inotifywait -e open header.inc;  echo '<?php echo "poorduck from php!";?>' > header.inc
 ```

@@ -26,7 +26,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Web server is running wordpress.
 
-with wpscan, collected some infomation.
+with wpscan, collected some information.
 
 * : WordPress version 5.8.1 identified
 * [i] User(s) Identified: admin
@@ -53,7 +53,7 @@ WordPress Plugin eBook Download 1.1 - Directory Traversal                       
 
 And right off the bat found Directory Traversal vulnerability in WordPress Plugin eBook Download 1.1 from searchsploit.
 
-its smiply allowed file inclusion from `/wp-content/plugins/ebook-download/filedownload.php?ebookdownloadurl=../../../wp-config.php`
+its simply allowed file inclusion from `/wp-content/plugins/ebook-download/filedownload.php?ebookdownloadurl=../../../wp-config.php`
 
 with lfi, get the `wp-config.php` file and db creds: `wordpressuser:MQYBJSaD#DxG6qbm`.
 
@@ -77,7 +77,7 @@ I use burp intruder to brute force pid to find the process.
 
 ![](screenshots/proc-is-useful.png)
 
-For curret boot, the PID for service that running on port 1337 in `862`
+For current boot, the PID for service that running on port 1337 in `862`
 ```bash
 /bin/sh -c while true;do su user -c "cd /home/user;gdbserver --once 0.0.0.0:1337 /bin/true;"; done
 ```
@@ -88,7 +88,7 @@ Port 1337 is running gdbserver. We can connect to this service with gdb.
 
 ![](screenshots/gdb-connect.png)
 
-There is a very old (2013) techinque on gdbserver to RCE from [jbremer.org](http://jbremer.org/turning-arbitrary-gdbserver-sessions-into-rce/)
+There is a very old (2013) technique on gdbserver to RCE from [jbremer.org](http://jbremer.org/turning-arbitrary-gdbserver-sessions-into-rce/)
 
 To make this easy there is a metasploit module based on this exploit.
 
@@ -112,7 +112,7 @@ Running find command for setuip binary on the box and found `/usr/bin/screen` wi
 
 And  screen version `Screen version 4.08.00 (GNU) 05-Feb-20`
 
-There is a [CVE-2017-5618](https://www.cvedetails.com/cve/CVE-2017-5618/) in GNU screen before 4.5.1 allows local users to modify arbitrary files and consequently gain root privileges by leveraging improper checking of logfile permissions.
+There is a [CVE-2017-5618](https://www.cvedetails.com/cve/CVE-2017-5618/) in GNU screen before 4.5.1 allows local users to modify arbitrary files and consequently gain root privileges by leveraging improper checking of log file permissions.
 
 Found exploit: https://github.com/XiphosResearch/exploits/tree/master/screen2root
 

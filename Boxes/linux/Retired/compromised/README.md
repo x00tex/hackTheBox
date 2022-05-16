@@ -1,6 +1,6 @@
 ![](compromised_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -72,6 +72,7 @@ webserver is running **[LiteCart](https://www.litecart.net/en/) CMS** - A free o
         User: admin Passwd: theNextGenSt0r3!~
         
 ### creds
+
 `admin:theNextGenSt0r3!~`
 
 ### admin login
@@ -85,23 +86,23 @@ webserver is running **[LiteCart](https://www.litecart.net/en/) CMS** - A free o
 * searching on google for **LiteCart-2.1.2-Exploit** i found a CVE
 
   Vulnerability Details : [CVE-2018-12256](https://nvd.nist.gov/vuln/detail/CVE-2018-12256)
-  * **Discription :** admin/vqmods.app/vqmods.inc.php in LiteCart before 2.1.3 allows remote authenticated attackers to upload a malicious file (resulting in remote code execution) by using the text/xml or application/xml Content-Type in a public_html/admin/?app=vqmods&doc=vqmods request. 
+  * **Description:** admin/vqmods.app/vqmods.inc.php in LiteCart before 2.1.3 allows remote authenticated attackers to upload a malicious file (resulting in remote code execution) by using the text/xml or application/xml Content-Type in a public_html/admin/?app=vqmods&doc=vqmods request. 
   * `shop/admin/vqmods.app/vqmods.inc.php` file is responsible for this vulnerability.
 
 #### Exploit surface
 
 * On the admin panel goto vQmods tab `http://10.10.10.207/shop/admin/?app=vqmods&doc=vqmods` here we can see a file upload option.
-* from the file upload option we can upload a php file insted of xml file by changing `Content-Type: application/x-php` to `Content-Type: application/xml` in the POST request and we can see that the file get uploaded, and thats the way we can get the remote code execution.
+* from the file upload option we can upload a php file instead of xml file by changing `Content-Type: application/x-php` to `Content-Type: application/xml` in the POST request and we can see that the file get uploaded, and thats the way we can get the remote code execution.
 
 **Why this happening -**
 
-in the litecart version 2.1.2 it validates the vQmods xml file by checking `Content-Type` in the file upload POST request and the `Content-Type` is ditermined by the file extention so when we upload xml file then the **Content-Type: text/xml** and when we upload php file then the **Content-Type: application/x-php**
+in the litecart version 2.1.2 it validates the vQmods xml file by checking `Content-Type` in the file upload POST request and the `Content-Type` is determined by the file extension so when we upload xml file then the **Content-Type: text/xml** and when we upload php file then the **Content-Type: application/x-php**
 
 and in the litecart 2.1.2 source code of the `vqmods.inc.php` file:
 
 ![](screenshots/vuln_code.png)
 
-upload function is only validates the file by cheacking the `Content-Type` from the POST request.
+upload function is only validates the file by checking the `Content-Type` from the POST request.
 
 so if we intercept the POST request and change the `Content-Type: application/x-php` to `Content-Type: application/xml` while uploading php file it get uploaded easily.
 
@@ -109,7 +110,7 @@ so if we intercept the POST request and change the `Content-Type: application/x-
 
 * found python script in [ExploitDB](https://www.exploit-db.com/exploits/45267) but this script did not worked.
 
-* first i do a manual test and execute the `phpinfo()` function to check the server's php configuration and found out that in the server there are so many php functions are diabled and thats why the ExploitDB script was not worked.
+* first i do a manual test and execute the `phpinfo()` function to check the server's php configuration and found out that in the server there are so many php functions are disabled and thats why the ExploitDB script was not worked.
 
 ![](screenshots/dis-php-func.png)
 
@@ -121,7 +122,7 @@ so if we intercept the POST request and change the `Content-Type: application/x-
 
 * in the `pwn` function from exploit.php file i use `$_REQUEST` [superglobal variable](https://www.php.net/manual/en/reserved.variables.request.php)
 
-**super global variable** `$_REQUEST` is used to collect the user input so we can use this variable to run commands from url field without uploading php file everytime
+**super global variable** `$_REQUEST` is used to collect the user input so we can use this variable to run commands from url field without uploading php file every time
 
 **solving all scripts errors -**
 
@@ -209,7 +210,7 @@ http://10.10.10.207/shop/vqmod/xml/MF6GJ.php?c=md5sum /usr/lib/mysql/plugin/libm
 
       http://10.10.10.207/shop/vqmod/xml/F8ALL.php?c=mysql -u root -pchangethis -e "select exec_cmd('echo ssh-rsa AAAAB3NzaC1y...Nb5q4%2B1LtnZpjM= > ~/.ssh/authorized_keys')"
 
-  * while putting my ssh in the `authorized_keys` it won't worked at first and then i notice in the output that the every plus `+` sign from the ssh key was converted into a white space so i changed every `+` sign into `%2B` that is equvilent to a plus sign to solve this problem.
+  * while putting my ssh in the `authorized_keys` it won't worked at first and then i notice in the output that the every plus `+` sign from the ssh key was converted into a white space so i changed every `+` sign into `%2B` that is equivalent to a plus sign to solve this problem.
 
 ### USER:mysql shell
 
@@ -259,7 +260,7 @@ uid=111(mysql) gid=113(mysql) groups=113(mysql)
 
 * **[pam_unix](https://linux.die.net/man/8/pam_unix):** It uses standard calls from the system's libraries to retrieve and set account information as well as authentication. Usually this is obtained from the /etc/passwd and the /etc/shadow file as well if shadow is enabled.
 
-* one interesting thing i found while searching about this file is that this file also used in persistence compromised attack where attacker modified the file and backdoored it with a master password to access root witout any interruption and i also found a script for this at  [zephrax@github](https://github.com/zephrax/linux-pam-backdoor)
+* one interesting thing i found while searching about this file is that this file also used in persistence compromised attack where attacker modified the file and backdoor it with a master password to access root without any interruption and i also found a script for this at  [zephrax@github](https://github.com/zephrax/linux-pam-backdoor)
 
 
 # Root Privesc

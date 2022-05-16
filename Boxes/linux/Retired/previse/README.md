@@ -40,7 +40,7 @@ Found bunch of php file from gobuster scan
 /status.php           (Status: 302) [Size: 2968] [--> login.php]
 ```
 
-bunch of php files and most of them are redireting to `login.php` but all redirect sizes are diffrent. If we intercept these redirect requests we can see these file content. ***New Thing:** This is a EAR(Execution After Redirect) vulnerability **(owasp docs)[https://owasp.org/www-community/attacks/Execution_After_Redirect_(EAR)]***
+bunch of php files and most of them are redirecting to `login.php` but all redirect sizes are different. If we intercept these redirect requests we can see these file content. ***New Thing:** This is a EAR(Execution After Redirect) vulnerability **(owasp docs)[https://owasp.org/www-community/attacks/Execution_After_Redirect_(EAR)]***
 
 And there's also a zip file.
 
@@ -50,7 +50,7 @@ We can create new account from `/accounts.php` with POST request.
 
 ![](screenshots/account-create.png)
 
-And now we can downlaod that `siteBackup.zip`.
+And now we can download that `siteBackup.zip`.
 
 Zip file contains source code of the web application.
 
@@ -63,7 +63,7 @@ Zip file contains source code of the web application.
 
   ![](screenshots/log-source.png)
 
-  User input from `/logs.php` POST request paramter `delim` directly placced in the `exec()`.
+  User input from `/logs.php` POST request parameter `delim` directly placced in the `exec()`.
 
 `/logs.php` file executing python script and takes input from `delim` parameter, and it is vulnerable form blind command injection.
 
@@ -110,7 +110,7 @@ try:
 except r.exceptions.Timeout:
     print('\n[-] Response timeout!')
 except KeyboardInterrupt:
-    print('\n[-] Exiting execuation!')
+    print('\n[-] Exiting execution!')
 ```
 
 # Privesc

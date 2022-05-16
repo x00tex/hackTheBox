@@ -33,7 +33,7 @@ Service Info: Host: REALCORP.HTB; OS: Linux; CPE: cpe:/o:redhat:enterprise_linux
 
 ### dig
 
-Using `dig` command to retrive "Any information" from dns server.
+Using `dig` command to retrieve "Any information" from dns server.
 ```bash
 ❯ dig ANY @10.10.10.224 realcorp.htb
 
@@ -63,7 +63,7 @@ ns.realcorp.htb.	259200	IN	A	10.197.243.77
 ;; MSG SIZE  rcvd: 143
 ```
 
-* Found internal host IP `10.197.243.77` which is running nameserver.
+* Found internal host IP `10.197.243.77` which is running nameservers.
 
 ### dnsenum
 
@@ -171,7 +171,7 @@ host `wpad.realcorp.htb` giving 403 on port 80.
 
 ## ffuf with multi-proxy
 
-while ffuf or gobuster don't support muli-proxy fuzzing i found a hacky solution from [github-issue](https://github.com/ffuf/ffuf/issues/50)
+while ffuf or gobuster don't support multi-proxy fuzzing i found a hacky solution from [github-issue](https://github.com/ffuf/ffuf/issues/50)
 
 1. Configure the proxies I want to use in [proxychains](https://github.com/rofl0r/proxychains-ng)
 
@@ -340,7 +340,7 @@ sJB}RM>6Z~64_
 
 ![](screenshots/token-to-ssh.png)
 
-**Update:** `GSSAPIAuthentication` already enables by default from ssh config file so `-o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes` are not required, the real reason for this to not work because GSSAPI cheaking for user in `REALCORP.HTB`'s krb database but user is in `srv01.realcorp.htb` and if we add `srv01.realcorp.htb` in `hosts` file and login with this host, it still won't work because GSSAPI takes first host name from `/etc/hosts` file, for this problem we can use `GSSAPIServerIdentity` to specify host which to look for.
+**Update:** `GSSAPIAuthentication` already enables by default from ssh config file so `-o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes` are not required, the real reason for this to not work because GSSAPI checking for user in `REALCORP.HTB`'s krb database but user is in `srv01.realcorp.htb` and if we add `srv01.realcorp.htb` in `hosts` file and login with this host, it still won't work because GSSAPI takes first host name from `/etc/hosts` file, for this problem we can use `GSSAPIServerIdentity` to specify host which to look for.
 
 ## k5login
 
@@ -359,7 +359,7 @@ cd /home/admin
 /usr/bin/rm -f access.log cache.log
 ```
 
-script is syncing `/var/log/squid/` to `/home/admin/`, that means all file from `/var/log/squid/` direcotry copy to `/home/admin/` and than creates tar archive from these file.
+script is syncing `/var/log/squid/` to `/home/admin/`, that means all file from `/var/log/squid/` directory copy to `/home/admin/` and than creates tar archive from these file.
 
 Found a login technique with kerberos with `.k5login` config file from [kerberos docs](https://web.mit.edu/kerberos/krb5-devel/doc/user/user_config/k5login.html)
 

