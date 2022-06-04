@@ -43,7 +43,7 @@ One in `/dashboard/settings`
 
 And Second in `/dashboard/stories/add`
 
-![](screenshots/file-upload-stories.png.png)
+![](screenshots/file-upload-stories.png)
 
 adding a stories also have url option in place of file upload.
 
