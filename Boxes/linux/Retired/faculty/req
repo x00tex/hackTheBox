@@ -1,0 +1,16 @@
+POST /admin/ajax.php?action=get_schecdule HTTP/1.1
+Host: faculty.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Content-Length: 36
+Origin: http://faculty.htb
+DNT: 1
+Connection: close
+Referer: http://faculty.htb/index.php
+Sec-GPC: 1
+
+faculty_id=*
