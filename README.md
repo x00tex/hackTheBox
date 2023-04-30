@@ -15,7 +15,7 @@
   <img align="float:right" alt="size" src="https://img.shields.io/github/repo-size/x00tex/hackTheBox">
 </p>
 
-**Latest update:** [MetaTwo](Boxes/linux/Retired/metatwo/README.md)
+**Latest update:** [MetaTwo](Boxes/linux/Retired/metaTwo/README.md)
 
 <!--TODO
 
